@@ -87,8 +87,7 @@
     }
 
     onShow() {
-      // 清空code
-      this.code = ''
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
