@@ -117,7 +117,7 @@
     initPageData() {
       var token = this.getString(wx.getStorageSync('token'))
       if (token) {
-        wx.switchTab({url: '/pages/partyList'})
+//        wx.switchTab({url: '/pages/partyList'})
       }
 //      this.$doLogin()
       this.$setCode()
