@@ -152,6 +152,9 @@
     }
     getPhoneNumber(e) {
       if (e.detail.iv) {
+        this.encryptedData = e.detail.encryptedData
+        this.iv =  e.detail.iv
+        this.$apply()
         let data = {
           code: wx.getStorageSync('code'),
           iv: e.detail.iv,

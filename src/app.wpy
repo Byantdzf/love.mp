@@ -4,6 +4,8 @@ import 'wepy-async-function'
 var ga = require('./ga.js')
 var GoogleAnalytics = ga.GoogleAnalytics
 var HitBuilders = ga.HitBuilders
+var fundebug = require('./fundebug.0.2.0.min.js')
+fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e5ee'
 
 export default class extends wepy.app {
   config = {
@@ -92,6 +94,11 @@ export default class extends wepy.app {
     t.send(new HitBuilders.ExceptionBuilder()
       .setDescription(wx.getStorageSync('message'))
       .setFatal(false).build())
+    t.set("&uid", '12345')
+    t.send(new HitBuilders.EventBuilder()
+      .setCategory("UX")
+      .setAction("User Sign In")
+      .build());
   }
   /* ========================= 更新缓存信息 ======================== */
 

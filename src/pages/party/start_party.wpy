@@ -258,7 +258,7 @@
         wx.navigateTo({url: url})
       },
       gotosign(url) {
-        if (this.list.is_join) {
+        if (this.list.is_join || this.list.is_admin) {
           wx.navigateTo({url: url})
         } else {
           wx.showModal({

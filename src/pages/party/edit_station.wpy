@@ -96,10 +96,10 @@
         {{index+1}}
       </view>
       <view class="h4" style="width: 95%;margin-right: 8%;">
-        <input @input="typing({{item.idv}},'title',{{item.num}})" class="weui-input text-center" value="{{item.title}}" placeholder="输入岗位名称"/>
+        <input @input="typing({{item.idv}},'title',{{item.num}})" class="weui-input text-center" value="{{item.title}}" adjust-position="true" placeholder="输入岗位名称"/>
       </view>
       <view class="h4" style="width: 80%;margin-right: 2%;">
-        <input @input="typing({{item.idv}},'need_num',{{item.num}})" @blur="Buffer({{item.idv}},{{item.num}})" type="number" class="weui-input text-center" value="{{item.need_num}}" placeholder="输入人数"/>
+        <input @input="typing({{item.idv}},'need_num',{{item.num}})" @blur="Buffer({{item.idv}},{{item.num}})" type="number" adjust-position="true" class="weui-input text-center" value="{{item.need_num}}" placeholder="输入人数"/>
       </view>
       <view class="h4" style="width: 18%;padding: 22rpx;" @tap="deleteStatiob({{item.idv}},{{item}})">
         <image src="{{item.icon_delete}}" mode="aspectFit" class="imgicon flo_l"></image>
