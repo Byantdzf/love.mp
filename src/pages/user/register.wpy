@@ -124,7 +124,7 @@
       wepy.getUserInfo({
         success: (res) => {
           wx.setStorageSync('user', res.userInfo)
-//          code: wx.getStorageSync('code'),
+          code: wx.getStorageSync('code'),
           console.log(res.userInfo)
           this.avatarUrl = res.userInfo.avatarUrl
           this.nickName = res.userInfo.nickName
@@ -137,9 +137,11 @@
             iv: this.iv,
             encryptedData: this.encryptedData
           }
+//          debugger
           this.$post({url: service.infor, data}, {
             success: ({code, data}) => {
 //              debugger
+              this.$setCode()
             },
             fail: ({code, data}) => {},
             complete: () => { this.loading = false }
@@ -149,7 +151,6 @@
       })
     }
     getPhoneNumber(e) {
-      this.$setCode()
       if (e.detail.iv) {
         let data = {
           code: wx.getStorageSync('code'),
@@ -160,6 +161,7 @@
           success: ({code, data}) => {
             this.mobile = data.phoneNumber
             this.$apply()
+            this.$setCode()
           },
           fail: ({code, data}) => {},
           complete: () => { this.loading = false }

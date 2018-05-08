@@ -106,7 +106,8 @@
       </view>
     </view>
   </view>
-  <view style="width: 100%;padding:22rpx 0 ">
+  <!--<view style="height: 200rpx;"></view>-->
+  <view style="width: 100%;padding:22rpx 0;">
     <button @tap="lastStep('/pages/party/edit_party?party_id={{party_id}}')" class="weui-btn btn-blue flo_l">上一步</button>
     <form bindsubmit="formSubmit" report-submit>
       <button formType="submit" @tap="servants" class="weui-btn btn-blue_r flo_l" data-type="click">

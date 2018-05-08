@@ -102,7 +102,7 @@
       </view>
     </view>
   </view>
-  <view style="width: 50%;margin:22rpx auto">
+  <view style="width: 100%;position: fixed;bottom: 0;left: 0;">
     <form bindsubmit="formSubmit" report-submit>
       <button formType="submit"  data-type="click"  @tap="next('/pages/party/edit_station')" class="weui-btn btn-blue">
         下一步

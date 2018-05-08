@@ -45,7 +45,7 @@
         <image src="../../images/tabbars/addmember.png"   mode="aspectFit" class="addmember" ></image>
       </button>
       <!--<view class="flo_r font_32" style="margin-top: 32rpx">{{members.length}}人</view>-->
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r" style="margin-top: 32rpx;" @tap="goto('/pages/party/statistics_party?party_id={{party_id}}&title={{list.title}}')">{{members.length}}人</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r" style="margin-top: 32rpx;" @tap="gotosign('/pages/party/statistics_party?party_id={{party_id}}&title={{list.title}}')">{{members.length}}人</view>
       <view class="clearfloat"></view>
     </view>
     <bolck wx:if="{{showmember}}">
@@ -256,6 +256,24 @@
       },
       goto(url) {
         wx.navigateTo({url: url})
+      },
+      gotosign(url) {
+        if (this.list.is_join) {
+          wx.navigateTo({url: url})
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '报名之后才能查看成员哦!',
+            confirmText: '去报名',
+            success: (res) => {
+              if (res.confirm) {
+                wx.navigateTo({url: '/pages/party/apply_party?party_id=' + this.party_id})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
       },
       label_acvive() {
         if (this.acvive) {
