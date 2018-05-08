@@ -115,6 +115,7 @@
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+//      debugger
     }
     onReachBottom() {
       console.log('到底了/.../')

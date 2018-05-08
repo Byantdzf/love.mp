@@ -89,6 +89,9 @@ export default class extends wepy.app {
     var t = this.globalData.tracker
     t.setScreenName(text)
     t.send(new HitBuilders.ScreenViewBuilder().build())
+    t.send(new HitBuilders.ExceptionBuilder()
+      .setDescription(wx.getStorageSync('message'))
+      .setFatal(false).build())
   }
   /* ========================= 更新缓存信息 ======================== */
 
