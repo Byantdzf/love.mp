@@ -132,6 +132,18 @@
           this.iv = res.iv
           console.log(this.iv)
           this.$apply()
+          let data = {
+            code: wx.getStorageSync('code'),
+            iv: this.iv,
+            encryptedData: this.encryptedData
+          }
+          this.$post({url: service.infor, data}, {
+            success: ({code, data}) => {
+//              debugger
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loading = false }
+          })
         },
         fail: (res) => { }
       })

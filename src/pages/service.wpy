@@ -1,183 +1,414 @@
 <template>
-  <view class="wrapper">
-    <view class="page-body">
-      <view class="page-body-wrapper">
-        <form bindsubmit="openLocation">
-          <view class="page-body-form">
-            <button @tap="servants" class="weui-btn btn-blue flo_l">客服</button>
-            <text class="page-body-form-key">经度</text>
-            <input class="page-body-form-value" type="text" value="{{location.longitude}}" name="longitude"></input>
-
-            <text class="page-body-form-key">纬度</text>
-            <input class="page-body-form-value" type="text"  value="{{location.latitude}}" name="latitude"></input>
-          </view>
-          <view class="page-body-buttons">
-            <button class="page-body-button" type="primary" bindtap="getLocation">获取位置</button>
-            <button class="page-body-button" type="primary" formType="submit">查看位置</button>
-            <button class="page-body-button" type="primary" bindtap="choose">选择位置</button>
-          </view>
-        </form>
+  <view class="user-borrow">
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-navbar">
+        <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+          <view class="weui-navbar__title">{{item}}</view>
+        </view>
+        <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+        <!--<view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>-->
+      </view>
+      <!--<view class="weui-panel__hd">-->
+      <!--{{library.name}}借阅管理-->
+      <!--</view>-->
+      <block wx:if="{{loading}}">
+        <view style="width: 100%;height: 100rpx"></view>
+        <view class="weui-loadmore">
+          <view class="weui-loading"></view>
+          <view class="weui-loadmore__tips">正在加载</view>
+        </view>
+      </block>
+      <block wx:elif="{{list && list.length>0}}">
+        <partyList :list.sync="list" :hideMessage.sync="hideMessage" ></partyList>
+        <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="weui-loadmore weui-loadmore_line">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+        </view>
+      </block>
+      <view class="scan">
+        <!--<view @tap="goto('/pages/party/edit_party')" wx:if="{{index}}" style="background: white;z-index:10;position:relative;">-->
+        <!--<image src="../images/tabbars/add.png" mode="aspectFit" class="{{icon_animation ? 'icon_animation' : ''}}" style="width: 120rpx;height: 120rpx;"></image>-->
+        <!--</view>-->
+        <view @tap="gotoparty" style="background: white;z-index:10;position:relative;border-radius: 50%;width:120rpx;">
+          <form bindsubmit="formSubmit" report-submit>
+            <button formType="submit" class="btn" data-type="click" style="line-height: 1">
+              <image src="../images/tabbars/add.png" mode="aspectFit" class="{{icon_animation ? 'icon_animation' : ''}}" style="width: 120rpx;height: 120rpx;"></image>
+            </button>
+          </form>
+        </view>
+        <view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="goto('/pages/party/templates_party')" >
+          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/add.png" style="margin-top: -12px"></image>
+          <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">模板</text>
+        </view>
+        <view class="scan_home scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" @tap="goto('/pages/party/edit_party')" >
+          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/add.png" style="margin-top: -12px"></image>
+          <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">新建</text>
+        </view>
       </view>
     </view>
   </view>
+  <block wx:if="{{message && list.length == 0 }}">
+    <!--<view style="margin: auto;margin-top: -32rpx;position: relative">-->
+    <!--<image src='../images/tabbars/messageV.png'  mode="aspectFit"  style="transform: rotateX(180deg);width: 280rpx;height: 214rpx "></image>-->
+    <!--&lt;!&ndash;<view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>&ndash;&gt;-->
+    <!--</view>-->
+    <!--</view>-->
+    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;right: 38rpx;bottom: 228rpx;">
+      <image src='../images/tabbars/messageV.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
+      <view class="font_26" style="position: absolute;left: 72rpx;bottom: 142rpx;transform: rotateZ(-12deg);">
+        点我！创建聚会
+      </view>
+    </view>
+  </block>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import ShareMessage from '../mixins/ShareMessage'
+  import getFormId from '../mixins/getFormId'
+  import partyList from '../components/List'
 
-  export default class address extends wepy.page {
+  export default class station extends wepy.page {
+    mixins = [base, http, ShareMessage, getFormId]
     config = {
-      navigationBarTitleText: '客服',
+      navigationBarTitleText: '聚会大厅',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#fafffb',
-      enablePullDownRefresh: false
+      enablePullDownRefresh: true
     }
     data = {
-      hasLocation: false
-    }
-
-    onReady() {
-//      this.initPageData()
+      loading: false,
+      list: [],
+      tabs: ['待参加', '已结束', '浏览过', '我的'],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      library_num: 0,
+      user: [],
+      icon_animation: false,
+      nav_active_joined: true,
+      nav_active_finished: false,
+      nav_active_browsed: false,
+      nav_active: false,
+      Show: false,
+      rotate: true,
+      changerotate: false,
+      shrink: false,
+      CollectAnimation: false,
+      showanimation: true,
+      type: 'JOINED',
+      page: 1,
+      message: false,
+      hideMessage: false,
+      status: 'RESERVE'
     }
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
-
+      this.page = 1
+      this.update(this.type, this.page)
+    }
+    onLoad(query) {
+//      this.id = query && +query.id
+//      this.libraryId = query && +query.library_id
+      let _this = this
+      wx.getSystemInfo({success: function (rst) {
+        _this.screenWidth = rst.screenWidth
+      }})
+      this.update(this.type, this.page)
+      this.sliderWidth = _this.screenWidth / this.tabs.length
+      this.sliderLeft = 0
+      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
     }
 
-    onReachBottom() {
-
-    }
-    // 获取经纬度
-    getLocation(e) {
-      console.log(e)
-      var that = this
-      wx.getLocation({
-        success: function (res) {
-          console.log(res)
-          that.setData({
-            hasLocation: true,
-            location: {
-              longitude: res.longitude,
-              latitude: res.latitude
-            }
-          })
+    // 初始化页面数据
+    update(type, page) {
+      let that = this
+      if (this.loading) return
+      this.loading = true
+      this.$get({
+        url: service.parties,
+        data: {
+          type: type,
+          page: page,
+          formId: this.formId
         }
-      })
-    }
-
-    // 根据经纬度在地图上显示
-    openLocation(e) {
-      var value = e.detail.value
-      wx.openLocation({
-        longitude: Number(value.longitude),
-        latitude: Number(value.latitude)
-      })
-    }
-    methods = {
-      servants() {
-        console.log('lkasl')
-        wx.navigateToMiniProgram({
-          appId: 'wx53cf66d72649eb5a',
-          path: 'pages/index',
-          extraData: {
-            foo: 'bar'
-          },
-          envVersion: 'develop',
-          success(res) {
-            // 打开成功
-          }
-        })
-      },
-      choose() {
-//        wx.getLocation({
-//          type: 'gcj02', //返回可以用于wx.openLocation的经纬度
-//          success: function(res) {
-//            var latitude = res.latitude
-//            var longitude = res.longitude
-//            wx.openLocation({
-//              latitude: latitude,
-//              longitude: longitude,
-//              scale: 28
-//            })
-//          }
-//        })
-        wx.chooseLocation({
-          success: function (res) {
-            // success
-//            console.log(res,"location")
-            console.log(res.name)
-            console.log(res.latitude)
-            console.log(res.longitude)
-            if (res.name == '') {
-              wx.showToast({
-                title: '请选择地址',
-                icon: 'none',
-                duration: 1500
-              })
-              setTimeout(() => {
-                wx.chooseLocation({
-                  success: function (res) {
-                  },
-                  fail: function () {
-                  },
-                  complete: function () {
-                  }
-                })
-              }, 1500)
+      }, {
+        success: ({code, data}) => {
+          that.noMoreList = false
+//          this.list = data.data
+          data = data.data
+          if (that.list.length == 0 || that.page == 1) {
+//            setTimeout(() => {
+//            that.list = []
+            that.list = data.map(function (item) {
+              return item
+            })
+            if (that.list.length == 0) {
+              that.message = true
+              that.hideMessage = true
+              that.$apply()
             }
-          },
-          fail: function () {
-            // fail
-
-          },
-          complete: function () {
-            // complete
+//            }, 200)
+          } else {
+            data.map(function (item, index) {
+              that.list.push(item)
+            })
           }
-        })
+          that.page += 1
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
+      })
+    }
+
+    methods = {
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+        if (this.activeIndex === '0') {
+          this.status = 'JOINED'
+        } else if (this.activeIndex === '1') {
+          this.status = 'FINISHED'
+        } else if (this.activeIndex === '2') {
+          this.status = 'BROWSED'
+        } else {
+          this.status = 'ALL'
+        }
+        this.page = 1
+        this.update(this.status, this.page)
+      },
+      rotate() {
+        if (this.showanimation) {
+          this.changerotate = true
+          setTimeout(() => {
+            this.$apply()
+          }, 500)
+          this.shrink = false
+          this.showanimation = false
+        } else {
+          setTimeout(() => {
+            this.$apply()
+          }, 500)
+          this.shrink = true
+          this.showanimation = true
+        }
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      gotoparty() {
+        this.icon_animation = true
+        setTimeout(() => {
+          this.icon_animation = false
+          this.$apply()
+        }, 800)
+        if (this.showanimation) {
+          this.changerotate = true
+          setTimeout(() => {
+            this.message = false
+            this.$apply()
+          }, 10)
+          this.shrink = false
+          this.showanimation = false
+        } else {
+          setTimeout(() => {
+            this.message = true
+            this.$apply()
+          }, 500)
+          this.shrink = true
+          this.showanimation = true
+        }
+//        wx.navigateTo({url: '/pages/party/edit_party'})
       }
+
     }
 
     components = {
+      partyList
     }
   }
 </script>
 
 <style lang="less">
-  .wrapper{
-    height: 100%;
-    background:#fff;
-  }
-  .page-body-form-value{
-    font-size: 14px;
-    color:darkturquoise;
-    font-weight: bold;
-    padding-left: 15px;
-    border: 1px solid rgb(72, 165, 131);
-    border-radius: 4px;
-    height: 30px;
-    line-height: 30px;
+  @import "../styles/weui/base/fn.wxss";
+  @import "../styles/custom/fn.less";
+  @import "../styles/custom/animation.less";
+  @import "../styles/custom/library.less";
+
+  .loopCovers(@count) when (@count > 0) {
+    &:nth-child( @{count} ) {
+      top: (@count * 0rpx);
+      left: (@count * 10rpx);
+    }
+    .loopCovers((@count - 1))
   }
 
-  .page-body-form-key{
-    font-size:14px;
-    padding: 10px;
-    margin-top:15px;
-    font-family: "Microsoft Yahei";
-    font-weight: bold;
-    height: 30px;
-    line-height: 30px;
+  @bookCoverWidth: 80rpx;
+  @bookCoverHeight: @bookCoverWidth / (3 / 4);
+
+  .weui-input{
+    padding-left: 12rpx;
+    border-bottom: 1rpx solid #e8e8e8;
+  }
+  .border_b{
+    border-bottom: 1rpx solid #e8e8e8;
+  }
+  .page-index{
+    margin: 12rpx 32rpx;
+    /*min-height: 700rpx;*/
+    margin-bottom: 48rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .party{
+    position: relative;
+    padding: 32rpx 10rpx;
+    margin:0 32rpx;
+    background:white;
+    border-top-right-radius: 12rpx;
+    border-top-left-radius: 12rpx;
+    /*border-bottom: 1rpx solid #d5d5d5;*/
+  }
+  textarea{
+    width:100%;
+    height: 250rpx;
+  }
+  .weui-btn{
+    width: 50%;
+    border-radius: 0;
+  }
+  .icon_animation{
+    animation: 800ms shrinkfresh 1;
+    animation-fill-mode:forwards;
+  }
+  @keyframes shrinkfresh {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .message{
+    color: white;
+    padding: 6rpx 22rpx;
+    background: orange;
+    margin-left: -72rpx;
+    border-radius: 6rpx;
+  }
+  .user_image{
+    width: 100rpx;
+    height: 100rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+  }
+  .user-message{
+    position: absolute;
+    right: 42rpx;
+    top: -22rpx;
+  }
+  .party_image{
+    width: 80rpx;
+    height: 80rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    border-radius: 50%;
+    margin-top: 12rpx;
+    margin-bottom: 12rpx;
+    margin-right: 22rpx;
+  }
+  .party_setting{
+    width: 60rpx;
+    height: 60rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    /*border-radius: 50%;*/
+  }
+  .setting{
+    width: 20%;
+  }
+  .member{
+    margin: 0 32rpx;
+    padding: 6rpx 32rpx;
+    background: white;
+    border-top: 1rpx solid #d3d3d3;
+    /*border-bottom: 1rpx solid #d3d3d3;*/
+  }
+  .setting_box{
+    border-radius: 50%;
+    width: 60rpx;
+    height: 60rpx;
+    padding: 12rpx;
+    background: red;
+    margin-left: 22rpx;
+    margin-top: 6rpx;
+  }
+  .setting_box:active{
+    transform: scale(1.1);
+  }
+  .nav{
+    width: 100%;
+    height: 60rpx;
+    background: white;
+    padding: 32rpx 22rpx 12rpx 22rpx;
+    border-bottom: 12rpx solid #d9d9d9;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+  }
+  .nav_btn{
+    padding: 1rpx 32rpx;
+    height:90%;
+    /*background: #F9E704;*/
+    float: left;
+    text-align: center;
+    margin-left: 22rpx;
+    /*color: #666666;*/
+    border-radius: 32rpx;
+    line-height: 54rpx;
+    /*box-shadow: 1rpx 1rpx 12rpx #e3e3e3;*/
   }
 
-  .page-body-button{
-    margin-top:20px;
-    line-height: 2;
+  .nav_active {
+    background: #F9E704;
+    animation: 1s opacity2 ;
+  }
+  @keyframes opacity2{
+    0%{opacity:0}
+    100%{opacity:1;}
+  }
+  .members{
+    /*background: red;*/
+    position: relative;
+    padding:12rpx 32rpx;
+    margin: 12rpx 22rpx;
+    border-radius: 6rpx;
+    box-shadow: 1rpx 1rpx 12rpx #dedede;
+  }
+  .member_image{
+    width: 120rpx;
+    height: 120rpx;
+    margin-top: 12rpx;
+    margin-right: 32rpx;
+  }
+  .member_icon{
+    width: 60rpx;
+    height: 60rpx;
+    position: absolute;
+    right: 12rpx;
+    top: 12rpx;
   }
 </style>

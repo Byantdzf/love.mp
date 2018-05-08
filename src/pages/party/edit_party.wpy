@@ -254,6 +254,7 @@
             }
           })
           that.multiIndex = [that.timeIndex, that.durationIndex]
+          that.duration = data.duration
           that.$apply()
         },
         fail: ({code, data}) => {
