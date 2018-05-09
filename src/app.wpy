@@ -10,7 +10,7 @@ fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/service',
+//      'pages/service',
       'pages/partyList',
       'pages/user/register',
       'pages/party/edit_party',

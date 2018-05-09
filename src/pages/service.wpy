@@ -155,7 +155,6 @@
           data = data.data
           if (that.list.length == 0 || that.page == 1) {
 //            setTimeout(() => {
-//            that.list = []
             that.list = data.map(function (item) {
               return item
             })
@@ -191,6 +190,8 @@
           this.status = 'ALL'
         }
         this.page = 1
+        this.list = []
+        this.$apply()
         this.update(this.status, this.page)
       },
       rotate() {

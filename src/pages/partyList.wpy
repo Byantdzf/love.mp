@@ -141,27 +141,32 @@
         }
       }, {
         success: ({code, data}) => {
-          that.noMoreList = false
-//          this.list = data.data
-          data = data.data
-          if (that.list.length == 0 || that.page == 1) {
-//            setTimeout(() => {
-//            that.list = []
-            that.list = data.map(function (item) {
-              return item
-            })
+          if (that.page == 1) {
+            that.list = data.data
+            that.$apply()
+//            debugger
             if (that.list.length == 0) {
               that.message = true
               that.hideMessage = true
               that.$apply()
             }
-//            }, 200)
           } else {
-            data.map(function (item, index) {
+            data.data.map(function (item, index) {
               that.list.push(item)
+              that.$apply()
             })
           }
+          if (type == 'JOINED') {
+            that.nav_active_joined = true
+          } else if (type == 'FINISHED') {
+            that.nav_active_finished = true
+          } else if (type == 'BROWSED') {
+            that.nav_active_browsed = true
+          } else {
+            that.nav_active = true
+          }
           that.page += 1
+          that.$apply()
         },
         fail: ({code, data}) => {
           // 失败了什么也不做
@@ -200,17 +205,17 @@
         that.nav_active_browsed = false
         that.nav_active = false
         if (type == 'JOINED') {
-          that.nav_active_joined = true
           that.update('JOINED', that.page)
+//          that.nav_active_joined = true
         } else if (type == 'FINISHED') {
-          that.nav_active_finished = true
           that.update('FINISHED', that.page)
+//          that.nav_active_finished = true
         } else if (type == 'BROWSED') {
-          that.nav_active_browsed = true
           that.update('BROWSED', that.page)
+//          that.nav_active_browsed = true
         } else {
-          that.nav_active = true
           that.update('ALL', that.page)
+//          that.nav_active = true
         }
         that.$apply()
       },
