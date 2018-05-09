@@ -98,9 +98,9 @@
     </view>
     <view class="weui-cell">
       <view class="weui-cell__bd h4">
-        <!--<textarea  @input="typing('notes')"  value="{{notes}}"  placeholder="聚会详细内容..." auto-height="true"/>-->
-        <textarea  @input="typing('notes')"  value="{{notes}}" wx:if="{{showtext}}" placeholder="聚会详细内容..."  bindblur="showtext" auto-height="true"/>
-        <view style="padding: 22rpx 0;" @tap="showtext"  wx:else  class="{{!showtext ? 'silver' : ''}}">{{notes}}</view>
+        <textarea  @input="typing('notes')"  value="{{notes}}"  placeholder="聚会详细内容..." auto-height="true"/>
+        <!--<textarea  @input="typing('notes')"  value="{{notes}}" wx:if="{{showtext}}" placeholder="聚会详细内容..."  bindblur="showtext" auto-height="true"/>-->
+        <!--<view style="padding: 22rpx 0;" @tap="showtext"  wx:else  class="{{!showtext ? 'silver' : ''}}">{{notes}}</view>-->
       </view>
     </view>
   </view>
