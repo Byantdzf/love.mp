@@ -163,17 +163,17 @@
         this.showMessage = false
         if (index == '1') {
           this.index = ''
-          this.nav_active = true
-          this.nav_active_v = false
+          this.initPageData(this.party_id)
           setTimeout(() => {
-            this.initPageData(this.party_id)
+            this.nav_active = true
+            this.nav_active_v = false
           }, 200)
         } else {
           this.index = '1'
-          this.nav_active = false
-          this.nav_active_v = true
+          this.initPageData(this.party_id, '1')
           setTimeout(() => {
-            this.initPageData(this.party_id, '1')
+            this.nav_active = false
+            this.nav_active_v = true
           }, 200)
         }
         this.$apply()
