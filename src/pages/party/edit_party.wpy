@@ -1,12 +1,4 @@
 
-
-
-
-
-
-
-
-
 <template>
   <view class="stepInfo">
     <ul>
@@ -98,7 +90,9 @@
     </view>
     <view class="weui-cell">
       <view class="weui-cell__bd h4">
-        <textarea  @input="typing('notes')"  value="{{notes}}" style='min-height:124rpx;' placeholder="聚会详细内容..."/>
+        <!--<textarea  @input="typing('notes')"  value="{{notes}}"  placeholder="聚会详细内容..." auto-height="true"/>-->
+        <textarea  @input="typing('notes')"  value="{{notes}}" wx:if="{{showtext}}" placeholder="聚会详细内容..."  bindblur="showtext" auto-height="true"/>
+        <view style="padding: 22rpx 0;" @tap="showtext"  wx:else  class="{{!showtext ? 'silver' : ''}}">{{notes}}</view>
       </view>
     </view>
   </view>
@@ -140,7 +134,7 @@
       title: '',
       address: '',
       address_detail: '',
-      notes: '',
+      notes: '聚会详细内容',
       fee: 0.00,
       longitude: '',
       latitude: '',
@@ -148,6 +142,7 @@
       time_duration: [],
       durationIndex: 0,
       timeIndex: 0,
+      showtext: false,
       duration: '0.5',
       multiIndex: [0, 0]
     }
@@ -390,6 +385,16 @@
       })
     }
     methods = {
+      showtext() {
+        if (this.showtext) {
+          this.showtext = false
+          return
+        } else {
+          this.showtext = true
+          return
+        }
+        this.$apply()
+      },
       bindMultiPickerChange: function (e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
         let value = e.detail.value
@@ -478,5 +483,8 @@
   textarea{
     width:100%;
     height: 250rpx;
+  }
+  .silver{
+  color: silver;
   }
 </style>
