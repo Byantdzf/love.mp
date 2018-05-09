@@ -134,7 +134,7 @@
       title: '',
       address: '',
       address_detail: '',
-      notes: '聚会详细内容',
+      notes: '',
       fee: 0.00,
       longitude: '',
       latitude: '',
