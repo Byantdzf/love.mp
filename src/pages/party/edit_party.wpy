@@ -1,12 +1,4 @@
 
-
-
-
-
-
-
-
-
 <template>
   <view class="stepInfo">
     <ul>
