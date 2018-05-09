@@ -41,6 +41,15 @@ export default class userMixin extends wepy.mixin {
     })
   }
 
+  $getSetting() {
+    wepy.getSetting({
+      success: (res) => {
+      },
+      fail: (res) => {
+
+      }
+    })
+  }
   // get code
   $getCode() {
     var code = wx.getStorageSync('code');

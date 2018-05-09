@@ -1,5 +1,6 @@
 import wepy from 'wepy'
 import { service } from '../config.js'
+import fundebug from '../fundebug.0.2.0.min.js'
 
 export default class httpMixin extends wepy.mixin {
   /* =================== [$get 发起GET请求] =================== */
@@ -93,6 +94,7 @@ export default class httpMixin extends wepy.mixin {
             this.$apply()
           })
         } else if (data.code == 1) {
+          fundebug.notifyError(data.message);
           wx.showModal({
             title: '提示',
             content: data.message,

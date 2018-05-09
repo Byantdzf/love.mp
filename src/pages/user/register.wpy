@@ -152,9 +152,6 @@
     }
     getPhoneNumber(e) {
       if (e.detail.iv) {
-        this.encryptedData = e.detail.encryptedData
-        this.iv =  e.detail.iv
-        this.$apply()
         let data = {
           code: wx.getStorageSync('code'),
           iv: e.detail.iv,
@@ -202,6 +199,13 @@
         }
         if (!this.isPhone(this.mobile)) {
           return this.$alert('温馨提示', '请输入正确的手机号码')
+        }
+        if (!this.nickName) {
+          return wx.openSetting({
+            success: (res) => {
+             this.initPageData()
+            }
+          })
         }
         const data = {
           mobile: this.getString(this.mobile),
