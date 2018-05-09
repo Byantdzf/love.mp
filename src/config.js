@@ -4,7 +4,7 @@
 ======================================================== */
 // 域名
  var host = 'https://party.ufutx.com/api'
-// var host = 'http://party/api'
+// var host = 'http://party.hankin.com/api'
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,

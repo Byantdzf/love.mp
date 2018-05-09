@@ -98,7 +98,7 @@
     </view>
     <view class="weui-cell">
       <view class="weui-cell__bd h4">
-        <textarea  @input="typing('notes')"  value="{{notes}}" placeholder="聚会详细内容..."/>
+        <textarea  @input="typing('notes')"  value="{{notes}}" style='min-height:124rpx;' placeholder="聚会详细内容..."/>
       </view>
     </view>
   </view>
