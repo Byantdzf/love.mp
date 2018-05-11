@@ -64,7 +64,6 @@
                   <span style="color: orange">{{time_duration[1][durationIndex]}}小时</span>
                 </view>
               </view>
-
               <!--<input class="weui-input" disabled value="{{time_duration[0][timeIndex]}},{{time_duration[1][durationIndex]}}" placeholder="时间及时长选择..."/>-->
             </view>
           </picker>
@@ -388,10 +387,8 @@
       showtext() {
         if (this.showtext) {
           this.showtext = false
-          return
         } else {
           this.showtext = true
-          return
         }
         this.$apply()
       },

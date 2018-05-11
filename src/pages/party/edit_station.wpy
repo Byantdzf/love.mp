@@ -164,9 +164,7 @@
         this.$apply()
         this.initPageData(this.party_id)
       }
-
     }
-
     onPullDownRefresh() {
       this.noMoreList = false
       this.initPageData()
@@ -220,7 +218,7 @@
       lastStep(url) {
         wx.navigateTo({url: url})
         wx.setStorage({
-          key: "statiob_list",
+          key: 'statiob_list',
           data: this.statiob_list
         })
       },

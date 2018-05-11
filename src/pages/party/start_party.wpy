@@ -4,12 +4,12 @@
     <view class="party">
       <view class="font_26 message flo_l" wx:if="{{list.is_deadline == 1}}" style="background: red">已截止报名</view>
       <view class="font_26 message flo_l" wx:else>正在报名</view>
-      <view class="user-message">
+      <view class="user-message text-center">
         <image src="{{user.wechat.avatar}}"  mode="aspectFit" class="user_image"></image>
-        <view class="font_26 text-center">{{user.name}}</view>
+        <view class="font_26 text-center" >{{user.name}}</view>
       </view>
       <view class="clearfloat"></view>
-      <view style="width: 100%" class="font_32 bold">{{list.title}}</view>
+      <view style="width: 85%" class="font_32 bold">{{list.title}}</view>
       <!--<view style="width: 100%" class="font_28">{{list.start_time}}</view>-->
       <view style="width: 100%" class="font_28 flo_l">
         <view class="flo_l">时间：{{list.start_time}}</view>
@@ -27,7 +27,7 @@
       <view style="width: 100%" class="font_28">
         备注：{{notes}}
         <block wx:if="{{list.notes !== list.short_notes}}">
-          <span>...</span>
+          <span wx:if="{{text == '展开↓'}}">...</span>
           <text @tap="unfold" class="notes_text">{{text}}</text>
         </block>
       </view>
@@ -366,7 +366,7 @@
           itemList = ['重发聚会']
           wx.showActionSheet({
             itemList: itemList,
-            success: function(res) {
+            success: function (res) {
               console.log('woshi重发')
               that.$post({
                 url: service.reset + '/' + that.party_id,
@@ -390,7 +390,7 @@
                 }
               })
             },
-            fail: function(res) {
+            fail: function (res) {
               console.log(res.errMsg)
             }
           })
@@ -398,7 +398,7 @@
           itemList = ['取消聚会']
           wx.showActionSheet({
             itemList: itemList,
-            success: function(res) {
+            success: function (res) {
               console.log(res.tapIndex)
               let data = {}
               data.is_cancel = 1
@@ -437,7 +437,7 @@
                 })
               }
             },
-            fail: function(res) {
+            fail: function (res) {
               console.log(res.errMsg)
             }
           })
@@ -445,7 +445,7 @@
           itemList = ['截至报名', '取消聚会']
           wx.showActionSheet({
             itemList: itemList,
-            success: function(res) {
+            success: function (res) {
               console.log(res.tapIndex)
               let data = {}
               if (!res.tapIndex) {
@@ -517,7 +517,7 @@
                 })
               }
             },
-            fail: function(res) {
+            fail: function (res) {
               console.log(res.errMsg)
             }
           })
@@ -588,7 +588,7 @@
   }
   .user-message{
     position: absolute;
-    right: 42rpx;
+    right: 32rpx;
     top: -22rpx;
   }
   .party_image{

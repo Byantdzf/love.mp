@@ -124,7 +124,7 @@
       wepy.getUserInfo({
         success: (res) => {
           wx.setStorageSync('user', res.userInfo)
-          code: wx.getStorageSync('code'),
+//          code: wx.getStorageSync('code')
           console.log(res.userInfo)
           this.avatarUrl = res.userInfo.avatarUrl
           this.nickName = res.userInfo.nickName
@@ -203,7 +203,7 @@
         if (!this.nickName) {
           return wx.openSetting({
             success: (res) => {
-             this.initPageData()
+              this.initPageData()
             }
           })
         }

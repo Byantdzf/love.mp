@@ -4,12 +4,12 @@
     <view class="party">
       <view class="font_26 message flo_l" wx:if="{{item.is_deadline == 1}}" style="background: red">已截止报名</view>
       <view class="font_26 message flo_l" wx:else>正在报名</view>
-      <view class="user-message">
+      <view class="user-message text-center">
         <image src="{{item.user.wechat.avatar}}"  mode="aspectFit" class="user_image"></image>
         <view class="font_26 text-center">{{item.user.name}}</view>
       </view>
       <view class="clearfloat"></view>
-      <view style="width: 100%" class="font_32 bold">{{item.title}}</view>
+      <view style="width: 80%" class="font_32 bold">{{item.title}}</view>
       <view style="width: 100%" class="font_28 flo_l">
         <view class="flo_l">时间：{{item.start_time}}</view>
         <view class="orange flo_l" style="margin-left: 22rpx;">{{item.duration}}小时</view>

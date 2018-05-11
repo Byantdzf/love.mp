@@ -94,11 +94,11 @@ export default class extends wepy.app {
     t.send(new HitBuilders.ExceptionBuilder()
       .setDescription(wx.getStorageSync('message'))
       .setFatal(false).build())
-    t.set("&uid", '12345')
+    t.set('&uid', '12345')
     t.send(new HitBuilders.EventBuilder()
-      .setCategory("UX")
-      .setAction("User Sign In")
-      .build());
+      .setCategory('UX')
+      .setAction('User Sign In')
+      .build())
   }
   /* ========================= 更新缓存信息 ======================== */
 

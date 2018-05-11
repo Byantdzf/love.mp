@@ -317,7 +317,7 @@
   }
   .user-message{
     position: absolute;
-    right: 42rpx;
+    right: 32rpx;
     top: -22rpx;
   }
   .party_image{
