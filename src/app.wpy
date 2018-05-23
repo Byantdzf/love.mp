@@ -46,7 +46,17 @@ export default class extends wepy.app {
     this.use('requestfix')
   }
 
-  onLaunch() {
+  onLaunch(options) {
+    console.log(options)
+    if (options.scene == 1037 || options.scene == 1038){
+      let tit = options.referrerInfo.extraData.name
+      console.log(JSON.stringify(tit))
+      wx.showToast({
+        title: JSON.stringify(tit),
+        icon: 'none',
+        duration: 1500
+      })
+    }
   }
 
   onShow(options) {
