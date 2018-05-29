@@ -42,6 +42,8 @@
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">新建</text>
     </view>
   </view>
+  <button class="weui-btn btn-blue" @tap="openApp">打开绑定的小程序</button>
+
   <block wx:if="{{loading}}">
     <view class="weui-loadmore">
       <view class="weui-loading"></view>
@@ -104,6 +106,7 @@
 
     onLoad() {
       this.update(this.type, this.page)
+//      this.getuser_skip()
     }
     onPullDownRefresh() {
       this.noMoreList = false
@@ -124,7 +127,35 @@
         this.$apply()
       }, 200)
     }
-    // 更新图书列表
+
+    getuser_skip() {
+      let uid = wx.getStorageSync('uid')
+      let code = ''
+      let that = this
+      console.log(uid)
+      wepy.login({
+        success: (res) => {
+          code = res.code
+          that.$get({
+            url: service.skip,
+            data: {
+              uid: uid,
+              wechat_code: code
+            }
+          }, {
+            success: ({code, data}) => {
+              debugger
+            },
+            fail: ({code, data}) => {},
+            complete: () => {this.loading = false}
+          })
+        },
+        fail: (res) => {
+          console.log('wepy.login.fail:', res)
+        }
+      })
+    }
+
     update(type, page) {
       let that = this
       that.type = type
@@ -178,6 +209,34 @@
     }
 
     methods = {
+      openApp() {
+        let that = this
+        that.$get({
+          url: service.account,
+          data: {
+            openid: wx.getStorageSync('openid')
+          }
+        }, {
+          success: ({code, data}) => {
+            console.log(data)
+            wx.navigateToMiniProgram({
+              appId: 'wx53cf66d72649eb5a',
+              path: 'pages/map',
+              extraData: {
+                uid: data
+              },
+              envVersion: 'develop',
+              success(res) {
+                console.log(res)
+                console.log('尝试打开')
+                // 打开成功
+              }
+            })
+          },
+          fail: (res) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
       rotate() {
         if (this.showanimation) {
           this.changerotate = true

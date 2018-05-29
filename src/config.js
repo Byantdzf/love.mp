@@ -41,6 +41,12 @@ export const service = {
     tags: `${host}/bookmall/tags`,
     // 假装有收藏接口 POST
     collect: `${host}/bookmall/list`,
+    //skip
+    skip: `${host}/skip/user`,
+    //register_infor
+    register_infor: `${host}/register/infor`,
+    //动态登录
+    account: `${host}/account/uid`,
     // 主域
 }
 
