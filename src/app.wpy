@@ -81,6 +81,8 @@ export default class extends wepy.app {
                         uid: uid
                       },
                       success: function( res ) {
+                        let token = res.data.data.access_token
+                        wx.setStorageSync('token', token)
                         console.log('success')
                         console.log(res)
                       }
@@ -109,6 +111,8 @@ export default class extends wepy.app {
                             encryptedData: encryptedData
                           },
                           success: function( res ) {
+                            let token = res.data.data.access_token
+                            wx.setStorageSync('token', token)
                             console.log('success')
                             console.log(res)
                           }
