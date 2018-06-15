@@ -11,23 +11,67 @@ fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e
 export default class extends wepy.app {
   config = {
     pages: [
-//      'pages/service',
-      'pages/partyList',
-      'pages/user/register',
-      'pages/party/edit_party',
-      'pages/party/edit_station',
+      'pages/home/index',
+      'pages/home/search',
+      'pages/home/sharePay',
+      'pages/home/sharing',
+      'pages/home/information',
+      'pages/home/addFriend',
+      'pages/home/swopWeChat',
+      'pages/home/giveGift',
+      'pages/books/index',
+      'pages/books/bookDetail',
+      'pages/party/index',
       'pages/party/start_party',
-      'pages/party/statistics_party',
-      'pages/party/templates_party',
-      'pages/party/apply_party'
+      'pages/users/register',
+      'pages/users/index',
+      'pages/users/integral',
+      'pages/users/myGift',
+      'pages/users/vipSetting',
+      'pages/users/vipData',
+      'pages/users/integralRecord',
+      'pages/users/myPay',
+      'pages/users/myNews',
+      'pages/users/friendlist',
+      'pages/users/list',
+      'pages/users/examineWeChat',
+      'pages/users/auditFriend',
+      'pages/users/integralAddress'
     ],
     window: {
-      navigationBarTitleText: '小程序',
+      navigationBarTitleText: '福恋',
       navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#fafffb',
+      navigationBarBackgroundColor: '#FFFFFF',
       backgroundColor: '#eaeaea',
       backgroundTextStyle: 'light',
       enablePullDownRefresh: true
+    },
+    tabBar: {
+      color: '#707070',
+      selectedColor: '#fb5c56',
+      backgroundColor: '#fff',
+      borderStyle: 'black',
+      list: [{
+        pagePath: 'pages/home/index',
+        selectedIconPath: './images/icon/map_active.png',
+        iconPath: './images/icon/map.png',
+        text: '首页'
+      }, {
+        pagePath: 'pages/books/index',
+        selectedIconPath: './images/icon/friends_active.png',
+        iconPath: './images/icon/friends.png',
+        text: '阅读'
+      }, {
+        pagePath: 'pages/party/index',
+        selectedIconPath: './images/icon/initiate_active.png',
+        iconPath: './images/icon/initiate.png',
+        text: '活动'
+      }, {
+        pagePath: 'pages/users/index',
+        selectedIconPath: './images/icon/my_active.png',
+        iconPath: './images/icon/my.png',
+        text: '我的'
+      }]
     },
     networkTimeout: {
       request: 5000,
@@ -171,9 +215,9 @@ export default class extends wepy.app {
     if (!this.globalData.tracker) {
       // 初始化GoogleAnalytics Tracker
       this.globalData.tracker = GoogleAnalytics.getInstance(this)
-      .setAppName('友福聚会')
+      .setAppName('福恋')
       .setAppVersion('v0.1')
-      .newTracker('UA-109097480-6')
+      .newTracker('UA-98664364-7')
     }
     var t = this.globalData.tracker
     t.setScreenName(text)

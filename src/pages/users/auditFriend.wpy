@@ -1,0 +1,364 @@
+<template>
+  <view class="navbar borrow">
+    <view class="page__bd">
+      <view class="weui-tab">
+          <view class="weui-tab__content" >
+            <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
+              <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{item.id}}')">
+                <view class="flo_l weui-cell__hd" >
+                  <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+                </view>
+                <view class="flo_l" style="width: 78%;">
+                  <view  class="font_28 flo_l orange ellipsis_1 bold" style="margin-left: 12rpx;">
+                    {{item.name}}
+                  </view>
+                  <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
+                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                  </view>
+                </view>
+                <view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{item.message}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                <!--<view class="flo_l" style="width: 78%;position: relative">-->
+                  <!--<view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">-->
+                    <!--<image src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.eBuZm4ON1h3P1571d3256087f83cf7d3fc3ceec0be5c.png" mode="aspectFit"style="width: 350rpx;height: 300rpx;" class="flo_l"></image>-->
+                  <!--</view>-->
+                  <!--<view style="width: 350rpx;height: 300rpx;">-->
+                    <!--<view class="orange bold" style="position: absolute ;left: 40rpx;top: 64rpx;"> hi</view>-->
+                    <!--<view class="black_6 font_24 flo_l" style="position: absolute ;left: 64rpx;top: 100rpx;width: 250rpx;">-->
+                      <!--<view style="padding-left: 52rpx;width: 80%" class="ellipsis_1">-->
+                        <!--我叫-->
+                        <!--<span class="orange bold font_28">angela</span>-->
+                      <!--</view>-->
+                      <!--<text>我想加你为我的好友！</text>-->
+                    <!--</view>-->
+                  <!--</view>-->
+                <!--</view>-->
+              </view>
+            </view>
+            <view class="clearfloat"></view>
+            <view class="font_32 bookTitle text-left bold black_6">请求加你为好友</view>
+            <view class="issue">
+              <view class="font_28">
+                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的月薪:</view>
+                <view class="">
+                  <input class="wx-input" placeholder="请输入"  value="6K"/>
+                </view>
+              </view>
+              <view class="font_28">
+                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的爱好:</view>
+                <view class="">
+                  <input class="wx-input" placeholder="请输入" value="打篮球" />
+                </view>
+              </view>
+              <view class="font_28">
+                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的年龄:</view>
+                <view class="">
+                  <input class="wx-input" placeholder="请输入" value="24岁"/>
+                </view>
+              </view>
+            </view>
+            <view style="padding: 2% 16%">
+              <view class="btn_white font_28 flo_l" style="margin: auto" @tap="reject">拒绝</view>
+              <view class="btn_red font_28 flo_r" style="margin: auto;margin-top: -8rpx;" @tap="consent">同意</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!--<block wx:if="{{loading}}">-->
+      <!--<view class="weui-loadmore">-->
+        <!--<view class="weui-loading"></view>-->
+        <!--<view class="weui-loadmore__tips">正在加载</view>-->
+      <!--</view>-->
+    <!--</block>-->
+    <!--<block wx:if="{{noMore}}">-->
+      <!--<view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">-->
+        <!--<view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>-->
+      <!--</view>-->
+    <!--</block>-->
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class auditFriend extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: "好友审核"
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      // 我的图书馆
+      mylibs: [],
+      list: [
+        {
+          'name' : 'Angelababy',
+          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'message' : '26岁/162cm/深圳',
+          'six': 0
+        }
+      ],
+      noMore: false,
+      loading: false
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    async onLoad(e) {
+      let _this = this
+    }
+    onShow() {
+      this.getLibraries()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.getLibraries()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+//        this.$apply()
+      }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wepy.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wepy.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
+    // 初始化页面数据
+    initPageData() {
+      var self = this
+      self.loading = false
+      // this.$get({url: service.my_libraries}, {
+      //   success: ({code, data}) => {
+      //     this.mylibs = data
+      //     self.config.navigationBarTitleText = data.name
+      //   },
+      //   fail: ({code, data}) => {},
+      //   complete: () => { this.loaded = false }
+      // })
+    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
+//       this.$get({
+//         url: url,
+//         data: {
+//           page: this.page
+//         }
+//       }, {
+//         success: ({code, data}) => {
+//           _this.noMore = false
+//           _this.loading = true
+//           if (data.data.length == 0 && data.data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (data.current_page > data.last_page) {
+//             _this.noMore = true
+//             _this.loading = true
+//             return
+//           }
+//           data = data.data
+//           if (this.isArray(data) && data.length === 0) {
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (_this.libs.length === 0 || _this.page === 1) {
+//             _this.libs = data
+//           } else {
+//             data.map(function (item, index) {
+//               _this.libs.push(item)
+//             })
+//           }
+//           _this.noMore = true
+//           _this.page += 1
+//
+// //          _this.libs = data.data
+//         },
+//         fail: ({code, data}) => {},
+//         complete: () => { this.loaded = false }
+//       })
+    }
+
+    methods = {
+      reject(){
+        wx.showToast({
+          title: '已拒绝',
+          icon: 'none',
+          duration: 1000
+        })
+      },
+      consent(){
+        wx.showToast({
+          title: '已添加为好友',
+          icon: 'success',
+          duration: 1000
+        })
+        setTimeout(() => {
+          wx.navigateTo({url: '/pages/users/myNews'})
+        }, 1000)
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+  @import "../../styles/custom/fn.less";
+  page{
+    background: white;
+  }
+  .borrow{
+    .page__bd{
+      height: 100%;
+    }
+    .page__bd{
+      padding-bottom: 0;
+    }
+    .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+    }
+    text-align: center;
+    background: #fff;
+    .library-title{
+      .h2();
+      text-align: left;
+      color: #666;
+      padding: 20rpx 40rpx 10rpx;
+    }
+    .library-wrapper{
+      padding: 20rpx 0;
+    }
+    .library-item{
+      position: relative;
+      &:before {
+        .setLeftLine(@weuiCellBorderColor);
+      }
+      &:first-child {
+        &:before {
+          display: none;
+        }
+      }
+    }
+    .item-title{
+      .h3();
+      line-height: 1;
+    }
+    .mini-btn{
+      //  margin: 1em auto;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+  .list{
+    padding: 22rpx;
+    /*background: red;*/
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+
+  .imagebox{
+    width: 33%;
+  }
+  .borrowlist{
+    width: 86%;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    margin-top: 18rpx;
+    border-radius: 6rpx;
+    margin-left: 4%;
+    padding: 22rpx;
+    /*position: relative*/
+  }
+  .weui-cell__ft {
+    margin-top: 10%;
+  }
+  .wx-input{
+    width: 360rpx;
+    height: 35rpx;
+    /*background: red;*/
+    padding: 12rpx 22rpx;
+    margin-bottom: 12rpx;
+    border-radius: 12rpx;
+    border: 1rpx solid #d3d3d3;
+  }
+  .weui-cells{
+    position: inherit;
+  }
+  .issue{
+    margin: 32rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    padding: 22rpx 26rpx;
+    /*position: relative;*/
+    background: white;
+  }
+  .bookTitle{
+    border-bottom: 1rpx solid #dedede;
+    margin: 22rpx;
+    margin-bottom: 4rpx;
+    background: white;
+    padding: 14rpx 32rpx;
+  }
+</style>

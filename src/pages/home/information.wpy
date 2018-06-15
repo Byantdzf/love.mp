@@ -1,0 +1,699 @@
+<template>
+  <view class="navbar borrow">
+    <view class="page__bd">
+      <view class="weui-tab">
+          <view class="weui-tab__content" >
+            <view>
+              <image src="{{background_image}}" mode="aspectFit"   style="width: 100%;height: 384rpx;" class=""></image>
+            </view>
+            <view class="page__bd "  wx:for="{{user}}" wx:key="*this" style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
+              <view class="flo_l weui-cell__hd" >
+                <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+              </view>
+              <view class="flo_l" style="margin-top: 26rpx">
+                <view  class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
+                  {{item.name}}
+                </view>
+                <view class="orange font_26 text-center flo_l menber"  style="width: 68rpx">
+                  <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                  <view style="font-size: 26rpx;line-height: 32rpx;"class="flo_r black_6 ">{{item.age}}</view>
+                </view>
+                <block wx:if="{{is_vip}}">
+                  <view class="orange font_26 text-center flo_r menber">
+                    <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                    <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
+                  </view>
+                </block>
+                <block wx:else>
+                  <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                    <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                    <view style="font-size: 20rpx;margin-top: 0rpx"class="flo_r">会员</view>
+                  </view>
+                </block>
+              </view>
+              <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
+                {{item.distance}}
+                <span>{{item.time}}</span>
+              </view>
+              <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
+                由Byant推荐加入福恋
+              </view>
+              <view  class="font_32 white flo_r atten_btn">
+                ...
+              </view>
+              <view  class="font_32 orange btn_red text-center flo_r atten {{parameter? 'atten_w' : ''}}"  @tap="attention">
+                {{text}}
+              </view>
+            </view>
+            <view class="clearfloat"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  <view class="font_32 wx_Title orange">基本资料</view>
+  <view class="booklist  font_28">
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>身高</span>
+      <span class="flo_r">164cm</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>体重</span>
+      <span class="flo_r">52kg</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>学历</span>
+      <span class="flo_r">硕士</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>出生地</span>
+      <span class="flo_r">深圳</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>毕业学校</span>
+      <span class="flo_r">清华大学</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>所在行业</span>
+      <span class="flo_r">影视明星</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>公司名称</span>
+      <span class="flo_r">华宇兄弟</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>户口类型</span>
+      <span class="flo_r">城市户口</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>户口所在地</span>
+      <span class="flo_r">深圳</span>
+    </view>
+  </view>
+  <view class="font_32 wx_Title orange">VIP资料</view>
+  <view class="booklist  font_28">
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>薪水级别</span>
+      <span class="flo_r">20k-50k</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>是否有车</span>
+      <span class="flo_r">是</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <span>是否有房</span>
+      <span class="flo_r">是</span>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title orange">
+      <span>生活照</span>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2826914640,3841572087&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2826914640,3841572087&fm=27&gp=0.jpg')" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+      <image src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3743468981,1822429682&fm=27&gp=0.jpg" @tap="previewImage('https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3743468981,1822429682&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title orange">
+      <span>身份证</span>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <image src="http://img1.imgtn.bdimg.com/it/u=680756696,610110959&fm=27&gp=0.jpg" @tap="previewImage('http://img1.imgtn.bdimg.com/it/u=680756696,610110959&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+      <image src="http://img3.imgtn.bdimg.com/it/u=1501101382,1888955963&fm=200&gp=0.jpg" @tap="previewImage('http://img3.imgtn.bdimg.com/it/u=1501101382,1888955963&fm=200&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title orange">
+      <span>毕业证</span>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <image src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3807281728,223336142&fm=27&gp=0.jpg" @tap="previewImage('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3807281728,223336142&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+      <image src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2378920878,130130965&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2378920878,130130965&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title orange">
+      <span>其他证件</span>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">无</view>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title orange">
+      <span>微信二维码</span>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">1张</view>
+    </view>
+    <view style="margin: 0 44rpx;" class="wx_Title">
+      <image src="https://f10.baidu.com/it/u=810667619,1510999328&fm=72" @tap="previewImage('https://f10.baidu.com/it/u=810667619,1510999328&fm=72')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+      <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=545741636,427872561&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=545741636,427872561&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
+    </view>
+  </view>
+    <view class='list_box' wx:for='{{list}}' wx:key='this' wx:for-item='parentItem' wx:for-index='parentIndex'>
+      <view class='list'>
+        <view class='list_name_box' @tap='listTap' data-parentindex='{{parentIndex}}'>
+          <text class='list_item_name orange'>{{parentItem.listName}}</text>
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+        </view>
+        <view class='list_item_box' wx:if='{{parentItem.show}}'>
+          <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
+                data-parentindex='{{parentIndex}}'>
+            <view class='list_item_name_box' @tap="showModal('{{item.itemName}}')">
+              <text class='list_item_name'>{{item.itemName}}</text>
+              <view class="weui-cell__ft weui-cell__ft_in-access">{{item.content}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  <view class="font_32 wx_Title orange">Ta的优势</view>
+  <view class="booklist  font_28">
+    <view style="margin: 0 44rpx;" class="wx_Title text-center orange">
+      <view class="weui-loading"></view>
+      <span>点击查看</span>
+    </view>
+  </view>
+    <view style="height: 35rpx;width: 100%"></view>
+    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
+      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend')">加好友</view>
+      <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat')">交换微信</view>
+      <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift')">送礼物</view>
+      <view class="clearfloat"></view>
+    </view>
+    <block wx:if="{{loading}}">
+      <view class="weui-loadmore">
+        <!--<view class="weui-loading"></view>-->
+        <view class="weui-loadmore__tips">正在加载</view>
+      </view>
+    </block>
+    <block wx:if="{{noMore}}">
+      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+      </view>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class information extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: "个人信息"
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      // 我的图书馆
+      mylibs: [],
+      background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.CaShiFjcO2Q7dd44e9547b343f1c8c4f6ae9424ab900.png',
+      user: [
+        {
+          'name' : 'Angela',
+          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'age' : '26',
+          'address': '深圳',
+          'stature': '164cm',
+          'distance': '200m',
+          'six': 0,
+          'time': '3分钟前活跃',
+          'vip': true,
+        }
+      ],
+      list: [
+        {listName: '爱情语言',
+          item: [{
+            itemName: '需要肯定的语言', content: '13', time: '2017-05-06'
+          }, {
+            itemName: '关注精心时刻', content: '22', time: '2015-08-06'
+          }, {
+            itemName: '喜好接受礼物', content: '9', time: '2015-11-06'
+          }, {
+            itemName: '需求服务行动', content: '32', time: '2015-08-06'
+          }, {
+            itemName: '喜欢身体接触', content: '44', time: '2015-08-06'
+          }]
+        }, {listName: '交往基因',
+          item: [{
+            itemName: '力量型', content: '12', time: '2015-05-15'
+          }, {
+            itemName: '活泼型', content: '5', time: '2015-05-24'
+          }, {
+            itemName: '完美型', content: '6', time: '2015-05-30'
+          }, {
+            itemName: '和平型', content: '21', time: '2015-05-30'
+          }]
+        }],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      page: 1,
+      noMore: false,
+      loading: false,
+      inputShowed: false,
+      inputVal: '',
+      text: '关注',
+      parameter: false
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    async onLoad(e) {
+      let _this = this
+    }
+    onShow() {
+      this.getLibraries()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.getLibraries()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+//        this.$apply()
+      }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wepy.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wepy.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
+    // 初始化页面数据
+    initPageData() {
+      var self = this
+      self.loading = false
+      // this.$get({url: service.my_libraries}, {
+      //   success: ({code, data}) => {
+      //     this.mylibs = data
+      //     self.config.navigationBarTitleText = data.name
+      //   },
+      //   fail: ({code, data}) => {},
+      //   complete: () => { this.loaded = false }
+      // })
+    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
+//       this.$get({
+//         url: url,
+//         data: {
+//           page: this.page
+//         }
+//       }, {
+//         success: ({code, data}) => {
+//           _this.noMore = false
+//           _this.loading = true
+//           if (data.data.length == 0 && data.data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (data.current_page > data.last_page) {
+//             _this.noMore = true
+//             _this.loading = true
+//             return
+//           }
+//           data = data.data
+//           if (this.isArray(data) && data.length === 0) {
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (_this.libs.length === 0 || _this.page === 1) {
+//             _this.libs = data
+//           } else {
+//             data.map(function (item, index) {
+//               _this.libs.push(item)
+//             })
+//           }
+//           _this.noMore = true
+//           _this.page += 1
+//
+// //          _this.libs = data.data
+//         },
+//         fail: ({code, data}) => {},
+//         complete: () => { this.loaded = false }
+//       })
+    }
+//让所有的展开项，都变为收起
+    packUp(data, index) {
+      for (let i = 0, len = data.length; i < len; i++) {//其他最外层列表变为关闭状态
+        if (index != i) {
+          data[i].show = false;
+          for (let j = 0; j < data[i].item.length; j++) {//其他所有内层也为关闭状态
+            data[i].item[j].show = false;
+          }
+        }
+      }
+    }
+    methods = {
+      //预览图片
+      previewImage(image){
+        let array = []
+        array.push(image)
+        wx.previewImage({
+          current: image, // 当前显示图片的http链接
+          urls: array // 需要预览的图片http链接列表
+        })
+      },
+      showModal(item) {
+        wx.showModal({
+          title: item,
+          content: '一个温和主义者，悠闲，平和，有耐心，感情内藏，待人和蔼，乐于倾听，遇事冷静，随遇而安。S型喜欢使用一句口头禅：“不过如此。”这个特点使得——S型总是缺乏热情，不愿改变。心情好的时候，S型的人比较善解人意，会是一个老好人的形象；一旦生气，就会不闻不问，可能会显得比较冷漠。\n' +
+          '\n' +
+          ' 代表人物：摩西。'
+        })
+      },
+      listTap(e) {
+        console.log('触发了最外层');
+        let Index = e.currentTarget.dataset.parentindex, //获取点击的下标值
+          list=this.data.list;
+        list[Index].show = !list[Index].show || false;//变换其打开、关闭的状态
+//        if (list[Index].show){//如果点击后是展开状态，则让其他已经展开的列表变为收起状态
+//          this.packUp(list,Index);
+//        }
+        this.setData({
+          list
+        });
+      },
+      //点击里面的子列表展开收起
+      listItemTap(e) {
+        let parentindex = e.currentTarget.dataset.parentindex,//点击的内层所在的最外层列表下标
+          Index = e.currentTarget.dataset.index,//点击的内层下标
+          list = this.data.list;
+        console.log(list[parentindex].item, Index);
+        list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false;//变换其打开、关闭的状态
+        if (list[parentindex].item[Index].show) {//如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
+          for (let i = 0, len = list[parentindex].item.length; i < len; i++) {
+            if (i != Index) {
+              list[parentindex].item[i].show = false;
+            }
+          }
+        }
+        this.setData({list});
+      },
+      attention() {
+        if(this.parameter) {
+          this.text = '关注'
+          this.$apply()
+          wx.showToast({
+            title: '取消成功',
+            icon: 'none',
+            duration: 1000
+          })
+//          wx.navigateTo({url: '/pages/users/list'})
+          return this.parameter = false
+        }else {
+          wx.showToast({
+            title: '成功关注',
+            icon: 'none',
+            duration: 1000
+          })
+          this.text = '取消关注'
+          this.$apply()
+          return this.parameter = true
+        }
+      },
+      showInput () {
+        this.inputShowed = true
+      },
+      hideInput () {
+        this.inputVal = ''
+        this.inputShowed = false
+      },
+      clearInput () {
+        this.inputVal = ''
+      },
+      inputTyping (e) {
+        this.inputVal = e.detail.value
+        console.log(this.inputVal)
+        this.page = 1
+        this.getLibraries(this.inputVal)
+      },
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/borrow'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+
+      scanBook() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
+        })
+      },
+      scanBorrow(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$get({
+                url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+  @import "../../styles/custom/fn.less";
+  page{
+    background: white;
+  }
+  .borrow{
+    .page__bd{
+      height: 100%;
+    }
+    .page__bd{
+      padding-bottom: 0;
+    }
+    .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+    }
+    text-align: center;
+    background: #fff;
+    .library-title{
+      .h2();
+      text-align: left;
+      color: #666;
+      padding: 20rpx 40rpx 10rpx;
+    }
+    .library-wrapper{
+      padding: 20rpx 0;
+    }
+    .library-item{
+      position: relative;
+      &:before {
+        .setLeftLine(@weuiCellBorderColor);
+      }
+      &:first-child {
+        &:before {
+          display: none;
+        }
+      }
+    }
+    .item-title{
+      .h3();
+      line-height: 1;
+    }
+    .mini-btn{
+      //  margin: 1em auto;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+  .inline-block {display: inline-block}
+
+  .imagebox{
+    width: 33%;
+  }
+  .borrowlist{
+    width: 86%;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    margin-top: 18rpx;
+    border-radius: 6rpx;
+    margin-left: 4%;
+    padding: 22rpx;
+    /*position: relative*/
+  }
+  .menber{
+    background: white;
+    border-radius: 6rpx;
+    padding:4rpx 6rpx ;
+    width: 94rpx;
+    margin-left: 16rpx;
+  }
+  .weui-cell__ft {
+    /*margin-top: 10%;*/
+  }
+  .atten{
+    background: white;
+    width: 80rpx;
+    padding:2rpx 12rpx;
+    border-radius: 6rpx;
+    border: 1rpx solid #d3d3d3;
+    height: 48rpx;line-height: 48rpx;
+    margin-top: -22rpx;
+  }
+  .atten_w{
+    width: 140rpx;
+  }
+  .atten_btn{
+     width: 68rpx;
+     /*background: red;*/
+     padding:2rpx 12rpx;
+     /*height: 52rpx;*/
+     font-size: 80rpx;
+     margin-top: -82rpx;
+    margin-right: -12rpx;
+   }
+  .list_name_box {
+    background: #fff;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    height: 90rpx;
+
+    align-items: center;
+    padding: 0 25rpx;
+    font-size: 32rpx;
+  }
+
+  .list_item_name {
+    flex: 1;
+  }
+
+  .icon_down {
+    width: 35rpx;
+    height: 35rpx;
+    transition: transform 0.3s;
+  }
+
+  /* .list_item_box{ height: 0; transition:height 0.3s; overflow: hidden; } .list_item_box_show{ height: 500rpx; } */
+  .list_item_name_box {
+    background: #fff;
+    font-size: 30rpx;
+    height: 80rpx;
+    display: flex;
+    align-items: center;
+    border-bottom: 1rpx solid #d3d3d3;
+    margin: 0 25rpx 0 50rpx;
+  }
+
+  .other {
+    display: flex;
+    height: 80 rpx;
+    padding: 0 25rpx 0 50rpx;
+    align-items: center;
+    font-size: 30rpx;
+    color: #666;
+  }
+
+  .icon_down_rotate {
+    transform: rotate(180deg);
+  }
+  .wx_Title{
+    border-bottom: 1rpx solid #dedede;
+    margin: 12rpx 22rpx;
+    margin-bottom: 4rpx;
+    background: white;
+    padding: 8rpx 32rpx;
+  }
+  .booklist{
+    margin: 4rpx 24rpx 12rpx 24rpx;
+    width: 93%;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+</style>

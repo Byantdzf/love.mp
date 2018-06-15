@@ -1,0 +1,213 @@
+<template>
+  <view class="gift text-center">
+    <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
+      <image src="{{item.image}}" style="width:100px; height: 100px;margin: 12rpx "></image>
+      <view class="font_28">{{item.name}} /<span class='orange bold'>{{item.code}}</span> </view>
+    </view>
+  </view>
+  <view class="gift text-center">
+    <view class="gift_address inline-block">
+    	<view class='font_28 gift_title'>填写信息</view>
+    	<view class='gift_input font_28'>
+    		<input @input="typing('name')" type='text' value="{{name}}" placeholder="收货人姓名"/>
+    	</view>
+    	<view class='gift_input font_28'>
+    		<input @input="typing('mobile')" type='number'  value="{{mobile}}" placeholder="收货手机号"/>
+    	</view>
+    	<view class='gift_input font_28'>
+    		<input @input="typing('address')" type='text' value="{{address}}" placeholder="收货地址"/>
+    	</view>
+    	<view class="btn_red font_26" style="width: 220rpx;height: 120rpx;line-height: 124rpx;margin: auto" @tap="conversion">确认兑换</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class integral extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '填写地址',
+      enablePullDownRefresh: true
+    }
+    data = {
+      libraries: {},
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      name: '',
+      address: '',
+      mobile: '',
+      list:[
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一朵玫瑰花',
+          code: '100积分',
+          id: '212'
+        }
+      ]
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad(e) {
+//  	console.log(e)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data.user
+          this.libraries = data.libraries
+          this.libraries.forEach((item) => {
+            if (item.type == 'SHARE') {
+              item.url = '/pages/library/shareLibrary?id=' + item.id
+            } else {
+              item.url = '/pages/library/library?id=' + item.id
+            }
+          })
+          wx.setStorageSync('openid', data.user.wechat.openid)
+          wx.setStorageSync('is_new', data.user.is_news)
+          if (data.user.is_news) {
+            wepy.showTabBarRedDot({
+              index: 4
+            })
+          } else {
+            wepy.hideTabBarRedDot({
+              index: 4
+            })
+          }
+        }
+      })
+    }
+
+    methods = {
+    	typing(type, e) {
+        if (this.isDefined(this[type])) {
+          this[type] = e.detail.value
+        }
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      conversion(){
+      	if (this.loading) return
+        if (!this.name) {
+          return this.$alert('温馨提示', '请输入姓名')
+        }
+        if (!this.mobile) {
+          return this.$alert('温馨提示', '请输入正确的手机号码')
+        }
+        if (!this.address) {
+          return this.$alert('温馨提示', '请输入地址')
+        }
+        let data = {
+        	name: this.name,
+        	mobile: this.mobile,
+        	address: this.address
+        }
+        console.log(data)
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+page{
+  background: white;
+}
+  .page-user{
+    background: white;
+    padding: 22rpx 50rpx;
+  }
+.weui-cells {
+  position: inherit;
+  /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
+  margin-top: 12rpx;
+}
+  .user_back{
+    background-image: url("http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.9TmBzGGHW7w9470132e3efb72f0a1c8c06768b4cbd80.png");
+    background-size: cover;
+    position: relative;
+  }
+.page-user{
+  .integral_title{
+    margin-bottom: 22rpx;
+  }
+  .integral_num{
+    font-size: 80rpx;
+    margin-bottom: -160rpx;
+    position: relative;
+    color: #0DB5A5;
+  }
+  .integral_log{
+    width: 200rpx;
+    height: 100rpx;
+    line-height: 108rpx;
+    margin-right: -42rpx;
+  }
+}
+  .gift_list{
+    width: 100%;
+    /*padding: 12rpx;*/
+    background: white;
+    /*box-shadow: 1rpx 1rpx 12rpx #d3d3d3;*/
+    border-radius: 12rpx;
+    /*margin: 22rpx 0 22rpx 24rpx;*/
+  }
+  .gift_address{
+  	width: 76%;
+    padding: 12rpx;
+    background: white;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    border-radius: 12rpx;
+    margin: 22rpx 0 22rpx 24rpx;
+  }
+  .gift_title{
+  	width: 96%;
+  	text-align: left;
+  	padding: 6rpx 12rpx;
+  	border-bottom: 1rpx solid #d3d3d3;
+  }
+  .gift_input{
+  	width: 86%;
+  	text-align: left;
+  	margin: 32rpx;
+  	padding: 12rpx;
+  	border-bottom: 1rpx solid #d3d3d3;
+  }
+  .gift{
+  	width: 100%;
+  	
+  }
+</style>

@@ -1,0 +1,122 @@
+<template>
+  <view class="page-user">
+    <view class="text-center">
+      <image src="{{image}}" mode="aspectFill" class="image"></image>
+    </view>
+    <view >
+        <view class="paylist"  wx:for="{{paylist}}">
+              <view class="flo_l" >
+                <span  class="font_32 flo_l bold" style="margin-right: 22rpx;">{{item.code}}</span>
+                <span class="font_28">{{item.iv}}</span>
+              </view>
+              <view class="flo_l orange bold" style="margin-left: 48rpx">{{item.name}}</view>
+              <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 62rpx;height: 62rpx" class="flo_l"></image>
+              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.message}}</view>
+              <view class="clearfix"></view>
+          <view class="clearfix"></view>
+        </view>
+      <view class="text-center pay">
+        <view class="btn_red font_32" style="margin-left: 200rpx" @tap="binding">绑定</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class sharing extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '欢迎加入',
+      enablePullDownRefresh: true
+    }
+    data = {
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1tLfwJxq23Oma0294409f50b26300af2046aefa10286.png',
+      paylist:[
+        {name: '市级VIP',money: '10元',code:'陈牧师', message:'特权：仅可添加本市的好友',iv: '邀请你加入福恋，并替你升级为'}
+      ]
+    }
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad() {
+
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      console.log("刷新成功")
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      radioChange: function(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+      },
+      binding() {
+        wx.showToast({
+          title: '绑定成功！',
+          duration: 1500
+        })
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+  page{
+    background: #f5f5f5;
+  }
+  .page-user{
+    padding: 32rpx;
+    .image{
+      width: 718rpx;
+      height: 760rpx;
+      /*margin: 80rpx auto;*/
+    }
+    .paylist{
+      width: 88%;
+      margin: 22rpx;
+      background: white;
+      padding: 22rpx;
+      border-radius: 12rpx;
+      box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    }
+    .pay{
+      margin: 22rpx;
+
+    }
+  }
+</style>

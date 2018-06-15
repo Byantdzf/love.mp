@@ -1,0 +1,195 @@
+<template>
+  <view class="page-user">
+    <view class="bold orange integral_title">我的福分:</view>
+    <view class="text-center">
+      <view class="integral_num bold">80</view>
+      <image src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png" style="width:140px; height: 140px;"></image>
+    </view>
+    <view class="orange integral_log flo_r font_26 btn_white" @tap="goto('/pages/users/integralRecord')">福分记录</view>
+    <view class="clearfloat"></view>
+  </view>
+  <view class="gift">
+    <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
+      <image src="{{item.image}}" style="width:80px; height: 80px;margin: 12rpx "></image>
+      <view class="font_24">{{item.name}} /<span class="orange">{{item.code}}</span> </view>
+      <view class="btn_red font_26" style="width: 150rpx;height: 80rpx;line-height: 84rpx;margin: auto" @tap="conversion({{item}})">兑换</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class integral extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '福分商城',
+      enablePullDownRefresh: true
+    }
+    data = {
+      libraries: {},
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      list:[
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一朵玫瑰花',
+          code: '100积分',
+          id: '212'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一束玫瑰花',
+          code: '999积分',
+          id: '258'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一盒巧克力',
+          code: '9999积分',
+          id: '520'
+        },{
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一朵问候',
+          code: '5积分',
+          id: '2'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一束关怀',
+          code: '5积分',
+          id: '5'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一盒飞吻',
+          code: '5积分',
+          id: '0'
+        }
+      ]
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad() {
+
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data.user
+          this.libraries = data.libraries
+          this.libraries.forEach((item) => {
+            if (item.type == 'SHARE') {
+              item.url = '/pages/library/shareLibrary?id=' + item.id
+            } else {
+              item.url = '/pages/library/library?id=' + item.id
+            }
+          })
+          wx.setStorageSync('openid', data.user.wechat.openid)
+          wx.setStorageSync('is_new', data.user.is_news)
+          if (data.user.is_news) {
+            wepy.showTabBarRedDot({
+              index: 4
+            })
+          } else {
+            wepy.hideTabBarRedDot({
+              index: 4
+            })
+          }
+        }
+      })
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      conversion(item){
+//      wx.showToast({
+//        title: item.name,
+//        icon: 'success',
+//        duration: 1000
+//      })
+        let url = '/pages/users/integralAddress?id=' + item.id
+        wx.navigateTo({url: url})
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+page{
+  background: #F7F7F7;
+}
+  .page-user{
+    background: white;
+    padding: 22rpx 50rpx;
+  }
+.weui-cells {
+  position: inherit;
+  /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
+  margin-top: 12rpx;
+}
+  .user_back{
+    background-image: url("http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.9TmBzGGHW7w9470132e3efb72f0a1c8c06768b4cbd80.png");
+    background-size: cover;
+    position: relative;
+  }
+.page-user{
+  .integral_title{
+    margin-bottom: 22rpx;
+  }
+  .integral_num{
+    font-size: 80rpx;
+    margin-bottom: -160rpx;
+    position: relative;
+    color: #0DB5A5;
+  }
+  .integral_log{
+    width: 200rpx;
+    height: 100rpx;
+    line-height: 108rpx;
+    margin-right: -42rpx;
+  }
+}
+  .gift_list{
+    width: 26%;
+    padding: 12rpx;
+    background: white;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    border-radius: 12rpx;
+    margin: 22rpx 0 22rpx 24rpx;
+  }
+</style>

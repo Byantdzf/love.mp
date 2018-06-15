@@ -1,0 +1,461 @@
+<template>
+  <view class="weui-panel weui-panel_access">
+    <view class="weui-navbar">
+      <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+        <view class="weui-navbar__title" >{{item}}</view>
+      </view>
+      <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+      <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>
+    </view>
+    <view style="width: 100%;height: 100rpx"></view>
+    <view class="weui-panel__bd">
+      <!--<view  wx:for="{{members}}" wx:key="*this" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">-->
+
+      <!--</view>-->
+    </view>
+  </view>
+  <view class="grit text-center">
+        <image class="grit-avatar" src="{{grit.image}}" background-size="cover"/>
+        <view class="font_28  bold orange" style="width: 56%;margin-bottom: 12rpx;">一共收到：</view>
+        <view class="font_28  bold text-center orange" style="width: 100%">{{grit.num}}朵{{grit.name}}</view>
+  </view>
+  <view class="font_32 bookTitle">礼物记录</view>
+  <view class="booklist">
+    <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.id}}')">
+      <view class="flo_l">
+        <image class="book-avatar" src="{{item.image}}" background-size="cover"/>
+      </view>
+      <view class="font_28" style="margin-top: 22rpx">
+        <view class="flo_l">{{item.name}}</view>
+        <view class="flo_l" style="margin-left: 12rpx;">给你赠送 <span class="font_32 orange bold">{{item.num}}</span> 朵玫瑰</view>
+        <view class="font_26 flo_r black_6">{{item.time}}</view>
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class myGift extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: "我的礼物"
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      mylibs: [],
+      tabs: ['玫瑰', '巧克力', '支持', '问候', '关怀'],
+      grit: {
+          'name' : '玫瑰花',
+          'image' : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.zaHz5Q5eFlMOffc0157532ac335690384bfc30f3113e.png',
+          'num': 2351565
+        },
+      list: [
+        {
+          'name' : 'Angelababy',
+          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'title' : '《长恨歌》|爱情中，比陪伴更重要的是这件事',
+          'num': 88,
+          'time' :'2018/12/21 13:45'
+        },
+        {
+          'name' : '赵丽颖',
+          'image' : 'http://img0.imgtn.bdimg.com/it/u=2096616296,4033957106&fm=27&gp=0.jpg',
+          'title' : '婚姻也分等级，你在哪一级',
+          'num': 998,
+          'time' :'2018/12/21 13:45'
+        },
+        {
+          'name' : '舒淇',
+          'image' : 'http://img3.imgtn.bdimg.com/it/u=604561010,2398733113&fm=27&gp=0.jpg',
+          'title' : '选男人眼光差怎么了？老娘又红又美又有钱',
+          'num': 98,
+          'time' :'2018/12/21 13:45'
+        },
+        {
+          'name' : '吴亦凡',
+          'image' : 'http://img4.imgtn.bdimg.com/it/u=1995730738,2698011742&fm=27&gp=0.jpg',
+          'title' : '微信中，有这10个表现的男人最爱你',
+          'num': 188,
+          'time' :'2018/12/21 13:45'
+        },
+      ],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      page: 1,
+      noMore: false,
+      loading: false,
+      inputShowed: false,
+      inputVal: ''
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    async onLoad(e) {
+      let _this = this
+      _this.tabIndex()
+//      this.list.forEach((item,index,arr)=>{
+//        arr[index].URL = encodeURIComponent(arr[index].mod_textUrl)
+//      })
+    }
+    onShow() {
+      this.getLibraries()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    tabIndex() {
+      let _this = this
+      wx.getSystemInfo({success: function (rst) {
+        _this.screenWidth = rst.screenWidth
+      }})
+      this.sliderWidth = _this.screenWidth / this.tabs.length
+      this.sliderLeft = 0
+      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
+    }
+    onPullDownRefresh() {
+      this.getLibraries()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+//        this.$apply()
+      }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wepy.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wepy.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
+    // 初始化页面数据
+    initPageData() {
+      var self = this
+      self.loading = false
+      // this.$get({url: service.my_libraries}, {
+      //   success: ({code, data}) => {
+      //     this.mylibs = data
+      //     self.config.navigationBarTitleText = data.name
+      //   },
+      //   fail: ({code, data}) => {},
+      //   complete: () => { this.loaded = false }
+      // })
+    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
+//       this.$get({
+//         url: url,
+//         data: {
+//           page: this.page
+//         }
+//       }, {
+//         success: ({code, data}) => {
+//           _this.noMore = false
+//           _this.loading = true
+//           if (data.data.length == 0 && data.data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (data.current_page > data.last_page) {
+//             _this.noMore = true
+//             _this.loading = true
+//             return
+//           }
+//           data = data.data
+//           if (this.isArray(data) && data.length === 0) {
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (_this.libs.length === 0 || _this.page === 1) {
+//             _this.libs = data
+//           } else {
+//             data.map(function (item, index) {
+//               _this.libs.push(item)
+//             })
+//           }
+//           _this.noMore = true
+//           _this.page += 1
+//
+// //          _this.libs = data.data
+//         },
+//         fail: ({code, data}) => {},
+//         complete: () => { this.loaded = false }
+//       })
+    }
+
+    methods = {
+      showInput () {
+        this.inputShowed = true
+      },
+      hideInput () {
+        this.inputVal = ''
+        this.inputShowed = false
+      },
+      clearInput () {
+        this.inputVal = ''
+      },
+      inputTyping (e) {
+        this.inputVal = e.detail.value
+        console.log(this.inputVal)
+        this.page = 1
+        this.getLibraries(this.inputVal)
+      },
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+        console.log(this.activeIndex)
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+      },
+
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      gotoapp(item) {
+        wx.navigateTo({url: '/pages/books/bookDetail?url=' + item})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/borrow'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+
+      scanBook() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
+        })
+      },
+      scanBorrow(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$get({
+                url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+  @import "../../styles/custom/fn.less";
+  page{
+    background: #F7F7F7;
+  }
+  .borrow{
+    .page__bd{
+      height: 100%;
+    }
+    .page__bd{
+      padding-bottom: 0;
+    }
+    .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+    }
+    text-align: center;
+    background: #fff;
+    .library-title{
+      .h2();
+      text-align: left;
+      color: #666;
+      padding: 20rpx 40rpx 10rpx;
+    }
+    .library-wrapper{
+      padding: 20rpx 0;
+    }
+    .library-item{
+      position: relative;
+      &:before {
+        .setLeftLine(@weuiCellBorderColor);
+      }
+      &:first-child {
+        &:before {
+          display: none;
+        }
+      }
+    }
+    .item-title{
+      .h3();
+      line-height: 1;
+    }
+    .mini-btn{
+      //  margin: 1em auto;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    .list{
+      padding: 22rpx;
+      /*background: red;*/
+      box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    }
+    .imagebox{
+      width: 33%;
+    }
+    .borrowlist{
+      width: 86%;
+      /*box-shadow: 1rpx 1rpx 18rpx #d3d3d3;*/
+      /*margin-top: 18rpx;*/
+      border-bottom: 1rpx solid #d3d3d3;
+      border-radius: 6rpx;
+      margin-left: 4%;
+      padding: 22rpx;
+      /*position: relative*/
+    }
+    .weui-cell__ft {
+      margin-top: 10%;
+    }
+  }
+  .weui-navbar__slider {
+    background-color: #FB6957;
+  }
+  .weui-navbar__item.weui-bar__item_on {
+    color:#FB6957;
+  }
+  .weui-panel {
+    margin-top: 0px;
+  }
+  .grit{
+    margin: 72rpx 100rpx;
+    background: white;
+    padding: 32rpx 32rpx 78rpx 12rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    border-radius: 6rpx;
+  }
+  .bookTitle{
+    border-bottom: 1rpx solid #dedede;
+    margin: 22rpx;
+    margin-bottom: 4rpx;
+    background: white;
+    padding: 14rpx 32rpx;
+  }
+  .grit-avatar{
+    width: 260rpx;
+    height: 260rpx;
+  }
+  .book-avatar{
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 50%;
+    border: 2rpx solid #d3d3d3;
+    margin-right: 12rpx;
+  }
+  .booklist{
+    margin: 0 22rpx;
+    background: white;
+    padding: 6rpx 32rpx;
+  }
+  .book{
+    padding: 12rpx;
+    background: white;
+    border-bottom: 1rpx solid #dedede;
+  }
+
+</style>

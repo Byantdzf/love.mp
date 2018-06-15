@@ -1026,7 +1026,7 @@ eslint@^3.18.0:
     strip-json-comments "~2.0.1"
     table "^3.7.8"
     text-table "~0.2.0"
-    user-home "^2.0.0"
+    users-home "^2.0.0"
 
 espree@^3.4.0:
   version "3.5.0"
@@ -1909,7 +1909,7 @@ typedarray@^0.0.6:
 
 user-home@^2.0.0:
   version "2.0.0"
-  resolved "http://registry.npm.taobao.org/user-home/download/user-home-2.0.0.tgz#9c70bfd8169bc1dcbf48604e0f04b8b49cde9e9f"
+  resolved "http://registry.npm.taobao.org/users-home/download/users-home-2.0.0.tgz#9c70bfd8169bc1dcbf48604e0f04b8b49cde9e9f"
   dependencies:
     os-homedir "^1.0.0"
 

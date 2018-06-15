@@ -129,13 +129,13 @@ export default class httpMixin extends wepy.mixin {
 
                   var route = '/' + getCurrentPages()[0].__route__;
 
-                  if (route == '/pages/user/register'){
+                  if (route == '/pages/users/register'){
                     return
                   }
 
                   if (!data.token ) {
-                    // wx.reLaunch({url: '/pages/user/register'})
-                    wx.navigateTo({url: '/pages/user/register'})
+                    // wx.reLaunch({url: '/pages/users/register'})
+                    wx.navigateTo({url: '/pages/users/register'})
                   } else {
                     wx.reLaunch({url: route})
                   }

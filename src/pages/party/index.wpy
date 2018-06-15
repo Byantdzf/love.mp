@@ -1,0 +1,561 @@
+<template>
+  <view class="navbar borrow">
+    <view class="page__bd">
+      <view class="weui-tab">
+        <view class="weui-tab__content" >
+          <view class="weui-search-bar" >
+            <view class="weui-search-bar__form">
+              <view class="weui-search-bar__box">
+                <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+                <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" @confirm="inputTyping" />
+                <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                  <icon type="clear" size="14"></icon>
+                </view>
+              </view>
+              <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+                <icon class="weui-icon-search" type="search" size="14"></icon>
+                <view class="weui-search-bar__text">搜索</view>
+              </label>
+            </view>
+            <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+          </view>
+          <view class="weui-cells__title"></view>
+          <partyList :list.sync="list" :hideMessage.sync="hideMessage" ></partyList>
+        </view>
+      </view>
+    </view>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import partyList from '../../components/partyList'
+
+  export default class search extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: "活动列表"
+    }
+    components = {
+      partyList
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      // 我的图书馆
+      mylibs: [],
+      list: [],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      page: 1,
+      noMore: false,
+      loading: false,
+      inputShowed: false,
+      inputVal: ''
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    async onLoad(e) {
+      this.update('ALL', 1)
+      let _this = this
+    }
+    onShow() {
+      this.getLibraries()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.getLibraries()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+//        this.$apply()
+      }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wepy.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wepy.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
+    update(type, page) {
+      let that = this
+      that.type = type
+      if (that.loading || that.noMoreList) return
+      that.loading = true
+      // 请求列表
+//      let url = ''
+      this.$get({
+        url: service.parties,
+        data: {
+          type: type,
+          page: page,
+          formId: this.formId
+        }
+      }, {
+        success: ({code, data}) => {
+          if (that.page == 1) {
+            that.list = data.data
+            that.$apply()
+//            debugger
+            if (that.list.length == 0) {
+              that.message = true
+              that.hideMessage = true
+              that.$apply()
+            }
+          } else {
+            data.data.map(function (item, index) {
+              that.list.push(item)
+              that.$apply()
+            })
+          }
+          if (type == 'JOINED') {
+            that.nav_active_joined = true
+          } else if (type == 'FINISHED') {
+            that.nav_active_finished = true
+          } else if (type == 'BROWSED') {
+            that.nav_active_browsed = true
+          } else {
+            that.nav_active = true
+          }
+          that.page += 1
+          that.$apply()
+        },
+        fail: ({code, data}) => {
+          // 失败了什么也不做
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
+    }
+    // 初始化页面数据
+    initPageData() {
+      var self = this
+      self.loading = false
+      // this.$get({url: service.my_libraries}, {
+      //   success: ({code, data}) => {
+      //     this.mylibs = data
+      //     self.config.navigationBarTitleText = data.name
+      //   },
+      //   fail: ({code, data}) => {},
+      //   complete: () => { this.loaded = false }
+      // })
+    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
+//       this.$get({
+//         url: url,
+//         data: {
+//           page: this.page
+//         }
+//       }, {
+//         success: ({code, data}) => {
+//           _this.noMore = false
+//           _this.loading = true
+//           if (data.data.length == 0 && data.data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (data.current_page > data.last_page) {
+//             _this.noMore = true
+//             _this.loading = true
+//             return
+//           }
+//           data = data.data
+//           if (this.isArray(data) && data.length === 0) {
+//             _this.noMore = true
+//             _this.libs = []
+//             return
+//           }
+//           if (_this.libs.length === 0 || _this.page === 1) {
+//             _this.libs = data
+//           } else {
+//             data.map(function (item, index) {
+//               _this.libs.push(item)
+//             })
+//           }
+//           _this.noMore = true
+//           _this.page += 1
+//
+// //          _this.libs = data.data
+//         },
+//         fail: ({code, data}) => {},
+//         complete: () => { this.loaded = false }
+//       })
+    }
+
+    methods = {
+      showInput () {
+        this.inputShowed = true
+      },
+      hideInput () {
+        this.inputVal = ''
+        this.inputShowed = false
+      },
+      clearInput () {
+        this.inputVal = ''
+      },
+      inputTyping (e) {
+        this.inputVal = e.detail.value
+        console.log(this.inputVal)
+        this.page = 1
+        this.getLibraries(this.inputVal)
+      },
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+//        if (this.activeIndex == '1') {
+        this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/borrow'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+
+      scanBook() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
+        })
+      },
+      scanBorrow(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$get({
+                url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+  @import "../../styles/custom/fn.less";
+  page{
+    background: white;
+  }
+  .weui-input{
+    padding-left: 12rpx;
+    border-bottom: 1rpx solid #e8e8e8;
+  }
+  .border_b{
+    border-bottom: 1rpx solid #e8e8e8;
+  }
+  .page-index{
+    margin: 12rpx 32rpx;
+    /*min-height: 700rpx;*/
+    margin-bottom: 48rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .party{
+    position: relative;
+    padding: 32rpx 10rpx;
+    margin:0 32rpx;
+    background:white;
+    border-top-right-radius: 12rpx;
+    border-top-left-radius: 12rpx;
+    /*border-bottom: 1rpx solid #d5d5d5;*/
+  }
+  textarea{
+    width:100%;
+    height: 250rpx;
+  }
+  .weui-btn{
+    width: 50%;
+    border-radius: 0;
+  }
+  .icon_animation{
+    animation: 800ms shrinkfresh 1;
+    animation-fill-mode:forwards;
+  }
+  @keyframes shrinkfresh {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .message{
+    color: white;
+    padding: 6rpx 22rpx;
+    background: orange;
+    margin-left: -72rpx;
+    border-radius: 6rpx;
+  }
+  .user_image{
+    width: 100rpx;
+    height: 100rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+  }
+  .user-message{
+    position: absolute;
+    right: 32rpx;
+    top: -22rpx;
+  }
+  .party_image{
+    width: 80rpx;
+    height: 80rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    border-radius: 50%;
+    margin-top: 12rpx;
+    margin-bottom: 12rpx;
+    margin-right: 22rpx;
+  }
+  .party_setting{
+    width: 60rpx;
+    height: 60rpx;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    /*border-radius: 50%;*/
+  }
+  .setting{
+    width: 20%;
+  }
+  .member{
+    margin: 0 32rpx;
+    padding: 6rpx 32rpx;
+    background: white;
+    border-top: 1rpx solid #d3d3d3;
+    /*border-bottom: 1rpx solid #d3d3d3;*/
+  }
+  .setting_box{
+    border-radius: 50%;
+    width: 60rpx;
+    height: 60rpx;
+    padding: 12rpx;
+    background: red;
+    margin-left: 22rpx;
+    margin-top: 6rpx;
+  }
+  .setting_box:active{
+    transform: scale(1.1);
+  }
+  .nav{
+    width: 100%;
+    height: 60rpx;
+    background: white;
+    padding: 32rpx 22rpx 12rpx 22rpx;
+    border-bottom: 12rpx solid #d9d9d9;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+  }
+  .nav_btn{
+    padding: 1rpx 32rpx;
+    height:90%;
+    /*background: #F9E704;*/
+    float: left;
+    text-align: center;
+    margin-left: 22rpx;
+    /*color: #666666;*/
+    border-radius: 32rpx;
+    line-height: 54rpx;
+    /*box-shadow: 1rpx 1rpx 12rpx #e3e3e3;*/
+  }
+
+  .nav_active {
+    background: #F9E704;
+    animation: 1s opacity2 ;
+  }
+  @keyframes opacity2{
+    0%{opacity:0}
+    100%{opacity:1;}
+  }
+  .members{
+    /*background: red;*/
+    position: relative;
+    padding:12rpx 32rpx;
+    margin: 12rpx 22rpx;
+    border-radius: 6rpx;
+    box-shadow: 1rpx 1rpx 12rpx #dedede;
+  }
+  .member_image{
+    width: 120rpx;
+    height: 120rpx;
+    margin-top: 12rpx;
+    margin-right: 32rpx;
+  }
+  .member_icon{
+    width: 60rpx;
+    height: 60rpx;
+    position: absolute;
+    right: 12rpx;
+    top: 12rpx;
+  }
+  .borrow{
+    .page__bd{
+      height: 100%;
+    }
+    .page__bd{
+      padding-bottom: 0;
+    }
+    .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+    }
+    text-align: center;
+    background: #fff;
+    .library-title{
+      .h2();
+      text-align: left;
+      color: #666;
+      padding: 20rpx 40rpx 10rpx;
+    }
+    .library-wrapper{
+      padding: 20rpx 0;
+    }
+    .library-item{
+      position: relative;
+      &:before {
+        .setLeftLine(@weuiCellBorderColor);
+      }
+      &:first-child {
+        &:before {
+          display: none;
+        }
+      }
+    }
+    .item-title{
+      .h3();
+      line-height: 1;
+    }
+    .mini-btn{
+      //  margin: 1em auto;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+  .list{
+    padding: 22rpx;
+    /*background: red;*/
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .imagebox{
+    width: 33%;
+  }
+  .borrowlist{
+    width: 86%;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    margin-top: 18rpx;
+    border-radius: 6rpx;
+    margin-left: 4%;
+    padding: 22rpx;
+    /*position: relative*/
+  }
+  .weui-cell__ft {
+    margin-top: 10%;
+  }
+</style>

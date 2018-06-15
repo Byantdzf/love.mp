@@ -38,7 +38,7 @@
     <view class="member">
       <view wx:for="{{list.members}}"  wx:key="*this" class="flo_l" wx:for-item="itemName" style="position:relative;">
         <image src="{{itemName.avatar}}" wx:if="{{index < 4 ? itemName : '' }}" mode="aspectFit" class="party_image flo_l" style="width: 82rpx;height: 82rpx;margin-bottom: 12rpx;"></image>
-        <image src="../../images/tabbars/query.png" mode="aspectFit"  wx:if="{{itemName.is_possible == '1' && index < 4}}" style="width: 42rpx;height: 42rpx;position: absolute;right: 6rpx; top: -2rpx;"></image>
+        <!--<image src="../../images/tabbars/query.png" mode="aspectFit"  wx:if="{{itemName.is_possible == '1' && index < 4}}" style="width: 42rpx;height: 42rpx;position: absolute;right: 6rpx; top: -2rpx;"></image>-->
       </view>
 
       <button open-type="share" class="btn flo_l text-center" style="width: 120rpx;height: 120rpx;">
@@ -48,78 +48,18 @@
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r" style="margin-top: 32rpx;" @tap="gotosign('/pages/party/statistics_party?party_id={{party_id}}&title={{list.title}}')">{{members.length}}人</view>
       <view class="clearfloat"></view>
     </view>
-    <bolck wx:if="{{showmember}}">
-      <view class="member" wx:if="{{list.is_admin}}">
-        <view  class="flo_l setting text-center" @tap="goto('/pages/party/statistics_party?party_id={{party_id}}&title={{list.title}}')">
-          <view class="setting_box">
-            <image src="../../images/tabbars/statistics.png"  mode="aspectFit" class="party_setting"></image>
-          </view>
-          <view class="font_26 text-center">统计</view>
-        </view>
-        <view  class="flo_l setting text-center" @tap="fetch" >
-          <view class="setting_box" style="background: #c1c1c1">
-            <image src="../../images/tabbars/money.png"  mode="aspectFit" class="party_setting"></image>
-          </view>
-          <view class="font_26 text-center">提现</view>
-        </view>
-        <view  class="flo_l setting text-center" @tap="goto('/pages/party/edit_party?party_id={{party_id}}')">
-          <!--<view  class="flo_l setting text-center" @tap="fetch">-->
-          <view class="setting_box">
-            <image src="../../images/tabbars/edit.png"  mode="aspectFit" class="party_setting"></image>
-          </view>
-          <view class="font_26 text-center">修改</view>
-        </view>
-        <view  class="flo_l setting text-center"  @tap="saveTemplates">
-          <form bindsubmit="formSubmit" report-submit>
-            <button formType="submit"  data-type="click" class="btn">
-              <view class="setting_box">
-                <image src="../../images/tabbars/save.png"  mode="aspectFit" class="party_setting"></image>
-              </view>
-            </button>
-          </form>
-          <view class="font_26">保存模板</view>
-        </view>
-        <view  class="flo_l setting text-center" @tap="setting({{list.is_deadline}}, {{list.is_cancel}})">
-          <form bindsubmit="formSubmit" report-submit>
-            <button formType="submit"  data-type="click" class="btn">
-              <view class="setting_box">
-                <image src="../../images/tabbars/setting.png"  mode="aspectFit" class="party_setting"></image>
-              </view>
-            </button>
-            <view class="font_26 text-center">设置</view>
-          </form>
-        </view>
-        <view class="clearfloat"></view>
-      </view>
-    </bolck>
-    <!--<view class="weui-cell">-->
-      <!--<view style="width: 100%">{{list.start_time}}</view>-->
-    <!--</view>-->
   </view>
   <view style="height: 100rpx;"></view>
-  <view style="width: 100%;" class="fixed_bot">
+  <view style="width: 100%;" class="font_28 text-center">
+    <button open-type="share" class="btn_white flo_l" style="margin-left: 15%;margin-right: 5%;">分享</button>
     <form bindsubmit="formSubmit" report-submit>
-      <button formType="submit"  data-type="click"  @tap="sign('join')"  class="weui-btn btn-blue flo_l" wx:if="{{!list.is_join}}">
-        报名参加
+      <button formType="submit"  data-type="click"  @tap="sign('join')"  class="btn_red flo_l" >
+        报名
       </button>
-      <button formType="submit"  data-type="click"  @tap="sign()" class="weui-btn btn-blue flo_l" wx:else>
-      取消报名
-      </button>
+      <!--<button formType="submit"  data-type="click"  @tap="sign()" class="weui-btn btn-blue flo_l" wx:else>-->
+      <!--取消报名-->
+      <!--</button>-->
     </form>
-    <button open-type="share" class="weui-btn btn-blue_r flo_l">分享给好友</button>
-  </view>
-  <view class="label_message ">
-    <!--<image src="../../images/tabbars/label.png"  mode="aspectFit" class="label_image flo_l" ></image>-->
-    <view class="flo_l label_box {{acvive ? 'label_acvive' : ''}} {{!acvive ? 'label_acvive_v' : ''}}"  @tap="label_acvive">
-      <image src="../../images/tabbars/home.png"  mode="aspectFit" style="width: 60rpx;height: 60rpx;"></image>
-      <block wx:if="{{show}}">
-        <view class="font_28 flo_r label_text {{!show ? 'position' : ''}}"  @tap.stop="goHome('/pages/partyList')">主页</view>
-        <button class="font_28 flo_r label_text service {{!show ? 'position' : ''}}" open-type="contact">客服</button>
-      </block>
-      <block wx:else>
-        <view class="font_32 flo_r"  style="margin-top: -2rpx;color: #FB7E00;">...</view>
-      </block>
-    </view>
   </view>
   <block wx:if="{{loading}}">
     <view class="weui-loadmore">
@@ -534,7 +474,7 @@
   @import "../../styles/custom/fn.less";
 
   page{
-    /*background: white;*/
+    background: #f7f7f7;
   }
   .weui-input{
     padding-left: 12rpx;
@@ -551,10 +491,12 @@
   .party{
     position: relative;
     padding:22rpx 50rpx;
-    margin:0 22rpx;
+    margin:0 26rpx;
     background:white;
-    /*border-bottom: 1rpx solid #d5d5d5;*/
+    /*border-bottom: 1rpx solid #b4b4b4;*/
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
   }
+
   textarea{
     width:100%;
     height: 250rpx;
@@ -610,10 +552,11 @@
     width: 20%;
   }
   .member{
-    margin: 0 22rpx;
+    margin: 0 26rpx;
     padding: 6rpx 32rpx;
     background: white;
     border-top: 1rpx solid #d3d3d3;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
     /*border-bottom: 1rpx solid #d3d3d3;*/
   }
   .setting_box{

@@ -1,0 +1,235 @@
+<template>
+  <view class="page__bd "  wx:for="{{list1}}" wx:key="*this" >
+    <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+      <view class="flo_r weui-cell__hd" >
+        <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%; margin-right: 12rpx" class="flo_r"></image>
+      </view>
+      <view class="flo_l" style="width: 78%;">
+        <view  class="font_28 flo_l orange bold" style="margin-left: 12rpx;width: 86%">
+          挑选一个礼物赠送给{{item.name}}吧！
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="gift">
+    <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
+      <image src="{{item.image}}" style="width:80px; height: 80px;margin: 12rpx "></image>
+      <view class="font_24">{{item.name}} /<span class="orange">{{item.code}}</span> </view>
+      <view class="btn_red font_26" style="width: 150rpx;height: 80rpx;line-height: 84rpx;margin: auto" @tap="conversion({{item}})">赠送</view>
+    </view>
+  </view>
+  <modal class="modal" hidden="{{hide}}" title="付款详情" no-cancel confirm-text="确认支付" @confirm="modalChange2">
+    <view class="text-center font_28" style="border-bottom: 1rpx solid #d3d3d3">
+      <view>购买礼物：一支玫瑰</view>
+      <view>200元 X 2支</view>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">订单详情：</span>
+      <span class="flo_r">200元</span>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">福分支付：</span>
+      <span class="flo_r">{{message.code}}</span>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">现金支付：</span>
+      <span class="flo_r">0元</span>
+    </view>
+  </modal>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class integral extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '赠送礼物',
+      enablePullDownRefresh: true
+    }
+    data = {
+      libraries: {},
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      hide: true,
+      message: {},
+      list1: [
+        {
+          'name' : 'Angelababy',
+          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'message' : '26岁/162cm/深圳',
+          'six': 0
+        }
+      ],
+      list:[
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一朵玫瑰花',
+          code: '100福分',
+          id: '212'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一束玫瑰花',
+          code: '999福分',
+          id: '258'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一盒巧克力',
+          code: '9999福分',
+          id: '520'
+        },{
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一朵问候',
+          code: '5福分',
+          id: '2'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一束关怀',
+          code: '5福分',
+          id: '5'
+        },
+        {
+          image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
+          name: '一盒飞吻',
+          code: '5福分',
+          id: '0'
+        }
+      ]
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad() {
+
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data.user
+          this.libraries = data.libraries
+          this.libraries.forEach((item) => {
+            if (item.type == 'SHARE') {
+              item.url = '/pages/library/shareLibrary?id=' + item.id
+            } else {
+              item.url = '/pages/library/library?id=' + item.id
+            }
+          })
+          wx.setStorageSync('openid', data.user.wechat.openid)
+          wx.setStorageSync('is_new', data.user.is_news)
+          if (data.user.is_news) {
+            wepy.showTabBarRedDot({
+              index: 4
+            })
+          } else {
+            wepy.hideTabBarRedDot({
+              index: 4
+            })
+          }
+        }
+      })
+    }
+
+    methods = {
+      modalChange2() {
+        this.hide = true
+        this.message = {}
+        this.$apply()
+        wx.showToast({
+          title: '赠送成功！',
+          icon: 'success',
+          duration: 1000
+        })
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      conversion(item){
+//      wx.showToast({
+//        title: item.name,
+//        icon: 'success',
+//        duration: 1000
+//      })
+        this.hide = false
+        this.message = item
+        this.$apply()
+//        let url = '/pages/users/integralAddress?id=' + item.id
+//        wx.navigateTo({url: url})
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+  page{
+    background: #F7F7F7;
+  }
+  .page-user{
+    background: white;
+    padding: 22rpx 50rpx;
+  }
+  .weui-cells {
+    position: inherit;
+    /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
+    margin-top: 12rpx;
+  }
+  .user_back{
+    background-image: url("http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.9TmBzGGHW7w9470132e3efb72f0a1c8c06768b4cbd80.png");
+    background-size: cover;
+    position: relative;
+  }
+  .gift_list{
+    width: 26%;
+    padding: 12rpx;
+    background: white;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    border-radius: 12rpx;
+    margin: 22rpx 0 22rpx 24rpx;
+  }
+  .borrowlist{
+    width: 86%;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    margin: 18rpx;
+    border-radius: 6rpx;
+    margin-left: 4%;
+    padding: 22rpx;
+    background: white;
+    /*position: relative*/
+  }
+  .weui-cell__ft {
+    margin-top: 10%;
+  }
+</style>

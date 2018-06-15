@@ -1,0 +1,119 @@
+<template>
+  <view class="page-user">
+    <view class="text-center">
+      <image src="{{image}}" mode="aspectFill" class="image"></image>
+    </view>
+    <view class="font_32 bold" style="margin-left: 32rpx;">替Ta支付VIP费用：</view>
+    <view >
+      <radio-group class="radio-group" bindchange="radioChange">
+        <view class="paylist"  wx:for="{{paylist}}">
+          <label class="radio">
+              <radio value="{{item.money}}" class="flo_l" checked="{{item.checked}}"/>
+              <view class="font_28 flo_l" style="margin-left: 12rpx;">{{item.name}} <span class="orange">{{item.money}}{{item.iv}}</span> </view>
+              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.message}}</view>
+              <view class="clearfix"></view>
+          </label>
+          <view class="clearfix"></view>
+        </view>
+      </radio-group>
+      <view class="text-center pay">
+        <view class="btn_red font_32" style="margin-left: 200rpx" @tap="goto('/pages/home/sharing')">确认支付</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class sharePay extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '邀请Ta',
+      enablePullDownRefresh: true
+    }
+    data = {
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
+      paylist:[
+        {name: '市级VIP',money: '10元',message:'特权：仅可添加本市的好友', checked: 'true'},
+        {name: '省级vip',money: '100元',message:'特权：仅可添加本省的好友'},
+        {name: '全国vip',money: '500元',message:'特权：仅可添加全国的好友',iv:'(赠送500元礼物)'}
+      ]
+    }
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad() {
+
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      console.log("刷新成功")
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      radioChange: function(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+  page{
+    background: #f7f7f7;
+  }
+  .page-user{
+    padding: 32rpx;
+    .image{
+      width: 400rpx;
+      height: 340rpx;
+      margin: 80rpx auto;
+    }
+    .paylist{
+      width: 88%;
+      margin: 22rpx;
+      background: white;
+      padding: 22rpx;
+      border-radius: 12rpx;
+      box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    }
+    .pay{
+      margin: 22rpx;
+
+    }
+  }
+</style>
