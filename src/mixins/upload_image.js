@@ -18,7 +18,7 @@ export default class upload_image extends wepy.mixin {
     let that = this
     let token = wx.getStorageSync('token')
     wx.uploadFile({
-      url: service.books_upload,
+      url: service.image_upload,
       filePath: filePaths,
       method: 'POST',
       name: 'fileData',

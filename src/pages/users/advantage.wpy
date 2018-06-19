@@ -39,83 +39,18 @@
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/integral" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/order.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
+      <view class="font_32 loveTitle">请用第一感觉选择最适合你的选项</view>
+      <radio-group class="radio-group" bindchange="radioChange">
+        <view class="paylist"  wx:for="{{list}}" wx:key="*this">
+          <label class="radio">
+            <radio value="{{item.money}}" class="flo_l" checked="{{item.checked}}"/>
+            <view class="font_28 flo_l" style="margin-left: 12rpx;margin-top: 8rpx;">{{item.name}}</view>
+            <view class="clearfix"></view>
+          </label>
+          <view class="clearfix"></view>
         </view>
-        <view class="weui-cell__bd">薪水级别</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">8k~10k</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/myGift" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/gift.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">是否有车</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">是</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">是否有房</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">是</view>
-      </navigator>
-      <!--<navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">-->
-      <!--<view class="weui-cell__hd">-->
-      <!--<image src="../../images/icon/test.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-      <!--</view>-->
-      <!--<view class="weui-cell__bd">心有灵犀</view>-->
-      <!--&lt;!&ndash;<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>&ndash;&gt;-->
-      <!--</navigator>-->
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <!--<view class="weui-cell__hd">-->
-          <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        <!--</view>-->
-        <view class="weui-cell__bd">生活照</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">身份证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">毕业证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">其他证件</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">微信二维码</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">1张</view>
-      </navigator>
+      </radio-group>
+      <view class="next btn_red" @tap="ensure">下一题</view>
     </view>
   </view>
 </template>
@@ -128,17 +63,21 @@
   import ShareMessage from '../../mixins/ShareMessage'
   import { service } from '../../config.js'
 
-  export default class vipSetting extends wepy.page {
+  export default class advantage extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: 'VIP资料',
+      navigationBarTitleText: '了解自己的优势',
       enablePullDownRefresh: true
     }
     data = {
       libraries: {},
       user: {},
       is_vip: false,
-      nickName: '加载中...'
+      nickName: '加载中...',
+      list:[
+        {name: '我会做饭', checked: 'true'},
+        {name: '我不会做饭'}
+      ]
 
     }
 
@@ -208,7 +147,7 @@
   @import "../../styles/custom/fn.less";
   @import "../../styles/custom/reset.less";
   page{
-    background: #ececec;
+    background: #f4f4f4;
   }
   .weui-cells {
     position: inherit;
@@ -295,6 +234,25 @@
       position: absolute;
       right: 16rpx;
       top: 40rpx;
+    }
+    .next{
+      margin: auto;
+    }
+    .paylist{
+      width: 88%;
+      margin: 22rpx;
+      background: white;
+      padding: 22rpx;
+      border-radius: 12rpx;
+      box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    }
+    .loveTitle{
+      border-bottom: 1rpx solid #dedede;
+      margin: 22rpx;
+      margin-bottom: 4rpx;
+      background: white;
+      padding: 14rpx 32rpx;
+      margin-top: 0rpx;
     }
   }
 </style>

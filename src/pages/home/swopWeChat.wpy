@@ -8,7 +8,7 @@
         向angela请求加微信
       </view>
       <view class="white font_32" style="position: absolute;left: 0%;top: 31%;">
-        <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1751385154,3008124413&fm=27&gp=0.jpg" mode="aspectFit"  ></image>
+        <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1751385154,3008124413&fm=27&gp=0.jpg" mode="aspectFit"   @tap="chooseimage"></image>
       </view>
       <view class="white btn_red font_32" style="position: absolute;left: 31%;bottom: 3%;" @tap="send()">
         发送请求
@@ -34,9 +34,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
+  import uploadimage from '../../mixins/upload_image'
 
   export default class swopWeChat extends wepy.page {
-    mixins = [base, http, user, ShareMessage]
+    mixins = [base, http, user, ShareMessage, uploadimage]
     config = {
       navigationBarTitleText: "交换微信"
     }

@@ -36,6 +36,14 @@ export default class extends wepy.app {
       'pages/users/list',
       'pages/users/examineWeChat',
       'pages/users/auditFriend',
+      'pages/users/intro',
+      'pages/users/unmarri',
+      'pages/users/vipImage',
+      'pages/users/loveLanguage',
+      'pages/users/sociability',
+      'pages/users/advantage',
+      'pages/users/addFriendSet',
+      'pages/users/upgradeVIP',
       'pages/users/integralAddress'
     ],
     window: {

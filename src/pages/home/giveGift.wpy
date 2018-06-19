@@ -172,7 +172,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      conversion(item){
+      conversion(item) {
 //      wx.showToast({
 //        title: item.name,
 //        icon: 'success',

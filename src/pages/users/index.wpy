@@ -12,26 +12,26 @@
                 <view class="userinfo-nickname font_32">
                   manber
                   <block wx:if="{{is_vip}}">
-                    <view class="orange font_26 text-center flo_r menber">
+                    <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
                       <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
                       <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
                     </view>
                   </block>
                   <block wx:else>
-                    <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                    <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx" @tap="goto('/pages/users/upgradeVIP')">
                       <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
                       <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">会员</view>
                     </view>
                   </block>
                 </view>
               </view>
-              <view class="flo_r font_26 white">
-                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-                <view style="margin-top: 5rpx"class="flo_r">完善个人资料，让更多的人认识你</view>
+              <view class="flo_r font_26 white" >
+                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; " @tap="goto('/pages/users/unmarri')"></image>
+                <view style="margin-top: 5rpx"class="flo_r" @tap="goto('/pages/users/intro')">完善个人资料，让更多的人认识你</view>
               </view>
               <view class="message" @tap="goto('/pages/users/myNews')">
                 <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-                <view class="message_red"></view>
+                <view class="message_red" ></view>
               </view>
             </view>
           <!--</navigator>-->

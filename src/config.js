@@ -3,7 +3,7 @@
                         小程序配置文件
 ======================================================== */
 // 域名
- var host = 'https://party.ufutx.com/api'
+ var host = 'https://love.ufutx.com/api'
 // var host = 'http://party.hankin.com/api'
 export const service = {
     // 登录接口
@@ -22,6 +22,8 @@ export const service = {
     templates: `${host}/templates`,
     // 重发接口
     reset: `${host}/reset/parties`,
+    // 图书上传
+    image_upload: `${host}/uploads`,
     // 假装有收藏接口 POST
     collect: `${host}/bookmall/list`,
     //skip

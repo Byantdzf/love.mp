@@ -1,0 +1,194 @@
+<template>
+  <view class="page-user">
+    <view class="text-center">
+      <!--<image src="{{image}}" mode="aspectFill" class="image"></image>-->
+    </view>
+    <view >
+      <view class="font_32 loveTitle">普通VIP</view>
+      <view class="paylist"  wx:for="{{paylist}}" wx:key="*this">
+        <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
+          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          <span class="red flo_r" @tap="conversion({{item}})">升级</span>
+        </view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
+        <view class="clearfix"></view>
+      </view>
+    </view>
+    <view >
+      <view class="font_32 loveTitle">高级VIP</view>
+      <view class="paylist"  wx:for="{{paylist1}}" wx:key="*this">
+        <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
+          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          <span class="red flo_r" @tap="conversion({{item}})">升级</span>
+        </view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
+        <view class="clearfix"></view>
+      </view>
+    </view>
+    <view >
+      <view class="font_32 loveTitle">海外VIP</view>
+      <view class="paylist"  wx:for="{{paylist2}}" wx:key="*this">
+        <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
+          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          <span class="red flo_r" @tap="conversion({{item}})">升级</span>
+        </view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
+        <view class='font_26 orange flo_r' style="width: 77%;text-align: left;">{{item.message1}}</view>
+        <view class="clearfix"></view>
+      </view>
+    </view>
+  </view>
+  <modal class="modal" hidden="{{hide}}" title="付款详情" no-cancel confirm-text="确认支付" @confirm="modalChange2">
+    <view class="text-center font_28" style="border-bottom: 1rpx solid #d3d3d3">
+      <view>升级VIP：升级到{{message.name}}</view>
+      <view>{{message.money}} X 1次</view>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">订单详情：</span>
+      <span class="flo_r">{{message.name}}</span>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">福分支付：</span>
+      <span class="flo_r">{{message.money}}</span>
+    </view>
+    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+      <span class="bold">现金支付：</span>
+      <span class="flo_r">{{message.money}}</span>
+    </view>
+  </modal>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class upgradeVIP extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '升级VIP',
+      enablePullDownRefresh: true
+    }
+    data = {
+      user: {},
+      is_vip: false,
+      nickName: '加载中...',
+      image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
+      paylist:[
+        {name: 'V1',money: '10元',message:'特权：仅可添加本市的好友', checked: 'true'},
+        {name: 'V2',money: '100元',message:'特权：仅可添加本省的好友'},
+        {name: 'V3',money: '500元',message:'特权：仅可添加全国的好友',iv:'(赠送100元礼物)'}
+      ],
+      paylist1:[
+        {name: 'V4',money: '1000元',message:'特权： 每月推送2位条件相符。异性(年24人）',iv:'(赠送500元礼物)'},
+        {name: 'V5',money: '3000元',message:'特权： 每月推送5位条件相符。异性(年60人）',iv:'(赠送1800元礼物)'}
+      ],
+      paylist2:[
+        {name: 'V6',money: '5000元',message:'特权：自我介绍视频',message1:'每月推送2位条件相符。异性(年24人）',iv:'(赠送2000元礼物)'},
+        {name: 'V7',money: '9800元',message:'特权：自我介绍视频',message1:'每月推送5位条件相符。异性(年60人）',iv:'(赠送3000元礼物)'}
+      ],
+      hide: true,
+      message: {},
+    }
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      // this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad() {
+
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      console.log("刷新成功")
+    }
+
+    methods = {
+      modalChange2() {
+        this.hide = true
+        this.message = {}
+        this.$apply()
+        wx.showToast({
+          title: '升级成功！',
+          icon: 'success',
+          duration: 1000
+        })
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      conversion(item){
+//      wx.showToast({
+//        title: item.name,
+//        icon: 'success',
+//        duration: 1000
+//      })
+        this.hide = false
+        this.message = item
+        this.$apply()
+//        let url = '/pages/users/integralAddress?id=' + item.id
+//        wx.navigateTo({url: url})
+      },
+      radioChange: function(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+  page{
+    background: #f7f7f7;
+  }
+  .page-user{
+    padding: 32rpx;
+    .image{
+      width: 400rpx;
+      height: 340rpx;
+      margin: 80rpx auto;
+    }
+    .paylist{
+      width: 88%;
+      margin: 22rpx;
+      background: white;
+      padding: 22rpx;
+      border-radius: 12rpx;
+      box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    }
+    .pay{
+      margin: 22rpx;
+
+    }
+    .loveTitle{
+      border-bottom: 1rpx solid #dedede;
+      margin: 22rpx;
+      margin-bottom: 4rpx;
+      background: white;
+      padding: 14rpx 32rpx;
+      margin-top: 0rpx;
+    }
+  }
+</style>

@@ -1,0 +1,414 @@
+<template>
+  <view class="container">
+    <view class="page-user">
+      <view class="weui-panel">
+        <view class="weui-cells_after-title">
+          <view class="weui-cell user_back">
+            <!--<navigator url="/pages/user/registerV2" >-->
+            <view class="userinfo clearfix">
+              <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
+              <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
+              <image class="userinfo-avatar" src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png" background-size="cover"/>
+              <view class="userinfo-info">
+                <view class="userinfo-nickname font_32">
+                  manber
+                  <block wx:if="{{is_vip}}">
+                    <view class="orange font_26 text-center flo_r menber">
+                      <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                      <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
+                    </view>
+                  </block>
+                  <block wx:else>
+                    <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                      <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                      <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">会员</view>
+                    </view>
+                  </block>
+                </view>
+              </view>
+              <view class="flo_r font_26 white">
+                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
+                <view style="margin-top: 5rpx"class="flo_r">完善个人资料，让更多的人认识你</view>
+              </view>
+              <view class="message">
+                <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
+                <view class="message_red"></view>
+              </view>
+            </view>
+            <!--</navigator>-->
+          </view>
+        </view>
+      </view>
+      <view class="orderdata">
+        <view class="title">{{uploadTitle}}</view>
+        <view class="Paths" style="margin:30rpx;" bindtap="chooseimage">+</view>
+        <view style="padding: 22rpx ;border: 1rpx solid #d3d3d3;border-radius: 6rpx;margin: 10rpx">
+          <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{files}}" wx:key="*this" wx:if="{{files}}"/>
+          <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{photosList}}" @tap="previewImage({{item}},{{photosList}})"
+                 wx:key="*this"/>
+        </view>
+      </view>
+      <view style="height: 88rpx"></view>
+      <view class="next btn_red" @tap="ensure">完成</view>
+    </view>
+
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  // import network from '../../mixins/api'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class vipImage extends wepy.page {
+    mixins = [ShareMessage]
+    data = {
+      user: {
+        avatarUrl: 'http://images.ufutx.com/201801/23/4a3bda4b26861d4b012dbab11f2d004f.jpeg',
+        nickName: '艾丽丝',
+        mobile: '15361454427'
+      },
+      photos: [],
+      files: '',
+      type_v: '',
+      uploadTitle: '',
+      tempFilePaths: '',
+      photosList: []
+    }
+
+    onLoad(e) {
+      console.log(this)
+      let that = this
+      this.type_v = e.type
+      this.uploadTitle = e.title
+      this.user.nickName = wx.getStorageSync('name')
+      this.user.mobile = wx.getStorageSync('mobile')
+      this.user.avatarUrl = wx.getStorageSync('avatar')
+      setTimeout(() => {
+        this.uploadTitle = e.title
+        this.$apply()
+      }, 20)
+      // network.GET('user', {
+      //   success: function (res) {
+      //     that.profile_courtship = res.data.data.user.profile_courtship
+      //     if (that.type_v === 'photos') {
+      //       that.photosList = that.profile_courtship.photos ? JSON.parse(that.profile_courtship.photos) : []
+      //     } else if (that.type_v === 'identification_photos') {
+      //       that.photosList = that.profile_courtship.identification_photos ? JSON.parse(that.profile_courtship.identification_photos) : []
+      //     } else if (that.type_v === 'graduate_photos') {
+      //       that.photosList = that.profile_courtship.graduate_photos ? JSON.parse(that.profile_courtship.graduate_photos) : []
+      //     } else if (that.type_v === 'wechat_qrcode') {
+      //       that.photosList = that.profile_courtship.wechat_qrcode ? JSON.parse(that.profile_courtship.wechat_qrcode) : []
+      //     } else if (that.type_v === 'other_photos') {
+      //       that.photosList = that.profile_courtship.other_photos ? JSON.parse(that.profile_courtship.other_photos) : []
+      //     }
+      //     that.$apply()
+      //   }
+      // })
+    }
+    onShow() {
+      this.$parent.getTracker(this.$root.$name, '上传' + this.uploadTitle)
+    }
+    methods = {
+      chooseimage() {
+        var that = this
+        wx.chooseImage({
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.files = res.tempFilePaths
+            console.log(res.tempFilePaths)
+            that.setData({
+              files: that.files
+            })
+          }
+        })
+      },
+      previewImage(imge, photoslist) {
+        wepy.previewImage({
+          current: imge, // 当前显示图片的http链接
+          urls: photoslist // 需要预览的图片http链接列表
+        })
+      },
+      stateChange(e) {
+        this.stateiIndex = e.detail.value
+      },
+      resident_typeChange(e) {
+        this.residentIndex = e.detail.value
+      },
+      ensure() {
+        let that = this
+        if (that.files) {
+          this.uploadFiles(that.files, 0, 0, 0, that.files.length)
+        } else {
+//          wx.navigateTo({
+//            url: '/pages/relacion/relacion'
+//          })
+          wx.navigateBack({
+            delta: 1
+          })
+        }
+      }
+    }
+          /* 函数描述：作为上传文件时递归上传的函数体体；
+      * 参数描述：
+      * filePaths是文件路径数组
+      * successUp是成功上传的个数
+      * failUp是上传失败的个数
+      * i是文件路径数组的指标
+      * length是文件路径数组的长度
+      */
+    uploadFiles = function (filePaths, successUp, failUp, i, length) {
+      let that = this
+      let token = wx.getStorageSync('ACCESS_TOKEN')
+      wx.showToast({
+        title: '照片上传中...',
+        icon: 'none',
+        duration: 2000
+      })
+      wx.uploadFile({
+        url: 'https://love.ufutx.com/api/uploads?XDEBUG_SESSION_START=1',
+        filePath: filePaths[i],
+        method: 'POST',
+        name: 'fileData',
+        formData: {
+          //   'pictureUid': owerId,
+          //   'pictureAid': albumId
+        },
+        header: {
+          'Authorization': 'Bearer ' + token,
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (resp) => {
+          that.photos[successUp] = JSON.parse(resp.data).data
+          successUp++
+          if ((length - i) === 1) {
+            let data = {}
+            if (that.photosList) {
+              that.photosList.forEach(function (val, index, arr) {
+                that.photos.push(arr[index])
+              })
+            }
+            console.log(that.photos)
+            if (that.type_v === 'photos') {
+              data = {photos: that.photos}
+            } else if (that.type_v === 'graduate_photos') {
+              data = {graduate_photos: that.photos}
+            } else if (that.type_v === 'identification_photos') {
+              data = {identification_photos: that.photos}
+            } else if (that.type_v === 'other_photos') {
+              data = {other_photos: that.photos}
+            } else {
+              data = {wechat_qrcode: that.photos}
+            }
+            wx.showToast({
+              title: '上传成功',
+              icon: 'none',
+              duration: 1500
+            })
+            setTimeout(() => {
+              network.PUT('users/courtship/media', {
+                data: data,
+                success: function (res) {
+                  wx.navigateBack({
+                    delta: 1
+                  })
+                }
+              })
+            }, 1000)
+          }
+        },
+        fail: (res) => {
+          failUp++
+        },
+        complete: () => {
+          i++
+          if (i === length) {
+//              console.log("kask")
+//              that.showToast('总共'+successUp+'张上传成功,'+failUp+'张上传失败！');
+          } else {
+//                 递归调用uploadDIY函数
+            that.uploadFiles(filePaths, successUp, failUp, i, length)
+          }
+        }
+      })
+    }
+  }
+</script>
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+  page{
+    background: #ececec;
+  }
+  .weui-cells {
+    position: inherit;
+    box-shadow: 1rpx 1rpx 12rpx #dedede;
+    color: #666666;
+    /*margin-top: 12rpx;*/
+  }
+  .user_back{
+    background-image: url("http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.9TmBzGGHW7w9470132e3efb72f0a1c8c06768b4cbd80.png");
+    background-size: cover;
+    position: relative;
+  }
+  .page-user{
+    @userinfoHeight: 100rpx;
+    @userinfoSpace: 8rpx;
+
+    .userinfo{
+      padding: 20rpx 0;
+      padding-top: 68rpx;
+      position: relative;
+      left: 0;
+      bottom: -26rpx;
+    }
+    .page__bd_spacing{
+      padding: 22rpx;
+    }
+
+    .userinfo-avatar {
+      border:4rpx solid #ffffff;
+      float: left;
+      width: @userinfoHeight;
+      height: @userinfoHeight;
+      border-radius: 50%;
+    }
+    .weui-cell__bd{
+      margin-left: 12rpx;
+    }
+    // space + space
+    .userinfo-info {
+      float: left;
+      line-height: 1;
+      padding: @userinfoSpace 0;
+      margin-left: 3 * @userinfoSpace;
+      position: relative;
+    }
+
+    // text + space + text
+    .userinfo-nickname {
+      color: white;
+      //font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+      margin-bottom: 2 * @userinfoSpace;
+    }
+    .userinfo-status {
+      color: #999;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+
+    }
+    .menber{
+      background: white;
+      border-radius: 12rpx;
+      padding:4rpx 6rpx ;
+      width: 94rpx;
+      margin-left: 16rpx;
+    }
+    .message{
+      position: absolute;
+      right: 32rpx;
+      top: 32rpx;
+    }
+    .message_red{
+      background: red;
+      width: 16rpx;
+      height: 16rpx;
+      position: absolute;
+      right: -12rpx;
+      border-radius: 50%;
+    }
+    .lead {
+      width: 16rpx;
+      height: 16rpx;
+      background: red;
+      margin-top: -24rpx;
+      border-radius: 50%;
+      position: absolute;
+      right: 16rpx;
+      top: 40rpx;
+    }
+  }
+  .active {
+    border: 1 rpx solid red;
+  }
+  .display_inlin {
+    display: inline-block;
+  }
+  .violet{color: #B22DC3}
+
+  .font_12 {
+    font-size: 22rpx;
+  }
+  .orderdata{
+    width: 100%;
+    padding:32rpx 0 ;
+  }
+  .list{
+    margin-left: 32rpx;
+    margin-right: 32rpx;
+    height: 32rpx;
+    line-height: 30rpx;
+    /*border-bottom: 1px solid #ece5e5;*/
+    font-size: 30rpx;
+    padding: 22rpx;
+    /*padding-right: 22rpx;*/
+    /*padding-left: 22rpx;*/
+    box-shadow: 1rpx 1rpx 10rpx #d3d3d3;
+    margin-bottom: 22rpx;
+    border-radius: 6rpx;
+    background: white;
+  }
+  .list:active{
+    background: #e3e3e3;
+  }
+  .Inp{
+    text-align: right; width: 72%;height: 72rpx;
+    float: right;
+    padding-right: 22rpx;
+  }
+  .text{
+    float: right;
+    margin-right: 82rpx;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+  .next{
+    margin: auto;
+  }
+  .Paths{
+    width: 150rpx;
+    height: 150rpx;
+    border: 1rpx dashed #d3d3d3;
+    text-align: center;line-height: 150rpx;
+    font-size: 60rpx;
+    margin-top: 100rpx;
+  }
+  .imge{
+    width: 200rpx;
+    height: 200rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    margin-right: 20rpx;
+  }
+  .title{
+    max-width: 180rpx;
+    text-align: center;
+    font-size: 36rpx;
+    border: 1rpx solid #dbd8d8;
+    border-left: none;
+    border-bottom-right-radius: 32rpx;
+    border-top-right-radius: 32rpx;
+    padding: 12rpx;
+    position: relative;
+    left: -180rpx ; top: 10rpx;
+    animation:myfirst 2s;
+    animation-direction:alternate;
+    animation-fill-mode:forwards;
+    box-shadow: 1rpx 1rpx 12rpx #e4e4e4;
+  }
+  @keyframes myfirst
+  {
+    from {left:-180rpx;}
+    to {left:0rpx;}
+  }
+  .Pats:active{transform: scale(1.1)}
+</style>

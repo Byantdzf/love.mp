@@ -48,7 +48,7 @@
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/myGift" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/addFriendSet" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/gift.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
@@ -57,7 +57,7 @@
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/loveLanguage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
@@ -73,7 +73,7 @@
       <!--</navigator>-->
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/sociability" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <!--<view class="weui-cell__hd">-->
         <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         <!--</view>-->
@@ -82,7 +82,7 @@
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/advantage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>

@@ -1,0 +1,514 @@
+<style lang="less">
+  .active {
+    border: 1 rpx solid red
+  }
+
+  .display_inlin {
+    display: inline-block
+  }
+  .flo_l{float: left}
+  .userinfo{
+    width: 100%;
+    font-size: 26rpx;
+    font-weight: bold;
+    box-shadow: 1rpx 1rpx 10rpx #d6d6d6;
+    position: fixed;
+    left: 0;
+    top:0;
+    background: white;
+    z-index: 10;
+  }
+  .violet{color: #B22DC3}
+
+  .font_12 {
+    font-size: 22 rpx
+  }
+  .orderdata{
+    width: 100%;
+    padding:32rpx 0 ;
+    margin-top: 200rpx;
+  }
+  .list{
+    margin-left: 32rpx;
+    margin-right: 32rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    /*border-bottom: 1px solid #ece5e5;*/
+    font-size: 30rpx;
+    padding-right: 22rpx;
+    padding-left: 22rpx;
+    box-shadow: 1rpx 1rpx 10rpx #d3d3d3;
+    margin-bottom: 22rpx;
+    border-radius: 6rpx;
+    background: white;
+  }
+  .list:active{
+    background: #e3e3e3;
+  }
+  .Inp{
+    text-align: right; width: 72%;height: 72rpx;
+    float: right;
+    padding-right: 22rpx;
+  }
+  .text{
+    float: right;
+    /*margin-right: 82rpx;*/
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+  .next{
+    position: fixed;
+    right: 0;
+    bottom:0;
+    z-index: 10;
+    width: 100%;
+    background: white;
+    box-shadow: 5rpx 5rpx 12rpx #c2571f;
+  }
+  .InputFocus{
+    border: 1px solid red;
+  }
+  </style>
+  <template>
+  <view class="container">
+    <view class="userinfo">
+    <!--<image  src="{{user.avatarUrl}}" style="width: 150rpx;height: 150rpx;border-radius: 50%;margin: 22rpx" class="flo_l"/>-->
+      <!--<open-data type="userAvatarUrl" style="width: 150rpx;height: 150rpx;border-radius: 50%;margin: 22rpx"></open-data>-->
+      <!--<open-data type="userNickName	" style="width: 45%;margin-top: 48rpx"></open-data>-->
+      <!--<view  class="flo_l font_12" style="width: 45%;margin-top: 48rpx">{{ user.nickName }}</view>-->
+      <!--<view  class="flo_l font_12" style="width: 45%;margin-top: 28rpx">{{ user.mobile }}</view>-->
+    </view>
+  <view class="orderdata">
+    <view  class="list {{NameFocus ? 'InputFocus' : ''}}" >
+      <span class="flo_l">姓名</span>
+      <input type='text' placeholder="输入您的名字" class="Inp" bindblur="nameChange" value="{{name}}"  focus="{{NameFocus}}"/>
+    </view>
+    <view class="section list">
+      <picker  value="{{sexIndex}}" range="{{sex}}"  bindchange="sexChange" >
+        <view class="picker">
+          性别
+          <text class="text">{{sex[sexIndex]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list {{AgeFocus ? 'InputFocus' : ''}}" >
+    <span class="flo_l">年龄</span>
+    <input type="number"  placeholder="输入您的年龄" class="Inp" bindblur="ageChange" value="{{profile_courtship.age}}" focus="{{AgeFocus}}" />
+    </view>
+  <view class="section list">
+    <picker  value="{{stateiIndex}}" range="{{state}}"  bindchange="stateChange" >
+       <view class="picker">
+        单身状态
+        <text class="text">{{state[stateiIndex]}}</text>
+       </view>
+     </picker>
+  </view>
+    <view  class="list {{StatureFocus ? 'InputFocus' : ''}}">
+    <span >身高</span>
+    <input type="number" placeholder="输入您的身高（cm）" class="Inp" bindblur="statureChange" value="{{profile_courtship.stature}}" focus="{{StatureFocus}}"/>
+  </view>
+    <view  class="list {{WeightFocus ? 'InputFocus' : ''}}">
+    <span class="flo_l">体重</span>
+    <input type="number" placeholder="输入您的体重（kg）" class="Inp"  bindblur="weightChange" value="{{profile_courtship.weight}}" focus="{{WeightFocus}}"/>
+    </view>
+    <view  class="list ">
+      <picker  mode = region value="{{region}}"  bindchange="cityChange" >
+        <view class="picker">
+          城市
+          <text class="text">{{region[0]}},{{region[1]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list ">
+      <picker  value="{{residentIndex}}" range="{{resident_type}}"  bindchange="resident_typeChange" >
+        <view class="picker">
+          户口类型
+          <text class="text">{{resident_type[residentIndex]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list ">
+      <picker  mode = region value="{{region_id}}"  bindchange="region_idChange" >
+        <view class="picker">
+          户口地
+          <text class="text">{{region_id[1]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list ">
+      <picker  value="{{degreeIndex}}" range="{{degree}}"  bindchange="degreeChange" >
+        <view class="picker">
+          最高学历
+          <text class="text" wx:if="{{ShowDegree}}">{{degree[degreeIndex]}}</text>
+          <text class="text" wx:else>{{DegreeText}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list {{Graduate_schoolFocus ? 'InputFocus' : ''}}">
+      <span class="flo_l">毕业学校</span>
+      <input type="text" placeholder="输入您的学校" class="Inp" bindblur="graduate_schoolChange"  value="{{profile_courtship.graduate_school}}" focus="{{Graduate_schoolFocus}}" cursor-spacing="50"/>
+    </view>
+    <view  class="list ">
+      <picker  value="{{work_sortIndex}}" range="{{work_sort}}"  bindchange="work_sortChange" >
+        <view class="picker">
+          单位性质
+          <text class="text" wx:if="{{WorkShow}}">{{work_sort[work_sortIndex]}}</text>
+          <text class="text" wx:else>{{work_text}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list">
+      <picker mode="multiSelector" bindchange="bindMultiPickerChange2" bindcolumnchange="bindMultiPickerColumnChange2" value="{{multiIndex2}}" range="{{objectMultiArray}}" >
+        <view class="picker">
+          行业
+          <text class="text" wx:if="{{show}}">{{objectMultiArray[0][multiIndex2[0]]}}，{{objectMultiArray[1][multiIndex2[1]]}}</text>
+          <text class="text" wx:else> {{industry}},{{industry_sub}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list">
+      <picker  value="{{salaryIndex}}" range="{{salary}}"  bindchange="salaryChange" >
+        <view class="picker">
+          收入
+          <text class="text" wx:if="{{Salaryshow}}">{{salary[salaryIndex]}}</text>
+          <text class="text" wx:else> {{salary[profile_courtship.salary_id]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list ">
+      <picker  value="{{carIndex}}" range="{{car}}"  bindchange="carChange" >
+        <view class="picker">
+          购车情况
+          <text class="text">{{car[carIndex]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list ">
+      <picker  value="{{housingIndex}}" range="{{housing}}"  bindchange="housingChange" >
+        <view class="picker">
+          购房情况
+          <text class="text">{{housing[housingIndex]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view  class="list {{IntroductionFocus ? 'InputFocus' : ''}}" style="height: 420rpx">
+      个人介绍（家庭情况，兴趣爱好，自我评价）
+      <view class="weui-cell">
+        <view class="weui-cell__bd" style="border-top: 1rpx solid #d3d3d3;border-bottom: 1rpx solid #d3d3d3;overflow: auto;">
+          <textarea class=""  bindinput="introductionChange" style="width: 100% !important;" value="{{profile_courtship.introduction}}" focus="{{IntroductionFocus}}" cursor-spacing="200"/>
+        </view>
+        <!--<view class="font_12" style="text-align: right">限140字</view>-->
+      </view>
+    </view>
+    <view  class="list {{Ideal_mateFocus ? 'InputFocus' : ''}}" style="height: 420rpx">
+      理想对象（写下你对另一半的期望）
+      <view class="weui-cell" >
+        <view class="weui-cell__bd" style="border-top: 1rpx solid #d3d3d3;border-bottom: 1rpx solid #d3d3d3;overflow: auto;">
+          <textarea class="" bindinput="ideal_mateChange" style="width: 100% !important;"  value="{{profile_courtship.ideal_mate}}" focus="{{Ideal_mateFocus}}"  cursor-spacing="200"/>
+        </view>
+        <!--<view class="font_12" style="text-align: right">限140字</view>-->
+      </view>
+    </view>
+    <view style="height: 88rpx"></view>
+    </view>
+    <view class="next text-center">
+      <view  class="btn_red" @tap="ensure" style="margin: auto;">完成</view>
+    </view>
+    </view>
+    </template>
+    <script>
+      import wepy from 'wepy'
+      // import network from '../../mixins/api'
+      import ShareMessage from '../../mixins/ShareMessage'
+
+      export default class Unmarried extends wepy.page {
+        mixins = [ShareMessage]
+        data = {
+          sex: ['男', '女'],
+          sexIndex: 0,
+          state: ['未婚', '离异', '丧偶'],
+          stateiIndex: 0,
+          resident_type: ['城市户口', '农村户口'],
+          residentIndex: 0,
+          degree: ['大专', '本科', '硕士', '博士', '其他'],
+          degreeIndex: 0,
+          work_sort: ['事业单位', '公务员', '央企', '国企', '私企', '外企'],
+          work_sortIndex: 0,
+          salary: [],
+          salaryIndex: 0,
+          car: ['无', '有'],
+          carIndex: 0,
+          housing: ['无', '有'],
+          housingIndex: 0,
+          region: ['广东省', '广州市'],
+          region_id: [''],
+          user: {
+            avatarUrl: '',
+            nickName: '艾丽丝',
+            mobile: '15361454427'
+          },
+          name: '',
+          age: '',
+          weight: '',
+          stature: '',
+          graduate_school: '',
+          introduction: '',
+          ideal_mate: '',
+          objectMultiArray: [],
+          Business: [],
+          show: false,
+          Salaryshow: false,
+          work_text: '',
+          WorkShow: false,
+          DegreeText: '',
+          ShowDegree: false,
+          industry: '',
+          industry_sub: '',
+          multiIndex2: [0, 0],
+          salary_id: '',
+          salaries: [],
+          NameFocus: false,
+          AgeFocus: false,
+          StatureFocus: false,
+          WeightFocus: false,
+          Graduate_schoolFocus: false,
+          IntroductionFocus: false,
+          Ideal_mateFocus: false,
+          ShowButton: true
+        }
+        onLoad() {
+          let that = this
+          this.user.nickName = wx.getStorageSync('name')
+          this.user.mobile = wx.getStorageSync('mobile')
+          this.user.avatarUrl = wx.getStorageSync('avatar')
+          network.GET('user', {
+            success: function (res) {
+              let result = res.data.data
+              that.salaries = result.salaries
+              result.salaries.forEach(function (ele, index, array) {
+                that.salary.push(ele.text)
+              })
+              that.name = result.user.name
+              that.age = result.user.profile_courtship.age
+              that.weight = result.user.profile_courtship.weight
+              that.stature = result.user.profile_courtship.stature
+              that.graduate_school = result.user.profile_courtship.graduate_school
+              that.introduction = result.user.profile_courtship.introduction
+              that.ideal_mate = result.user.profile_courtship.ideal_mate
+              that.work_text = result.user.profile_courtship.work_sort
+              that.DegreeText = result.user.profile_courtship.degree
+              that.industry = result.user.industry
+              that.industry_sub = result.user.industry_sub
+              that.profile_courtship = result.user.profile_courtship
+              that.region[0] = result.user.profile_courtship.province
+              that.region[1] = result.user.profile_courtship.city
+              that.region_id[1] = result.user.profile_courtship.resident_city
+              that.setData({
+                salary: that.salary,
+                profile_courtship: that.profile_courtship,
+                region: that.region,
+                region_id: that.region_id,
+                salaryIndex: that.profile_courtship.salary_id ? that.profile_courtship.salary_id : 0,
+                residentIndex: that.profile_courtship.resident_type === '城市户口' ? 0 : 1,
+                degreeIndex: that.profile_courtship.degree === '本科' ? 1 : 0,
+                degreeIndex: that.profile_courtship.degree === '硕士' ? 2 : 0,
+                degreeIndex: that.profile_courtship.degree === '博士' ? 3 : 0,
+                degreeIndex: that.profile_courtship.degree === '其他' ? 4 : 0,
+                work_sortIndex: that.profile_courtship.resident_type === '公务员' ? 1 : 0,
+                work_sortIndex: that.profile_courtship.resident_type === '央企' ? 2 : 0,
+                work_sortIndex: that.profile_courtship.resident_type === '国企' ? 3 : 0,
+                work_sortIndex: that.profile_courtship.resident_type === '私企' ? 4 : 0,
+                work_sortIndex: that.profile_courtship.resident_type === '外企' ? 5 : 0,
+                carIndex: that.profile_courtship.h_car,
+                housingIndex: that.profile_courtship.h_housing
+              })
+              that.$apply()
+            }
+          })
+          network.GET('industry/json', {
+            success: function (res) {
+              let result = res.data.data
+              that.Business = result
+              let IndustryArr = []
+              result.forEach(function (item, index, arr) {
+                IndustryArr.push(arr[index].title)
+              })
+              that.objectMultiArray.push(IndustryArr)
+              that.objectMultiArray.push(result[0].items)
+              that.$apply()
+              console.log(that.objectMultiArray)
+            }
+          })
+        }
+        ShowModal(text) {
+          wx.showToast({
+            title: text,
+            icon: 'none',
+            duration: 1500
+          })
+        }
+        onShow() {
+          this.$parent.getTracker(this.$root.$name, '个人信息（单身）修改')
+        }
+        methods = {
+          ensure() {
+            this.NameFocus = false
+            this.AgeFocus = false
+            this.StatureFocus = false
+            this.WeightFocus = false
+            this.Graduate_schoolFocus = false
+            this.IntroductionFocus = false
+            this.Ideal_mateFocus = false
+            this.ShowButton = true
+            let data = {
+              name: this.name,
+              sex: this.sexIndex == 0 ? 1 : 2,
+              age: this.age,
+              stature: this.stature,
+              weight: this.weight,
+              graduate_school: this.graduate_school,
+              introduction: this.introduction,
+              ideal_mate: this.ideal_mate,
+              state: this.state[this.stateiIndex],
+              province: this.region[0],
+              city: this.region[1],
+              resident_type: this.resident_type[this.residentIndex],
+              resident_province: this.region_id[0],
+              resident_city: this.region_id[1],
+              degree: this.degree[this.degreeIndex],
+              salary_id: this.salary_id ? this.salary_id : this.salaries[0].id,
+              h_car: this.carIndex,
+              h_housing: this.housingIndex,
+              industry: this.objectMultiArray[0][this.multiIndex2[0]],
+              industry_sub: this.objectMultiArray[1][this.multiIndex2[1]],
+              work_sort: this.work_sort[this.work_sortIndex]
+            }
+            console.log(this.age)
+            if (!this.name) {
+              this.NameFocus = true
+              console.log(this.NameFocus)
+              this.ShowModal('请填写真实姓名')
+            } else if (!this.age) {
+              this.AgeFocus = true
+              this.ShowModal('请填写年龄')
+            } else if (!this.stature) {
+              this.StatureFocus = true
+              this.ShowModal('请填写身高（cm）')
+            } else if (!this.weight) {
+              this.WeightFocus = true
+              this.ShowModal('请填写体重（kg）')
+            } else if (!this.graduate_school) {
+              this.Graduate_schoolFocus = true
+              this.ShowModal('请填写毕业学校')
+            } else if (!this.introduction) {
+              this.IntroductionFocus = true
+              this.ShowModal('请填写一些自我介绍介绍')
+            } else if (!this.ideal_mate) {
+              this.Ideal_mateFocus = true
+              this.ShowModal('请描绘一下你未来的理想对象')
+            } else {
+              network.PUT('users/courtship/text', {
+                data: data,
+                success: function (res) {
+                  wx.navigateTo({
+                    url: '/pages/user/user_imge',
+                    success: function (res) {
+                    }
+                  })
+                }
+              })
+            }
+          },
+          bindMultiPickerChange2 (e) {
+            console.log(e)
+            console.log('picker发送选择改变，携带值为', e.detail.value)
+            this.setData({
+              multiIndex2: e.detail.value
+            })
+          },
+          bindMultiPickerColumnChange2 (e) {
+            let that = this
+            var data = {
+              objectMultiArray: that.data.objectMultiArray,
+              multiIndex2: that.data.multiIndex2
+            }
+            that.show = true
+            that.$apply()
+            data.multiIndex2[e.detail.column] = e.detail.value
+            console.log(e.detail.column)
+            switch (e.detail.column) {
+              case 0:
+                for (let i = 0; i < that.Business.length; i++) {
+                  if (data.multiIndex2[0] === i) {
+                    data.objectMultiArray[1] = that.Business[i].items
+                  }
+                }
+                data.multiIndex2[1] = 0
+                break
+            }
+            this.setData(data)
+          },
+          nameChange(e) {
+            this.name = e.detail.value
+          },
+          ageChange(e) {
+            this.age = e.detail.value
+          },
+          statureChange(e) {
+            this.stature = e.detail.value
+          },
+          weightChange(e) {
+            this.weight = e.detail.value
+          },
+          graduate_schoolChange(e) {
+            this.graduate_school = e.detail.value
+          },
+          introductionChange(e) {
+            this.introduction = e.detail.value
+          },
+          ideal_mateChange(e) {
+//              console.log(e.detail.value)
+            this.ideal_mate = e.detail.value
+          },
+          stateChange(e) {
+            this.stateiIndex = e.detail.value
+          },
+          resident_typeChange(e) {
+            this.residentIndex = e.detail.value
+          },
+          cityChange(e) {
+            this.region = e.detail.value
+          },
+          region_idChange(e) {
+            this.region_id = e.detail.value
+          },
+          sexChange(e) {
+            this.sexIndex = e.detail.value
+          },
+          degreeChange(e) {
+            this.ShowDegree = true
+            this.degreeIndex = e.detail.value
+          },
+          work_sortChange(e) {
+            this.WorkShow = true
+            this.work_sortIndex = e.detail.value
+          },
+          salaryChange(e) {
+            console.log(e)
+            console.log(this.salaries)
+            this.Salaryshow = true
+            this.salaryIndex = e.detail.value
+            for (let i = 0; i < this.salaries.length; i++) {
+              if (this.salary[this.salaryIndex] == this.salaries[i].text) {
+                this.salary_id = this.salaries[i].id
+              }
+            }
+          },
+          carChange(e) {
+            this.carIndex = e.detail.value
+          },
+          housingChange(e) {
+            this.housingIndex = e.detail.value
+          }
+        }
+  }
+</script>
