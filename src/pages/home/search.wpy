@@ -3,7 +3,7 @@
     <view class="page__bd">
       <view class="weui-tab">
           <view class="weui-tab__content" >
-            <view class="weui-search-bar" >
+            <view class="weui-search-bar" style="position: fixed; left: 0; top: 0;width: 100%;z-index: 99999">
               <view class="weui-search-bar__form">
                 <view class="weui-search-bar__box">
                   <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
@@ -19,22 +19,22 @@
               </view>
               <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
             </view>
-            <view class="weui-cells__title"></view>
+            <view class="weui-cells__title" style="height: 80rpx;"></view>
             <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
               <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{item.id}}')">
                 <view class="flo_l weui-cell__hd" >
-                  <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+                  <image src="{{item.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
                 </view>
                 <view class="flo_l" style="width: 78%;">
                   <view  class="font_28 flo_l orange ellipsis_1 bold" style="margin-left: 12rpx;">
                     {{item.name}}
                   </view>
                   <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}} == '男'" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
                     <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
                   </view>
                 </view>
-                <view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{item.message}}</view>
+                <view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">距离你{{item.distance}}千米</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
             </view>
@@ -75,32 +75,7 @@
       loaded: false,
       // 我的图书馆
       mylibs: [],
-      list: [
-        {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '26岁/162cm/深圳',
-          'six': 0
-        },
-        {
-          'name' : '赵丽颖',
-          'image' : 'http://img0.imgtn.bdimg.com/it/u=2096616296,4033957106&fm=27&gp=0.jpg',
-          'message' : '26岁/160cm/深圳',
-          'six': 0
-        },
-        {
-          'name' : '舒淇',
-          'image' : 'http://img3.imgtn.bdimg.com/it/u=604561010,2398733113&fm=27&gp=0.jpg',
-          'message' : '36岁/168cm/深圳',
-          'six': 0
-        },
-        {
-          'name' : '吴亦凡',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=1995730738,2698011742&fm=27&gp=0.jpg',
-          'message' : '26岁/186cm/深圳',
-          'six': 1
-        },
-      ],
+      list: [],
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
@@ -177,53 +152,56 @@
       // })
     }
     getLibraries(keyword) {
-      let _this = this
+      let _this = this,
+         myLong = wx.getStorageSync('myLong'),
+         myLat = wx.getStorageSync('myLat')
       _this.loading = true
-      let url = service.libraries
+      let url = service.near_single
       if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
+        url = service.near_single + '?keyword=' + keyword
       }
-//       this.$get({
-//         url: url,
-//         data: {
-//           page: this.page
-//         }
-//       }, {
-//         success: ({code, data}) => {
-//           _this.noMore = false
-//           _this.loading = true
-//           if (data.data.length == 0 && data.data.last_page == 1) {
-//             _this.loading = false
-//             _this.noMore = true
-//             _this.libs = []
-//             return
-//           }
-//           if (data.current_page > data.last_page) {
-//             _this.noMore = true
-//             _this.loading = true
-//             return
-//           }
-//           data = data.data
-//           if (this.isArray(data) && data.length === 0) {
-//             _this.noMore = true
-//             _this.libs = []
-//             return
-//           }
-//           if (_this.libs.length === 0 || _this.page === 1) {
-//             _this.libs = data
-//           } else {
-//             data.map(function (item, index) {
-//               _this.libs.push(item)
-//             })
-//           }
-//           _this.noMore = true
-//           _this.page += 1
-//
-// //          _this.libs = data.data
-//         },
-//         fail: ({code, data}) => {},
-//         complete: () => { this.loaded = false }
-//       })
+       this.$get({
+         url: url,
+         data: {
+           page: this.page,
+           location_latitude: myLat,
+           location_longitude: myLong
+         }
+       }, {
+         success: ({code, data}) => {
+           _this.noMore = false
+           _this.loading = true
+           if (data.data.length == 0 && data.data.last_page == 1) {
+             _this.loading = false
+             _this.noMore = true
+             _this.list = []
+             return
+           }
+           if (data.current_page > data.last_page) {
+             _this.noMore = true
+             _this.loading = false
+             return
+           }
+           data = data.data
+           if (this.isArray(data) && data.length === 0) {
+             _this.noMore = true
+             _this.list = []
+             return
+           }
+           if (_this.list.length === 0 || _this.page === 1) {
+             _this.loading = false
+             _this.list = data
+           } else {
+             data.map(function (item, index) {
+               _this.list.push(item)
+             })
+           }
+           _this.noMore = true
+           _this.page += 1
+         },
+         fail: ({code, data}) => {},
+         complete: () => { this.loaded = false }
+       })
     }
 
     methods = {

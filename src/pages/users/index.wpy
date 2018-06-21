@@ -7,10 +7,10 @@
             <view class="userinfo clearfix">
               <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
               <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
-              <image class="userinfo-avatar" src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png" background-size="cover"/>
+              <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
               <view class="userinfo-info">
                 <view class="userinfo-nickname font_32">
-                  manber
+                  {{ user.name }}
                   <block wx:if="{{is_vip}}">
                     <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
                       <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
@@ -25,9 +25,9 @@
                   </block>
                 </view>
               </view>
-              <view class="flo_r font_26 white" >
-                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; " @tap="goto('/pages/users/unmarri')"></image>
-                <view style="margin-top: 5rpx"class="flo_r" @tap="goto('/pages/users/intro')">完善个人资料，让更多的人认识你</view>
+              <view class="flo_r font_26 white" @tap="gotoUser({{user.type}})">
+                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; " ></image>
+                <view style="margin-top: 5rpx"class="flo_r" >完善个人资料，让更多的人认识你</view>
               </view>
               <view class="message" @tap="goto('/pages/users/myNews')">
                 <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
@@ -40,15 +40,15 @@
     </view>
     <view style="background: white;width: 100%;height: 100rpx;padding: 8rpx 0">
       <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=attention')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">28</view>
+        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.follow_count}}</view>
         <view class=" font_26">关注</view>
       </view>
       <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=fans')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">34</view>
+        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.fans_count}}</view>
         <view class=" font_26">粉丝</view>
       </view>
       <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=friend')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">121</view>
+        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.friend_count}}</view>
         <view class=" font_26">好友</view>
       </view>
     </view>
@@ -132,7 +132,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -151,32 +151,42 @@
     initPageData() {
       this.$get({url: service.user}, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
-          this.libraries.forEach((item) => {
-            if (item.type == 'SHARE') {
-              item.url = '/pages/library/shareLibrary?id=' + item.id
-            } else {
-              item.url = '/pages/library/library?id=' + item.id
-            }
-          })
-          wx.setStorageSync('openid', data.user.wechat.openid)
-          wx.setStorageSync('is_new', data.user.is_news)
-          if (data.user.is_news) {
-            wepy.showTabBarRedDot({
-              index: 4
-            })
-          } else {
-            wepy.hideTabBarRedDot({
-              index: 4
-            })
-          }
+          this.user = data
+          this.$apply()
+//          this.libraries = data.libraries
+//          this.libraries.forEach((item) => {
+//            if (item.type == 'SHARE') {
+//              item.url = '/pages/library/shareLibrary?id=' + item.id
+//            } else {
+//              item.url = '/pages/library/library?id=' + item.id
+//            }
+//          })
+//          wx.setStorageSync('openid', data.user.wechat.openid)
+//          wx.setStorageSync('is_new', data.user.is_news)
+//          if (data.user.is_news) {
+//            wepy.showTabBarRedDot({
+//              index: 4
+//            })
+//          } else {
+//            wepy.hideTabBarRedDot({
+//              index: 4
+//            })
+//          }
         }
       })
     }
 
     methods = {
       goto(url) {
+        wx.navigateTo({url: url})
+      },
+      gotoUser(type) {
+        let url = ''
+        if(type == 'single'){
+          url = '/pages/users/unmarri'
+        }else{
+          url = '/pages/users/intro'
+        }
         wx.navigateTo({url: url})
       }
     }

@@ -41,7 +41,7 @@
       </view>
       <view class="orderdata">
         <view class="title">{{uploadTitle}}</view>
-        <view class="Paths" style="margin:30rpx;" bindtap="chooseimage">+</view>
+        <view class="Paths" style="margin:30rpx;" @tap="chooseimage">+</view>
         <view style="padding: 22rpx ;border: 1rpx solid #d3d3d3;border-radius: 6rpx;margin: 10rpx">
           <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{files}}" wx:key="*this" wx:if="{{files}}"/>
           <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{photosList}}" @tap="previewImage({{item}},{{photosList}})"
@@ -49,18 +49,25 @@
         </view>
       </view>
       <view style="height: 88rpx"></view>
-      <view class="next btn_red" @tap="ensure">完成</view>
+      <view class="next btn_red" @tap="ensure">上传</view>
     </view>
 
   </view>
 </template>
 <script>
   import wepy from 'wepy'
-  // import network from '../../mixins/api'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
+//  import uploadimage from '../../mixins/upload_image'
 
   export default class vipImage extends wepy.page {
-    mixins = [ShareMessage]
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: "上传照片"
+    }
     data = {
       user: {
         avatarUrl: 'http://images.ufutx.com/201801/23/4a3bda4b26861d4b012dbab11f2d004f.jpeg',
@@ -80,9 +87,8 @@
       let that = this
       this.type_v = e.type
       this.uploadTitle = e.title
-      this.user.nickName = wx.getStorageSync('name')
-      this.user.mobile = wx.getStorageSync('mobile')
-      this.user.avatarUrl = wx.getStorageSync('avatar')
+      this.photosList = e.imageArr
+//      debugger
       setTimeout(() => {
         this.uploadTitle = e.title
         this.$apply()
@@ -141,33 +147,22 @@
         if (that.files) {
           this.uploadFiles(that.files, 0, 0, 0, that.files.length)
         } else {
-//          wx.navigateTo({
-//            url: '/pages/relacion/relacion'
-//          })
           wx.navigateBack({
             delta: 1
           })
         }
       }
     }
-          /* 函数描述：作为上传文件时递归上传的函数体体；
-      * 参数描述：
-      * filePaths是文件路径数组
-      * successUp是成功上传的个数
-      * failUp是上传失败的个数
-      * i是文件路径数组的指标
-      * length是文件路径数组的长度
-      */
     uploadFiles = function (filePaths, successUp, failUp, i, length) {
       let that = this
-      let token = wx.getStorageSync('ACCESS_TOKEN')
+      let token = wx.getStorageSync('token')
       wx.showToast({
         title: '照片上传中...',
         icon: 'none',
         duration: 2000
       })
       wx.uploadFile({
-        url: 'https://love.ufutx.com/api/uploads?XDEBUG_SESSION_START=1',
+        url: service.image_upload,
         filePath: filePaths[i],
         method: 'POST',
         name: 'fileData',
@@ -208,13 +203,14 @@
               duration: 1500
             })
             setTimeout(() => {
-              network.PUT('users/courtship/media', {
-                data: data,
-                success: function (res) {
+              this.$put({url: service.courtship, data}, {
+                success: ({code, res}) => {
                   wx.navigateBack({
                     delta: 1
                   })
-                }
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loading = false }
               })
             }, 1000)
           }
@@ -240,7 +236,7 @@
   @import "../../styles/custom/fn.less";
   @import "../../styles/custom/reset.less";
   page{
-    background: #ececec;
+    background: #f4f4f4;
   }
   .weui-cells {
     position: inherit;
@@ -393,13 +389,15 @@
     max-width: 180rpx;
     text-align: center;
     font-size: 36rpx;
-    border: 1rpx solid #dbd8d8;
+    /*border: 1rpx solid #dbd8d8;*/
     border-left: none;
     border-bottom-right-radius: 32rpx;
     border-top-right-radius: 32rpx;
     padding: 12rpx;
     position: relative;
     left: -180rpx ; top: 10rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+    background: white;
     animation:myfirst 2s;
     animation-direction:alternate;
     animation-fill-mode:forwards;

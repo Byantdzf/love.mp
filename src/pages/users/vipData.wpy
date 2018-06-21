@@ -38,84 +38,80 @@
         </view>
       </view>
     </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/integral" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/order.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
+    <view class="list">
+      <picker value="{{salaryIndex}}" range="{{salary}}" @change="salaryChange">
+        <view class="picker weui-cell__bd ">
+          薪水级别
+          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r" wx:if="{{Salaryshow}}">{{salary[salaryIndex]}}</text>
+          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r" wx:else> {{salary[0]}}</text>
         </view>
-        <view class="weui-cell__bd">薪水级别</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">8k~10k</view>
-      </navigator>
+      </picker>
+    </view>
+    <view class="list ">
+      <picker value="{{carIndex}}" range="{{car}}" @change="carChange">
+        <view class="picker weui-cell__bd">
+          购车情况
+          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r">{{car[carIndex]}}</text>
+        </view>
+      </picker>
+    </view>
+    <view class="list ">
+      <picker value="{{housingIndex}}" range="{{housing}}" @change="housingChange">
+        <view class="picker weui-cell__bd">
+          购房情况
+          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r">{{housing[housingIndex]}}</text>
+        </view>
+        <!--<view class="weui-cell__bd">购房情况</view>-->
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{housing[housingIndex]}}</view>-->
+      </picker>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/myGift" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/gift.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">是否有车</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">是</view>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <!--<image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        </view>
-        <view class="weui-cell__bd">是否有房</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">是</view>
-      </navigator>
-      <!--<navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">-->
-      <!--<view class="weui-cell__hd">-->
-      <!--<image src="../../images/icon/test.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-      <!--</view>-->
-      <!--<view class="weui-cell__bd">心有灵犀</view>-->
-      <!--&lt;!&ndash;<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>&ndash;&gt;-->
-      <!--</navigator>-->
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="hrefing(photos,'生活照',{{profile_courtship.photos}})" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <!--<view class="weui-cell__hd">-->
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         <!--</view>-->
         <view class="weui-cell__bd">生活照</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{profile_courtship.photos.length}}张</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="hrefing(identification_photos,'身份证照片',{{profile_courtship.identification_photos}})" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">身份证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{profile_courtship.identification_photos.length}}张</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="hrefing(graduate_photos,'毕业证照片',{{profile_courtship.graduate_photos}})" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">毕业证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{profile_courtship.graduate_photos.length}}张</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="hrefing(other_photos,'其他证件',{{profile_courtship.other_photos}})" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">其他证件</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">2张</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{profile_courtship.other_photos.length}}张</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/vipImage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="hrefing(wechat_qrcode,'微信二维码名片',{{profile_courtship.wechat_qrcode}})" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">微信二维码</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">1张</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{profile_courtship.wechat_qrcode.length}}张</view>
+      </view>
+    </view>
+    <view class="next text-center">
+      <view  class="btn_red" @tap="ensure" style="margin: 22rpx auto;">完成</view>
     </view>
   </view>
 </template>
@@ -138,6 +134,15 @@
       libraries: {},
       user: {},
       is_vip: false,
+      car: ['无', '有'],
+      carIndex: 0,
+      housing: ['无', '有'],
+      housingIndex: 0,
+      Salaryshow: false,
+      salary: [],
+      salaryIndex: 0,
+      salary_id: '',
+      profile_courtship: [],
       nickName: '加载中...'
 
     }
@@ -150,7 +155,8 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.getsalaries()
+      this.getuser()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -164,38 +170,92 @@
     onPullDownRefresh() {
       this.initPageData()
     }
-
-    // 初始化页面数据
-    initPageData() {
-      this.$get({url: service.user}, {
+    getsalaries() {
+      let that = this
+      this.loading = true
+      this.$get({url: service.salaries }, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
-          this.libraries.forEach((item) => {
-            if (item.type == 'SHARE') {
-              item.url = '/pages/library/shareLibrary?id=' + item.id
-            } else {
-              item.url = '/pages/library/library?id=' + item.id
-            }
+          that.salaries = data
+          that.salaries.forEach(function (ele, index, array) {
+            that.salary.push(ele.text)
           })
-          wx.setStorageSync('openid', data.user.wechat.openid)
-          wx.setStorageSync('is_new', data.user.is_news)
-          if (data.user.is_news) {
-            wepy.showTabBarRedDot({
-              index: 4
-            })
-          } else {
-            wepy.hideTabBarRedDot({
-              index: 4
-            })
-          }
-        }
+          that.$apply()
+          console.log(that.objectMultiArray)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
       })
     }
+    getuser() {
+      let that = this
+      this.loading = true
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.profile_courtship = data.profile_courtship
+          this.$apply()
 
+//          that.residentIndex = result.resident_type === '城市户口' ? 0 : 1
+//          that.sex.forEach((item, index, arr) => {
+//            if (result.sex == index+1) {
+//              that.sexIndex = index
+//            }
+//          })
+          that.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
+      })
+    }
     methods = {
       goto(url) {
         wx.navigateTo({url: url})
+      },
+      salaryChange(e) {
+        console.log(e)
+        console.log(this.salaries)
+        this.Salaryshow = true
+        this.salaryIndex = e.detail.value
+        for (let i = 0; i < this.salaries.length; i++) {
+          if (this.salary[this.salaryIndex] == this.salaries[i].text) {
+            this.salary_id = this.salaries[i].id
+            console.log(this.salary_id)
+          }
+        }
+      },
+      carChange(e) {
+        this.carIndex = e.detail.value
+      },
+      housingChange(e) {
+        this.housingIndex = e.detail.value
+      },
+      ensure() {
+        let data = {
+          salary_id: this.salary_id ? this.salary_id : this.salaries[0].id,
+          h_car: this.car[this.carIndex],
+          h_housing: this.housing[this.housingIndex]
+        }
+        console.log(data)
+        this.$put({url: service.courtship, data}, {
+          success: ({code, res}) => {
+            wx.showToast({
+              title: '填写成功!',
+              icon: 'success',
+              duration: 1200,
+              success: (res) => {
+                let url = '/pages/home/index'
+                wx.switchTab({url: url})
+              }
+            })
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loading = false }
+        })
+      },
+      hrefing(type, title, imageArr) {
+        console.log(type)
+        wx.navigateTo({
+          url: '/pages/users/vipImage?type=' + type + '&title=' + title + '&imageArr=' + imageArr
+        })
       }
     }
 
@@ -208,7 +268,24 @@
   @import "../../styles/custom/fn.less";
   @import "../../styles/custom/reset.less";
   page{
-    background: #ececec;
+    background: #f4f4f4;
+  }
+  .list{
+    /*margin-left: 32rpx;*/
+    /*margin-right: 32rpx;*/
+    /*height: 72rpx;*/
+    /*line-height: 72rpx;*/
+    /*border-bottom: 1px solid #ece5e5;*/
+    font-size: 32rpx;
+    color: #828282;
+    padding:10px 15px;
+    box-shadow: 1rpx 1rpx 10rpx #d3d3d3;
+    /*margin-bottom: 22rpx;*/
+    /*border-radius: 6rpx;*/
+    background: white;
+  }
+  .list:active{
+    background: #e3e3e3;
   }
   .weui-cells {
     position: inherit;
@@ -245,6 +322,8 @@
     }
     .weui-cell__bd{
       margin-left: 12rpx;
+      font-size: 32rpx;
+      color: #828282;
     }
     // space + space
     .userinfo-info {

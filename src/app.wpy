@@ -16,6 +16,7 @@ export default class extends wepy.app {
       'pages/home/sharePay',
       'pages/home/sharing',
       'pages/home/information',
+      'pages/home/introducer',
       'pages/home/addFriend',
       'pages/home/swopWeChat',
       'pages/home/giveGift',

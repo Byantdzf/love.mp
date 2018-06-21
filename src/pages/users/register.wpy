@@ -119,6 +119,14 @@
     onLoad() {
       // 初始化页面数据
       this.initPageData()
+       wx.setNavigationBarColor({
+           frontColor: '#ffffff',
+           backgroundColor: '#CDA6C1',
+           animation: {
+             duration: 400,
+             timingFunc: 'easeIn'
+           }
+         })
 //      this.getInfo()
     }
 
@@ -135,54 +143,62 @@
       if (token) {
 //        wx.switchTab({url: '/pages/partyList'})
       }
-//      this.$doLogin()
-      this.$setCode()
-      wepy.getUserInfo({
-        success: (res) => {
-          wx.setStorageSync('user', res.userInfo)
-//          code: wx.getStorageSync('code')
-          console.log(res.userInfo)
-          this.avatarUrl = res.userInfo.avatarUrl
-          this.nickName = res.userInfo.nickName
-          this.encryptedData = res.encryptedData
-          this.iv = res.iv
-          console.log(this.iv)
-          this.$apply()
-          let data = {
-            code: wx.getStorageSync('code'),
-            iv: this.iv,
-            encryptedData: this.encryptedData
-          }
+      this.$doLogin()
+//      this.$setCode()
+//      debugger
+//      wepy.getUserInfo({
+//        success: (res) => {
+//          wx.setStorageSync('user', res.userInfo)
+////          code: wx.getStorageSync('code')
+//          console.log(res.userInfo)
+//          this.avatarUrl = res.userInfo.avatarUrl
+//          this.nickName = res.userInfo.nickName
+//          this.encryptedData = res.encryptedData
+//          this.iv = res.iv
+//          console.log(this.iv)
+//          this.$apply()
+//          let data = {
+//            code: wx.getStorageSync('code'),
+//            iv: this.iv,
+//            encryptedData: this.encryptedData
+//          }
 //          debugger
-          this.$post({url: service.infor, data}, {
-            success: ({code, data}) => {
-//              debugger
-              this.$setCode()
-            },
-            fail: ({code, data}) => {},
-            complete: () => { this.loading = false }
-          })
-        },
-        fail: (res) => { }
-      })
+//          this.$post({url: service.infor, data}, {
+//            success: ({code, data}) => {
+////              debugger
+//              this.$setCode()
+//            },
+//            fail: ({code, data}) => {},
+//            complete: () => { this.loading = false }
+//          })
+//        },
+//        fail: (res) => { }
+//      })
     }
     getPhoneNumber(e) {
-      if (e.detail.iv) {
-        let data = {
-          code: wx.getStorageSync('code'),
-          iv: e.detail.iv,
-          encryptedData: e.detail.encryptedData
+      wepy.login({
+        success: (res) => {
+          if (e.detail.iv) {
+            let data = {
+              code: res.code,
+              iv: e.detail.iv,
+              encryptedData: e.detail.encryptedData
+            }
+            this.$post({url: service.infor, data}, {
+              success: ({code, data}) => {
+                this.mobile = data.phoneNumber
+                this.$apply()
+                this.$setCode()
+              },
+              fail: ({code, data}) => {},
+              complete: () => { this.loading = false }
+            })
+          }
+        },
+        fail: (res) => {
+          console.log('wepy.login.fail:', res)
         }
-        this.$post({url: service.infor, data}, {
-          success: ({code, data}) => {
-            this.mobile = data.phoneNumber
-            this.$apply()
-            this.$setCode()
-          },
-          fail: ({code, data}) => {},
-          complete: () => { this.loading = false }
-        })
-      }
+      })
     }
 //    getInfo() {
 //      wepy.getUserInfo({
@@ -217,39 +233,51 @@
         if (!this.isPhone(this.mobile)) {
           return this.$alert('温馨提示', '请输入正确的手机号码')
         }
-        if (!this.nickName) {
-          return wx.openSetting({
-            success: (res) => {
-              this.initPageData()
-            }
-          })
-        }
+//        if (!this.nickName) {
+//          return wx.openSetting({
+//            success: (res) => {
+//              this.initPageData()
+//            }
+//          })
+//        }
         const data = {
           mobile: this.getString(this.mobile),
           code: wx.getStorageSync('code'),
           name: this.getString(this.name),
           encryptedData: this.encryptedData,
-          iv: this.iv
+          iv: this.iv,
+          type: type
         }
         // 绑定手机号
         this.loading = true
         this.$post({url: service.register, data}, {
           success: ({code, data}) => {
             wx.setStorageSync('token', data.token)
-            wx.showModal({
-              title: '更新成功',
-              content: '返回之前页面！',
+            wx.showLoading({
+              title: '注册中...',
+              mask: true,
               showCancel: false,
               success: (res) => {
-//                    if (res.confirm) {
-                var jump = wx.getStorageSync('jump')
-                if (jump) {
-                  wx.redirectTo({url: '/' + jump})
-                } else {
-                  wx.redirectTo({url: '/pages/partyList'})
-                }
               }
             })
+            setTimeout(function(){
+              wx.hideLoading()
+              wx.showToast({
+                title: '注册成功!',
+                icon: 'success',
+                duration: 1200,
+                success: (res) => {
+                  let url = ''
+                  if(type == 'single'){
+                    url = '/pages/users/unmarri'
+                  }else{
+                    url = '/pages/users/intro'
+                  }
+                  wx.redirectTo({url: url})
+                }
+              })
+
+            },1000)
           },
           fail: ({code, data}) => {},
           complete: () => { this.loading = false }

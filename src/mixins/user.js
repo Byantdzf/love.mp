@@ -15,7 +15,7 @@ export default class userMixin extends wepy.mixin {
         this.$post({ url: service.login, data: {code: res.code} }, {
           success: ({code, data}) => {
             wx.setStorageSync('token', data.token)
-            wx.setStorageSync('openid', data.token)
+            wx.setStorageSync('openid', data.openid)
             if(!data.token){
               wx.setStorageSync('jump', '/' + getCurrentPages()[0].__route__)
             }

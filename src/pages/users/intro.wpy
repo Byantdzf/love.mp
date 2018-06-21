@@ -1,4 +1,330 @@
+<template>
+  <view class="container">
+    <!--<view class="userinfo">-->
+      <!--<image  src="{{user.avatarUrl}}" style="width: 150rpx;height: 150rpx;border-radius: 50%;margin: 22rpx" class="flo_l"/>-->
+      <!--<view  class="flo_l font_12" style="width: 45%;margin-top: 48rpx">{{ user.nickName }}</view>-->
+      <!--<view  class="flo_l font_12" style="width: 45%;margin-top: 28rpx">{{ user.mobile }}</view>-->
+    <!--</view>-->
+    <view class="orderdata">
+      <!--<view  class="list {{NameFocus ? 'InputFocus' : ''}}" >-->
+        <!--<span class="flo_l">姓名</span>-->
+        <!--<input type="text" placeholder="" class="Inp" @blur="typing('name')" value="{{name}}"  focus="{{NameFocus}}"/>-->
+      <!--</view>-->
+      <view class="section list">
+        <picker  value="{{sexIndex}}" range="{{sex}}"  @change="sexChange" >
+          <view class="picker">
+            性别
+            <text class="text">{{sex[sexIndex]}}</text>
+          </view>
+        </picker>
+      </view>
+      <view class="section list">
+        <picker mode="date"  value="{{birthday}}"  @change="typing('birthday')">
+          <view class="picker">
+            出生日期
+            <text class="text">{{birthday}}</text>
+          </view>
+        </picker>
+      </view>
+      <view  class="list {{WordFocus ? 'InputFocus' : ''}}" >
+        <span class="flo_l">工作单位</span>
+        <input type="text" placeholder="" class="Inp" @blur="typing('company')" value="{{company}}" focus="{{WordFocus}}"/>
+      </view>
+      <view  class="list">
+        <picker mode="multiSelector" bindchange="bindMultiPickerChange2" bindcolumnchange="bindMultiPickerColumnChange2" value="{{multiIndex2}}" range="{{objectMultiArray}}" >
+          <view class="picker">
+            行业
+            <text class="text" wx:if="{{show}}">{{objectMultiArray[0][multiIndex2[0]]}}，{{objectMultiArray[1][multiIndex2[1]]}}</text>
+            <text class="text" wx:else> {{industry}},{{industry_sub}}</text>
+          </view>
+        </picker>
+      </view>
+      <!--<view  class="list {{WechatFocus ? 'InputFocus' : ''}}">-->
+        <!--<span class="flo_l">微信号</span>-->
+        <!--<input type="text" placeholder="输入您的微信号" class="Inp" @blur="typing('wechat_id')" value="{{profile_marriage.wechat_id}}" focus="{{WechatFocus}}"/>-->
+      <!--</view>-->
+      <!--<view  class="list ">-->
+        <!--<picker  value="{{degreeIndex}}" range="{{degree}}"  bindchange="degreeChange" >-->
+          <!--<view class="picker">-->
+            <!--学历-->
+            <!--<text class="text" wx:if="{{ShowDegree}}">{{degree[degreeIndex]}}</text>-->
+            <!--<text class="text" wx:else>{{DegreeText}}</text>-->
+          <!--</view>-->
+        <!--</picker>-->
+      <!--</view>-->
+      <view  class="list  {{SloganFocus ? 'InputFocus' : ''}} " style="height: 420rpx">
+        服务格言(为何喜欢做介绍人)
+        <view class="weui-cell">
+          <view class="weui-cell__bd" style="border-top: 1rpx solid #d3d3d3;border-bottom: 1rpx solid #d3d3d3;overflow: auto;">
+            <textarea class="weui-textarea" style="width: 100% !important;"   @input="typing('slogan')" value="{{slogan}}" focus="{{SloganFocus}}"  cursor-spacing="200"/>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="next btn_red"  @tap="ensure">完成</view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class Intro extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '单身资料填写',
+      enablePullDownRefresh: false
+    }
+    data = {
+      name: '',
+      sex: ['男', '女'],
+      sexIndex: 1,
+      degree: ['大专', '本科', '硕士', '博士', '其他'],
+      DegreeText: '',
+      ShowDegree: false,
+      degreeIndex: 0,
+      company: '',
+      slogan: '',
+      wechat_id: '',
+      profile_marriage: [],
+      objectMultiArray: [],
+      Business: [],
+      show: false,
+      industry: '',
+      industry_sub: '',
+      multiIndex2: [0, 0],
+      birthday:'1990-01-01',
+      NameFocus: false,
+      WordFocus: false,
+      WechatFocus: false,
+      SloganFocus: false,
+      user: {
+        avatarUrl: 'http://images.ufutx.com/201801/23/4a3bda4b26861d4b012dbab11f2d004f.jpeg',
+        nickName: '艾丽丝',
+        mobile: '15361454427'
+      }
+    }
+    onLoad() {
+      this.getindustry()
+      this.getuser()
+//      let that = this
+//      this.user.nickName = wx.getStorageSync('name')
+//      this.user.mobile = wx.getStorageSync('mobile')
+//      this.user.avatarUrl = wx.getStorageSync('avatar')
+//      network.GET('user', {
+//        success: function (res) {
+//          let result = res.data.data
+//          that.profile_marriage = result.user.profile_marriage
+//          if (that.profile_marriage === null) {
+//            that.show = true
+//          } else {
+//            that.name = result.user.name
+//            that.company = result.user.profile_marriage.company
+//            that.wechat_id = result.user.profile_marriage.wechat_id
+//            that.DegreeText = result.user.profile_marriage.degree
+//            that.industry = result.user.industry
+//            that.industry_sub = result.user.industry_sub
+//          }
+//          that.$apply()
+//        }
+//      })
+//      network.GET('industry/json', {
+//        success: function (res) {
+//          let result = res.data.data
+//          that.Business = result
+//          let IndustryArr = []
+//          result.forEach(function (item, index, arr) {
+//            IndustryArr.push(arr[index].title)
+//          })
+//          that.objectMultiArray.push(IndustryArr)
+//          that.objectMultiArray.push(result[0].items)
+//          that.$apply()
+//          console.log(that.objectMultiArray)
+//        }
+//      })
+    }
+    ShowModal(text) {
+      wx.showToast({
+        title: text,
+        icon: 'none',
+        duration: 1500
+      })
+    }
+    onShow() {
+      this.$parent.getTracker(this.$root.$name, '介绍人信息注册/修改')
+    }
+    getindustry() {
+      let that = this
+      this.loading = true
+      this.$get({url: service.industry, }, {
+        success: ({code, data}) => {
+          let result = data
+          that.Business = result
+          let IndustryArr = []
+          result.forEach(function (item, index, arr) {
+            IndustryArr.push(arr[index].title)
+          })
+          that.objectMultiArray.push(IndustryArr)
+          that.objectMultiArray.push(result[0].items)
+          that.$apply()
+          console.log(that.objectMultiArray)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
+      })
+    }
+    getuser() {
+      let that = this
+      this.loading = true
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          let result = data.profile_marriage
+          that.age = result.age
+//          that.weight = result.weight
+          that.stature = result.stature
+//          that.graduate_school = result.graduate_school
+//          that.introduction = result.introduction
+//          that.ideal_mate = result.ideal_mate
+          that.work_text = result.work_sort
+          that.DegreeText = result.degree
+          that.birthday = result.birthday
+          that.company = result.company
+          that.slogan = result.slogan
+//          that.region[0] = result.province
+//          that.region[1] = result.city
+//          that.region_id[1] = result.resident_city
+//          that.residentIndex = result.resident_type === '城市户口' ? 0 : 1
+//          that.degree.forEach((item, index, arr) => {
+//            console.log(arr[index])
+//            if (result.degree == arr[index]) {
+//              that.degreeIndex = index
+//            }
+//          })
+          that.sex.forEach((item, index, arr) => {
+            if (result.sex == index+1) {
+              that.sexIndex = index
+            }
+          })
+          that.industry = data.industry
+          that.industry_sub = data.industry_sub
+          that.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
+      })
+    }
+    methods = {
+      bindMultiPickerChange2 (e) {
+        console.log(e)
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        this.setData({
+          multiIndex2: e.detail.value
+        })
+      },
+      bindMultiPickerColumnChange2 (e) {
+        let that = this
+        var data = {
+          objectMultiArray: that.data.objectMultiArray,
+          multiIndex2: that.data.multiIndex2
+        }
+        that.show = true
+        that.$apply()
+        data.multiIndex2[e.detail.column] = e.detail.value
+        console.log(e.detail.column)
+        switch (e.detail.column) {
+          case 0:
+            for (let i = 0; i < that.Business.length; i++) {
+              if (data.multiIndex2[0] === i) {
+                data.objectMultiArray[1] = that.Business[i].items
+              }
+            }
+            data.multiIndex2[1] = 0
+            break
+        }
+        this.setData(data)
+      },
+      typing (type, e) {
+        if (this.isDefined(this[type])) {
+          this[type] = e.detail.value
+        }
+      },
+//      nameChange(e) {
+//        this.name = e.detail.value
+//      },
+//      companyChange(e) {
+//        this.company = e.detail.value
+//      },
+//      sloganChange(e) {
+//        this.slogan = e.detail.value
+//      },
+//      wechat_idChange(e) {
+//        this.wechat_id = e.detail.value
+//      },
+      degreeChange(e) {
+        this.ShowDegree = true
+        this.degreeIndex = e.detail.value
+      },
+      ensure() {
+        this.NameFocus = false
+        this.WordFocus = false
+        this.WechatFocus = false
+        this.SloganFocus = false
+        let data = {
+          company: this.company,
+          slogan: this.slogan,
+          birthday: this.birthday,
+          sex: this.sexIndex == 0 ? 1 : 2,
+//          wechat_id: this.wechat_id,
+          industry: this.objectMultiArray[0][this.multiIndex2[0]],
+          industry_sub: this.objectMultiArray[1][this.multiIndex2[1]],
+//          degree: this.degree[this.degreeIndex]
+        }
+        if (!this.company) {
+          this.WordFocus = true
+          this.ShowModal('请填写工作单位')
+        } else {
+          console.log(data)
+          this.$put({url: service.marriage, data}, {
+            success: ({code, res}) => {
+              wx.showToast({
+                title: '填写成功!',
+                icon: 'success',
+                duration: 1200,
+                success: (res) => {
+                  let url = '/pages/home/index'
+                  wx.switchTab({url: url})
+                }
+              })
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loading = false }
+          })
+        }
+//        else if (!this.wechat_id) {
+//          this.WechatFocus = true
+//          this.ShowModal('请填写微信号')
+//        }
+
+      },
+      stateChange(e) {
+        this.stateiIndex = e.detail.value
+      },
+      sexChange(e) {
+        this.sexIndex = e.detail.value
+      },
+      resident_typeChange(e) {
+        this.residentIndex = e.detail.value
+      }
+    }
+  }
+</script>
 <style lang="less">
+  page{
+    background: #f4f4f4;
+  }
   .active {
     border: 1 rpx solid red
   }
@@ -26,7 +352,7 @@
   .orderdata{
     width: 100%;
     padding:32rpx 0 ;
-    margin-top: 200rpx;
+    /*margin-top: 200rpx;*/
   }
   .list{
     margin-left: 32rpx;
@@ -62,225 +388,3 @@
     border: 1px solid red;
   }
 </style>
-<template>
-  <view class="container">
-    <view class="userinfo">
-      <image  src="{{user.avatarUrl}}" style="width: 150rpx;height: 150rpx;border-radius: 50%;margin: 22rpx" class="flo_l"/>
-      <view  class="flo_l font_12" style="width: 45%;margin-top: 48rpx">{{ user.nickName }}</view>
-      <view  class="flo_l font_12" style="width: 45%;margin-top: 28rpx">{{ user.mobile }}</view>
-    </view>
-    <view class="orderdata">
-      <view  class="list {{NameFocus ? 'InputFocus' : ''}}" >
-        <span class="flo_l">姓名</span>
-        <input type="text" placeholder="" class="Inp" bindblur="nameChange" value="{{name}}"  focus="{{NameFocus}}"/>
-      </view>
-      <view  class="list {{WordFocus ? 'InputFocus' : ''}}" >
-        <span class="flo_l">工作单位</span>
-        <input type="text" placeholder="" class="Inp" bindblur="companyChange" value="{{profile_marriage.company}}" focus="{{WordFocus}}"/>
-      </view>
-      <view  class="list">
-        <picker mode="multiSelector" bindchange="bindMultiPickerChange2" bindcolumnchange="bindMultiPickerColumnChange2" value="{{multiIndex2}}" range="{{objectMultiArray}}" >
-          <view class="picker">
-            行业
-            <text class="text" wx:if="{{show}}">{{objectMultiArray[0][multiIndex2[0]]}}，{{objectMultiArray[1][multiIndex2[1]]}}</text>
-            <text class="text" wx:else> {{industry}},{{industry_sub}}</text>
-          </view>
-        </picker>
-      </view>
-      <view  class="list {{WechatFocus ? 'InputFocus' : ''}}">
-        <span class="flo_l">微信号</span>
-        <input type="text" placeholder="输入您的微信号" class="Inp" bindblur="wechat_idChange" value="{{profile_marriage.wechat_id}}" focus="{{WechatFocus}}"/>
-      </view>
-      <view  class="list ">
-        <picker  value="{{degreeIndex}}" range="{{degree}}"  bindchange="degreeChange" >
-          <view class="picker">
-            学历
-            <text class="text" wx:if="{{ShowDegree}}">{{degree[degreeIndex]}}</text>
-            <text class="text" wx:else>{{DegreeText}}</text>
-          </view>
-        </picker>
-      </view>
-      <view  class="list  {{SloganFocus ? 'InputFocus' : ''}} " style="height: 420rpx">
-        服务格言(为何喜欢做介绍人)
-        <view class="weui-cell">
-          <view class="weui-cell__bd" style="border-top: 1rpx solid #d3d3d3;border-bottom: 1rpx solid #d3d3d3;overflow: auto;">
-            <textarea class="weui-textarea" style="width: 100% !important;"   bindinput="sloganChange" value="{{profile_marriage.slogan}}" focus="{{SloganFocus}}"  cursor-spacing="200"/>
-          </view>
-        </view>
-      </view>
-    </view>
-    <view class="next btn_red"  @tap="ensure">完成</view>
-  </view>
-</template>
-<script>
-  import wepy from 'wepy'
-  // import network from '../../mixins/api.js'
-  import ShareMessage from '../../mixins/ShareMessage'
-
-  export default class Intro extends wepy.page {
-    mixins = [ShareMessage]
-    data = {
-      name: '',
-      sex: ['男', '女'],
-      degree: ['大专', '本科', '硕士', '博士', '其他'],
-      DegreeText: '',
-      ShowDegree: false,
-      degreeIndex: 0,
-      company: '',
-      slogan: '',
-      wechat_id: '',
-      profile_marriage: [],
-      objectMultiArray: [],
-      Business: [],
-      show: false,
-      industry: '',
-      industry_sub: '',
-      multiIndex2: [0, 0],
-      NameFocus: false,
-      WordFocus: false,
-      WechatFocus: false,
-      SloganFocus: false,
-      user: {
-        avatarUrl: 'http://images.ufutx.com/201801/23/4a3bda4b26861d4b012dbab11f2d004f.jpeg',
-        nickName: '艾丽丝',
-        mobile: '15361454427'
-      }
-    }
-    onLoad() {
-      let that = this
-      this.user.nickName = wx.getStorageSync('name')
-      this.user.mobile = wx.getStorageSync('mobile')
-      this.user.avatarUrl = wx.getStorageSync('avatar')
-      network.GET('user', {
-        success: function (res) {
-          let result = res.data.data
-          that.profile_marriage = result.user.profile_marriage
-          if (that.profile_marriage === null) {
-            that.show = true
-          } else {
-            that.name = result.user.name
-            that.company = result.user.profile_marriage.company
-            that.wechat_id = result.user.profile_marriage.wechat_id
-            that.DegreeText = result.user.profile_marriage.degree
-            that.industry = result.user.industry
-            that.industry_sub = result.user.industry_sub
-          }
-          that.$apply()
-        }
-      })
-      network.GET('industry/json', {
-        success: function (res) {
-          let result = res.data.data
-          that.Business = result
-          let IndustryArr = []
-          result.forEach(function (item, index, arr) {
-            IndustryArr.push(arr[index].title)
-          })
-          that.objectMultiArray.push(IndustryArr)
-          that.objectMultiArray.push(result[0].items)
-          that.$apply()
-          console.log(that.objectMultiArray)
-        }
-      })
-    }
-    ShowModal(text) {
-      wx.showToast({
-        title: text,
-        icon: 'none',
-        duration: 1500
-      })
-    }
-    onShow() {
-      this.$parent.getTracker(this.$root.$name, '介绍人信息注册/修改')
-    }
-    methods = {
-      bindMultiPickerChange2 (e) {
-        console.log(e)
-        console.log('picker发送选择改变，携带值为', e.detail.value)
-        this.setData({
-          multiIndex2: e.detail.value
-        })
-      },
-      bindMultiPickerColumnChange2 (e) {
-        let that = this
-        var data = {
-          objectMultiArray: that.data.objectMultiArray,
-          multiIndex2: that.data.multiIndex2
-        }
-        that.show = true
-        that.$apply()
-        data.multiIndex2[e.detail.column] = e.detail.value
-        console.log(e.detail.column)
-        switch (e.detail.column) {
-          case 0:
-            for (let i = 0; i < that.Business.length; i++) {
-              if (data.multiIndex2[0] === i) {
-                data.objectMultiArray[1] = that.Business[i].items
-              }
-            }
-            data.multiIndex2[1] = 0
-            break
-        }
-        this.setData(data)
-      },
-      nameChange(e) {
-        this.name = e.detail.value
-      },
-      companyChange(e) {
-        this.company = e.detail.value
-      },
-      sloganChange(e) {
-        this.slogan = e.detail.value
-      },
-      wechat_idChange(e) {
-        this.wechat_id = e.detail.value
-      },
-      degreeChange(e) {
-        this.ShowDegree = true
-        this.degreeIndex = e.detail.value
-      },
-      ensure() {
-        this.NameFocus = false
-        this.WordFocus = false
-        this.WechatFocus = false
-        this.SloganFocus = false
-        let data = {
-          name: this.name,
-          company: this.company,
-          slogan: this.slogan,
-          wechat_id: this.wechat_id,
-          industry: this.objectMultiArray[0][this.multiIndex2[0]],
-          industry_sub: this.objectMultiArray[1][this.multiIndex2[1]],
-          degree: this.degree[this.degreeIndex]
-        }
-        if (!this.name) {
-          this.NameFocus = true
-          this.ShowModal('请填写你的姓名')
-        } else if (!this.company) {
-          this.WordFocus = true
-          this.ShowModal('请填写工作单位')
-        } else if (!this.wechat_id) {
-          this.WechatFocus = true
-          this.ShowModal('请填写微信号')
-        } else {
-          network.PUT('users/marriage', {
-            data: data,
-            success: function (res) {
-              setTimeout(() => {
-                wx.reLaunch({
-                  url: '/pages/relacion/relacion'
-                })
-              }, 1000)
-            }
-          })
-        }
-      },
-      stateChange(e) {
-        this.stateiIndex = e.detail.value
-      },
-      resident_typeChange(e) {
-        this.residentIndex = e.detail.value
-      }
-    }
-  }
-</script>

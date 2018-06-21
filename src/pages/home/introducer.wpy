@@ -50,31 +50,18 @@
         </view>
       </view>
     </view>
+  <view class="font_32 wx_Title orange">Ta的人脉</view>
+  <view class="font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
+    <view class="btn_red flo_l" style="margin-left: 24rpx" @tap="goto('/pages/home/addFriend')">介绍人</view>
+    <view class="btn_red flo_l" @tap="goto('/pages/home/swopWeChat')">单身男</view>
+    <view class="btn_red flo_l" style="margin-top: 0rpx"  @tap="goto('/pages/home/giveGift')">单身女</view>
+    <view class="clearfloat"></view>
+  </view>
   <view class="font_32 wx_Title orange">基本资料</view>
   <view class="booklist  font_28">
     <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>身高</span>
-      <span class="flo_r">{{profile_courtship.stature}}cm</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
       <span>出生年月日</span>
-      <span class="flo_r">{{profile_courtship.birthday}}</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>体重</span>
-      <span class="flo_r">{{profile_courtship.weight}}kg</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>学历</span>
-      <span class="flo_r">{{profile_courtship.degree}}</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>现所在城市</span>
-      <span class="flo_r">{{profile_courtship.city}}</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>毕业学校</span>
-      <span class="flo_r">{{profile_courtship.company}}</span>
+      <span class="flo_r">{{profile_marriage.birthday}}</span>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title">
       <span>所在行业</span>
@@ -82,90 +69,13 @@
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title">
       <span>公司名称</span>
-      <span class="flo_r">{{profile_courtship.company}}</span>
+      <span class="flo_r">{{profile_marriage.company}}</span>
+    </view>
+    <view style="margin: 0 44rpx;width: 18%" class="wx_Title">
+      <span class="orange">服务格言</span>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>户口类型</span>
-      <span class="flo_r">{{profile_courtship.resident_type}}</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>户口所在地</span>
-      <span class="flo_r">{{profile_courtship.resident_province}}</span>
-    </view>
-  </view>
-  <view class="font_32 wx_Title orange">VIP资料</view>
-  <view class="booklist  font_28">
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>薪水级别</span>
-      <span class="flo_r">20k-50k</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>是否有车</span>
-      <span class="flo_r">是</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <span>是否有房</span>
-      <span class="flo_r">是</span>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title orange">
-      <span>生活照</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2826914640,3841572087&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2826914640,3841572087&fm=27&gp=0.jpg')" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-      <image src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3743468981,1822429682&fm=27&gp=0.jpg" @tap="previewImage('https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3743468981,1822429682&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title orange">
-      <span>身份证</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <image src="http://img1.imgtn.bdimg.com/it/u=680756696,610110959&fm=27&gp=0.jpg" @tap="previewImage('http://img1.imgtn.bdimg.com/it/u=680756696,610110959&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-      <image src="http://img3.imgtn.bdimg.com/it/u=1501101382,1888955963&fm=200&gp=0.jpg" @tap="previewImage('http://img3.imgtn.bdimg.com/it/u=1501101382,1888955963&fm=200&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title orange">
-      <span>毕业证</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">2张</view>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <image src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3807281728,223336142&fm=27&gp=0.jpg" @tap="previewImage('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3807281728,223336142&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-      <image src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2378920878,130130965&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2378920878,130130965&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title orange">
-      <span>其他证件</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">无</view>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title orange">
-      <span>微信二维码</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">1张</view>
-    </view>
-    <view style="margin: 0 44rpx;" class="wx_Title">
-      <image src="https://f10.baidu.com/it/u=810667619,1510999328&fm=72" @tap="previewImage('https://f10.baidu.com/it/u=810667619,1510999328&fm=72')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-      <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=545741636,427872561&fm=27&gp=0.jpg" @tap="previewImage('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=545741636,427872561&fm=27&gp=0.jpg')"  mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" ></image>
-    </view>
-  </view>
-    <view class='list_box' wx:for='{{list}}' wx:key='this' wx:for-item='parentItem' wx:for-index='parentIndex'>
-      <view class='list'>
-        <view class='list_name_box' @tap='listTap' data-parentindex='{{parentIndex}}'>
-          <text class='list_item_name orange'>{{parentItem.listName}}</text>
-          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-        </view>
-        <view class='list_item_box' wx:if='{{parentItem.show}}'>
-          <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
-                data-parentindex='{{parentIndex}}'>
-            <view class='list_item_name_box' @tap="showModal('{{item.itemName}}')">
-              <text class='list_item_name'>{{item.itemName}}</text>
-              <view class="weui-cell__ft weui-cell__ft_in-access">{{item.content}}</view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-  <view class="font_32 wx_Title orange">Ta的优势</view>
-  <view class="booklist  font_28">
-    <view style="margin: 0 44rpx;" class="wx_Title text-center orange">
-      <view class="weui-loading"></view>
-      <span>点击查看</span>
+      <span>{{profile_marriage.slogan}}</span>
     </view>
   </view>
     <view style="height: 35rpx;width: 100%"></view>
@@ -175,12 +85,12 @@
       <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift')">送礼物</view>
       <view class="clearfloat"></view>
     </view>
-    <block wx:if="{{loading}}">
-      <view class="weui-loadmore">
-        <!--<view class="weui-loading"></view>-->
-        <view class="weui-loadmore__tips">正在加载</view>
-      </view>
-    </block>
+    <!--<block wx:if="{{loading}}">-->
+      <!--<view class="weui-loadmore">-->
+        <!--&lt;!&ndash;<view class="weui-loading"></view>&ndash;&gt;-->
+        <!--<view class="weui-loadmore__tips">正在加载</view>-->
+      <!--</view>-->
+    <!--</block>-->
     <block wx:if="{{noMore}}">
       <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
         <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
@@ -197,7 +107,7 @@
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
 
-  export default class information extends wepy.page {
+  export default class introducer extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: "个人信息"
@@ -257,7 +167,7 @@
       inputVal: '',
       text: '关注',
       id: '',
-      profile_courtship: [],
+      profile_marriage: [],
       parameter: false
     }
 
@@ -293,14 +203,14 @@
     getMessage() {
       let self = this
       this.$get({url: service.users + '/' + self.id}, {
-       success: ({code, data}) => {
+        success: ({code, data}) => {
 //         debugger
-         this.mylibs = data
-         this.profile_courtship = data.profile_courtship
-       },
-       fail: ({code, data}) => {},
-       complete: () => { this.loaded = false }
-     })
+          this.mylibs = data
+          this.profile_marriage = data.profile_marriage
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
     }
     // 初始化页面数据
     initPageData() {

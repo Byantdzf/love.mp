@@ -10,17 +10,18 @@
         <cover-image src='../../images/icon/position.png'  @tap="moveToLocation" class='ten_l flo_l' style="width: 62rpx;height: 62rpx;margin-right: 22rpx;"></cover-image>
         <cover-image src='../../images/icon/search.png' @tap="goto('/pages/home/search')" class='code flo_l' style="width: 68rpx;height: 68rpx;"></cover-image>
       </cover-view>
-      <cover-view class='btn' style="background: white;width: 640rpx;position: absolute;right: 5%;bottom: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3">
-        <cover-view style="border-bottom:1rpx solid #d3d3d3;padding-bottom: 12rpx" @tap="goto('/pages/home/information')">
-          <cover-image src='http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png'  class='ten_l flo_l' style="width: 78rpx;height: 78rpx;margin-right: 22rpx;border-radius: 50%"></cover-image>
-          <cover-view class="font_32 orange bold" >Angelababy
-            <cover-view class="font_26 black_6 bold flo_r" >3.14千米</cover-view>
+      <cover-view class='btn' style="background: white;width: 640rpx;position: absolute;right: 5%;bottom: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3" wx:if="{{showfriend}}"  @tap="gotofriends({{friends}})">
+        <cover-view style="border-bottom:1rpx solid #d3d3d3;padding-bottom: 12rpx">
+          <cover-image src='{{friends.image}}'  class='ten_l flo_l' style="width: 78rpx;height: 78rpx;margin-right: 22rpx;border-radius: 50%"></cover-image>
+          <cover-view class="font_32 orange bold" >{{friends.name}}
+            <cover-view class="font_26 black_6 bold flo_r" >{{friends.distance}}千米</cover-view>
           </cover-view>
-          <cover-image src='../../images/icon/man_v.png'  @tap="moveToLocation" class='ten_l flo_l' style="width: 38rpx;height: 38rpx;margin-right: 22rpx;"></cover-image>
+          <cover-image src='../../images/icon/man_v.png' wx:if="{{friends.sex}} == '男'" class='ten_l flo_l' style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>
+          <cover-image src='../../images/icon/woman_v.png' wx:else class='ten_l flo_l' style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>
         </cover-view>
         <cover-view style="padding: 6rpx;">
           <cover-view class="flo_r font_26 orange" style="margin-top: 6rpx;">查看"Ta"</cover-view>
-          <cover-image src='../../images/icon/love.png'  @tap="moveToLocation" class='ten_l flo_r' style="width: 38rpx;height: 38rpx;margin-right: 8rpx;"></cover-image>
+          <cover-image src='../../images/icon/love.png'  class='ten_l flo_r' style="width: 38rpx;height: 38rpx;margin-right: 8rpx;"></cover-image>
         </cover-view>
       </cover-view>
       <cover-view class="commodity_screen"bindtap="hideModal"wx:if="{{showModalStatus}}"></cover-view>
@@ -57,6 +58,12 @@
           <cover-view style="position: relative;left: 42% ;top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0" @tap="saveImage('save')">保存</cover-view>
       </cover-view>
     </map>
+    <modal class="modal" hidden="{{hide}}" title="提示" no-cancel no-confirm>
+      <cover-view class="text-center font_32">不授权将无法查看地图哦！</cover-view>
+      <cover-view style="position: absolute;left: 40%;bottom: 0;background: #FAFAFC; z-index: 999999;">
+        <button class="btn orange" style="width: 100%;height: 82rpx" 	open-type="openSetting" @opensetting="openSetting">去授权</button>
+      </cover-view>
+    </modal>
   </view>
 </template>
 
@@ -78,19 +85,23 @@
     data = {
 //      markers标记点
       markers: [],
-      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
+//      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
       longitude: 0,
       latitude: 0,
       myLong: '',
       myLat: '',
       distance1: '',
       libraries: '',
+      nearFriends: [],
       distance_library: {},
       text: '',
       height: '',
       showModalStatus: false,
       showModal: false,
       url: '',
+      hide: true,
+      showfriend: false,
+      friends: [],
       animation: [],
       animationData: {},
       animationImage: {}
@@ -110,14 +121,13 @@
       this.updataMap()
       this.mapCtx = wx.createMapContext('map')
       this.getCenterLocation()
-
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onLoad() {
       this.getSystem()
       // wx.setNavigationBarColor({
       //   frontColor: '#ffffff',
-      //   backgroundColor: '#e26432',
+      //   backgroundColor: #CDA6C1',
       //   animation: {
       //     duration: 400,
       //     timingFunc: 'easeIn'
@@ -148,15 +158,47 @@
       if (token) {
 //        console.log(token)
         let that = this
-        that.$put({
-          url: service.updatemap,
+        that.$get({
+          url: service.near_single,
           data: {
             location_latitude: myLat,
             location_longitude: myLong
           }
         }, {
           success: ({code, data}) => {
-
+            that.nearFriends = data.data
+            let markersNew = []
+            that.nearFriends.forEach((item, index, arr) => {
+              markersNew.push(
+                {
+                  iconPath: '../../images/icon/icon_position.png',
+                  id: item.id,
+                  latitude: item.location_latitude,
+                  longitude: item.location_longitude,
+                  name: item.name,
+                  mobile: item.mobile,
+                  sex: item.sex,
+                  type: item.type,
+                  image: item.wechat ? item.wechat.avatar : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png',
+                  width: 30,
+                  distance: item.distance,
+                  height: 30,
+                  callout: {
+                    content: item.name,
+                    color: '#2c8df6',
+                    fontSize: 14,
+                    borderRadius: 6,
+                    bgColor: '#fff',
+                    padding: 6,
+                    display: 'BYCLICK',
+                    boxShadow: '2px 2px 10px #aaa'
+                  }
+                }
+              )
+            })
+            that.markers = markersNew
+            that.$apply()
+            that.noMoreList = false
           },
           fail: ({code, data}) => {},
           complete: () => {
@@ -180,16 +222,8 @@
           that.$apply()
         },
         fail: function () {
-          wx.showModal({
-            title: '提示',
-            confirmText: '去授权',
-            content: '不授权将无法查看地图哦！',
-            success: (res) => {
-              if (res.confirm) {
-                that.openSetting()
-              }
-            }
-          })
+          this.hide = true
+          this.$apply()
         }
       })
     }
@@ -256,28 +290,6 @@
         }
       })
     }
-    openSetting() {
-      let that = this
-      wepy.openSetting({
-        success: (res) => {
-          wepy.getLocation({
-            altitude: true,
-            type: 'gcj02',
-            success: function (res) {
-              that.myLat = res.latitude
-              that.myLong = res.longitude
-              that.$apply()
-              that.mapFunction()
-            },
-            fail: function () {
-            },
-            complete: function () {
-            }
-          })
-        }
-      })
-    }
-
     getLngLat() {
       let that = this
       that.mapCtx = wx.createMapContext('map')
@@ -515,22 +527,23 @@
           }
         });
       },
+      gotofriends(item) {
+        let url = ''
+        if (item.type == 'single') {
+          url = '/pages/home/information?id=' + item.id
+        } else {
+          url = '/pages/home/introducer?id=' + item.id
+        }
+        wx.navigateTo({url: url})
+      },
       goto(url) {
         wx.navigateTo({url: url})
       },
       moveToLocation() {
         this.mapCtx.moveToLocation()
         if (!this.myLat) {
-          return wx.showModal({
-            title: '提示',
-            confirmText: '去授权',
-            content: '不授权无法查看图书馆的位置哦！',
-            success: (res) => {
-              if (res.confirm) {
-                this.openSetting()
-              }
-            }
-          })
+           this.hide = true
+           this.$apply()
         }
       },
       translateMarker() {
@@ -549,11 +562,11 @@
       },
       regionchange(e) {
         console.log(e.type)
-        let that = this
-        if (e.type == 'end') {
-          this.getLngLat()
-        } else {
-          console.log('move')
+//        let that = this
+//        if (e.type == 'end') {
+//          this.getLngLat()
+//        } else {
+//          console.log('move')
           // this.mapCtx.getCenterLocation({
           //   success: function (res) {
           //     that.longitude = res.longitude
@@ -567,55 +580,49 @@
           //     this.markers.splice(index, 1)
           //   }
           // })
+//        }
+      },
+      openSetting(e) {
+        let that = this
+        this.hide = false
+        this.$apply()
+        if (e.detail.authSetting["scope.userLocation"]){//如果打开了地理位置，就会为true
+          wepy.getLocation({
+            altitude: true,
+            type: 'gcj02',
+            success: function (res) {
+              that.myLat = res.latitude
+              that.myLong = res.longitude
+              that.$apply()
+              that.mapFunction()
+            },
+            fail: function () {
+            },
+            complete: function () {
+            }
+          })
         }
+        wepy.openSetting({
+          success: (res) => {
+
+          }
+        })
       },
       markertap(e) {
         console.log(e.markerId)
         let that = this
-        let data = {
-          my_location_longitude: that.myLong,
-          my_location_latitude: that.myLat
-        }
-        that.$get({
-          url: service.libraries + '/' + e.markerId + '/infor',
-          data: data
-        }, {
-          success: ({code, data}) => {
-            that.distance1 = data.distance
-            that.distance_library = data.library
-            // if (that.distance_library == null) {
-            //   return wx.showToast({
-            //     title: '距离太远了！',
-            //     image: '../images/icon/icon-error.png',
-            //     duration: 1500
-            //   })
-            // }
-            if (that.distance_library.type == 'SHARE') {
-              that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
-              that.$apply()
-            } else {
-              that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
-              that.$apply()
-            }
-            that.$apply()
-          },
-          fail: ({code, data}) => {
-          },
-          complete: () => {
-          }
-        })
+        this.showfriend = true
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
-            arr[index].iconPath = '/images/icon-position_red.png'
+            this.friends = arr[index]
+            this.$apply()
+            console.log(arr[index])
+            arr[index].iconPath = 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {
-            arr[index].iconPath = '/images/icon-position.png'
-          }
-          if (arr[index].id == 0) {
-            that.markers.splice(index, 1)
+            arr[index].iconPath = '../../images/icon/icon_position.png'
           }
         })
-//        that.markers = markers_new
       }
     }
   }
