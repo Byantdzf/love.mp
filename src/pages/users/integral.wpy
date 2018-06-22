@@ -125,7 +125,7 @@
               signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
               paySign: wxconfig.paySign, // 支付签名
               success: function (res) {
-                that.$post({url: service.orderpay  + that.trade_no}, {
+                that.$post({url: service.orderpay  + '/' +  that.trade_no}, {
                   success: ({code, data}) => {
                     wx.showToast({
                       title: '支付成功',
