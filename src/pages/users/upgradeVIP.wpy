@@ -7,10 +7,10 @@
       <view class="font_32 loveTitle">普通VIP</view>
       <view class="paylist"  wx:for="{{paylist}}" wx:key="*this">
         <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
-          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          {{item.name}} <span class="red">{{item.price}}元</span>
           <span class="red flo_r" @tap="conversion({{item}})">升级</span>
         </view>
-        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.content}}</view>
         <view class="clearfix"></view>
       </view>
     </view>
@@ -18,10 +18,10 @@
       <view class="font_32 loveTitle">高级VIP</view>
       <view class="paylist"  wx:for="{{paylist1}}" wx:key="*this">
         <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
-          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          {{item.name}} <span class="red">{{item.price}}元</span>
           <span class="red flo_r" @tap="conversion({{item}})">升级</span>
         </view>
-        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.content}}</view>
         <view class="clearfix"></view>
       </view>
     </view>
@@ -29,11 +29,10 @@
       <view class="font_32 loveTitle">海外VIP</view>
       <view class="paylist"  wx:for="{{paylist2}}" wx:key="*this">
         <view class="font_28 flo_l" style="margin-left: 12rpx;width: 96%">
-          {{item.name}} <span class="red">{{item.money}}{{item.iv}}</span>
+          {{item.name}} <span class="red">{{item.price}}元</span>
           <span class="red flo_r" @tap="conversion({{item}})">升级</span>
         </view>
-        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.message}}</view>
-        <view class='font_26 orange flo_r' style="width: 77%;text-align: left;">{{item.message1}}</view>
+        <view class='font_26 orange flo_r' style="width: 90%;text-align: left;">{{item.content}}</view>
         <view class="clearfix"></view>
       </view>
     </view>
@@ -77,19 +76,9 @@
       is_vip: false,
       nickName: '加载中...',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
-      paylist:[
-        {name: 'V1',money: '10元',message:'特权：仅可添加本市的好友', checked: 'true'},
-        {name: 'V2',money: '100元',message:'特权：仅可添加本省的好友'},
-        {name: 'V3',money: '500元',message:'特权：仅可添加全国的好友',iv:'(赠送100元礼物)'}
-      ],
-      paylist1:[
-        {name: 'V4',money: '1000元',message:'特权： 每月推送2位条件相符。异性(年24人）',iv:'(赠送500元礼物)'},
-        {name: 'V5',money: '3000元',message:'特权： 每月推送5位条件相符。异性(年60人）',iv:'(赠送1800元礼物)'}
-      ],
-      paylist2:[
-        {name: 'V6',money: '5000元',message:'特权：自我介绍视频',message1:'每月推送2位条件相符。异性(年24人）',iv:'(赠送2000元礼物)'},
-        {name: 'V7',money: '9800元',message:'特权：自我介绍视频',message1:'每月推送5位条件相符。异性(年60人）',iv:'(赠送3000元礼物)'}
-      ],
+      paylist: [],
+      paylist1: [],
+      paylist2: [],
       hide: true,
       message: {},
     }
@@ -123,13 +112,13 @@
       this.$get({url: service.ranks}, {
         success: ({code, data}) => {
           data.forEach((item, index, arr) => {
-            if(arr[index].type = '普通会员'){
+            if (arr[index].type == '普通会员') {
               that.paylist.push(arr[index])
               that.$apply()
-            }else if(arr[index].type = '高级会员'){
+            } else if (arr[index].type == '高级会员') {
               that.paylist1.push(arr[index])
               that.$apply()
-            }else if(arr[index].type = '海外VIP'){
+            } else if (arr[index].type == '海外VIP') {
               that.paylist2.push(arr[index])
               that.$apply()
             }
@@ -137,6 +126,8 @@
 //          that.paylist = data
 //          that.paylist.length = 3
           console.log(that.paylist)
+          console.log(that.paylist1)
+          console.log(that.paylist2)
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -158,14 +149,50 @@
         wx.navigateTo({url: url})
       },
       conversion(item){
-//      wx.showToast({
-//        title: item.name,
-//        icon: 'success',
-//        duration: 1000
-//      })
-        this.hide = false
-        this.message = item
-        this.$apply()
+//        this.hide = false
+//        this.message = item
+//        this.$apply()
+        let that = this,
+          data = {
+            type: 'rank',
+            rank_id: item.id
+          }
+        this.$post({url: service.charge, data}, {
+          success: ({code, data}) => {
+            that.trade_no = data.order_pay.trade_no
+            that.$apply()
+            let wxconfig = data.order_pay.wx_pay.config
+//            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
+            wx.requestPayment({
+              timeStamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+              package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: wxconfig.paySign, // 支付签名
+              success: function (res) {
+                that.$post({url: service.orderpay + '/' + that.trade_no}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '支付成功',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {},
+                  complete: () => { this.loaded = false }
+                })
+              },
+              fail: function (res) {
+                wx.showToast({
+                  title: '支付失败:'+res.errMsg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            });
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
 //        let url = '/pages/users/integralAddress?id=' + item.id
 //        wx.navigateTo({url: url})
       },
