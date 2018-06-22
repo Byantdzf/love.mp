@@ -2,15 +2,20 @@
   <view class="">
     <!--<image src="{{background_image}}" mode="aspectFit"style="width: 88%;height: 75vh;position: fixed;margin: 0 48rpx" class="flo_l"></image>-->
     <view style="position: relative;width: 84%;height: 73vh;margin: 12% 8%;;background-image:url({{background_image}});background-size:cover;border-radius: 12rpx;" >
-      <image src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1295417284,1703059451&fm=27&gp=0.jpg" mode="aspectFit"   style="width: 100rpx;height: 100rpx;border-radius: 50%;position: absolute;left: 64rpx;top: 74rpx;" class="flo_l"></image>
-      <image src="http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg" mode="aspectFit"   style="width: 100rpx;height: 100rpx;border-radius: 50%;position: absolute;right: 74rpx;top: 72rpx;" class="flo_l"></image>
+      <image src="{{user.wechat.avatar}}" mode="aspectFit"   style="width: 100rpx;height: 100rpx;border-radius: 50%;position: absolute;left: 64rpx;top: 74rpx;" class="flo_l"></image>
+      <image src="{{other_user.wechat.avatar}}" mode="aspectFit"   style="width: 100rpx;height: 100rpx;border-radius: 50%;position: absolute;right: 74rpx;top: 72rpx;" class="flo_l"></image>
       <view class="white font_32" style="position: absolute;left: 3%;top: 21%;">
-        向angela请求加微信
+        向{{other_user.name}}请求加微信
       </view>
-      <view class="white font_32" style="position: absolute;left: 0%;top: 31%;">
-        <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1751385154,3008124413&fm=27&gp=0.jpg" mode="aspectFit"   @tap="chooseimage"></image>
+      <view class="white font_32 text-center" wx:if="{{user.wechat_qrcode}}" style="position: absolute;left: 3%;top: 31%;">
+        <image src="{{user.wechat_qrcode}}"  mode="aspectFit" style="width: 600rpx;height: 600rpx"  ></image>
       </view>
-      <view class="white btn_red font_32" style="position: absolute;left: 31%;bottom: 3%;" @tap="send()">
+      <view wx:else style="position: absolute;left: 19%;top: 41%;" @tap="chooseimage">
+        <view class="upload text-center" >
+          <image  mode="aspectFit" style="width: 300rpx;height: 300rpx;margin: 10% auto"  src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/21/wxc41491431733671e.o6zAJs2lf_SH4K2plnWTlsSfhR70.mE8QDu2jXQzV066822d9c99e556d508072404e0ec58f.png"></image>
+        </view>
+      </view>
+      <view class="white btn_red font_32" style="position: absolute;left: 31%;bottom: 2%;" @tap="send">
         发送请求
       </view>
     </view>
@@ -34,10 +39,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
-  import uploadimage from '../../mixins/upload_image'
+//  import uploadimage from '../../mixins/upload_image'
 
   export default class swopWeChat extends wepy.page {
-    mixins = [base, http, user, ShareMessage, uploadimage]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: "交换微信"
     }
@@ -45,7 +50,12 @@
       // 后置显示按钮
       loaded: false,
       // 我的图书馆
-      mylibs: [],
+      other_user: {},
+      user: {},
+      Image: '',
+      files: '',
+      ShowUpload: false,
+      BookImage: '',
       background_image:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.8cKMn755GiaIda2fc0b90c70f7c6f97d3ff312df6794.png',
       list:{
           'name' : 'Angelababy',
@@ -63,14 +73,16 @@
     }
     async onLoad(e) {
       let _this = this
+      _this.id = e.id
+      _this.$apply()
     }
     onShow() {
-//      this.getLibraries()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
-//      this.getLibraries()
+      this.initPageData()
     }
     onReachBottom() {
       setTimeout(() => {
@@ -85,7 +97,7 @@
     getMessage() {
       var isNew = wx.getStorageSync('is_new')
       if (!isNew) {
-        this.$get({url: service.user}, {
+        this.$get({url: service.wechat}, {
           success: ({code, data}) => {
             wepy.setStorageSync('is_new', data.user.is_news)
             if (data.user.is_news) {
@@ -109,24 +121,99 @@
     initPageData() {
       var self = this
       self.loading = false
-      // this.$get({url: service.my_libraries}, {
-      //   success: ({code, data}) => {
-      //     this.mylibs = data
-      //     self.config.navigationBarTitleText = data.name
-      //   },
-      //   fail: ({code, data}) => {},
-      //   complete: () => { this.loaded = false }
-      // })
+       this.$get({url: service.wechat + '/users/' + self.id}, {
+         success: ({code, data}) => {
+           self.user = data.user
+           self.other_user = data.other_user
+           self.$apply()
+         },
+         fail: ({code, data}) => {},
+         complete: () => { this.loaded = false }
+       })
+    }
+    uploadFiles(filePaths, successUp, failUp, i, length) {
+      let that = this
+      let token = wx.getStorageSync('token')
+      wx.showToast({
+        title: '照片上传中...',
+        icon: 'none',
+        duration: 2000
+      })
+      wx.uploadFile({
+        url: service.image_upload,
+        filePath: filePaths,
+        method: 'POST',
+        name: 'fileData',
+        header: {
+          'Authorization': 'Bearer ' + token,
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (resp) => {
+          that.Image = JSON.parse(resp.data).data
+          console.log(that.Image)
+          let array = []
+            array.push(that.Image)
+          let data = {
+            wechat_qrcode : array
+          }
+          that.$put({url: service.profile, data}, {
+            success: ({code, res}) => {
+              wx.showToast({
+                title: '上传成功',
+                icon: 'none',
+                duration: 1500
+              })
+              that.initPageData()
+            },
+            fail: ({code, data}) => {},
+            complete: () => { that.loading = false }
+          })
+          that.$apply()
+        },
+        fail: (res) => {
+          failUp++
+        },
+        complete: () => {
+          i++
+          if (i === length) {
+          } else {
+            that.uploadFiles(filePaths, successUp, failUp, i, length)
+          }
+        }
+      })
     }
 
     methods = {
+      chooseimage() {
+        var that = this
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.files = res.tempFilePaths
+            that.ShowUpload = true
+            that.BookImage = res.tempFilePaths[0]
+            that.$apply()
+            that.uploadFiles(that.BookImage, 0, 0, 0, that.files.length)
+          }
+        })
+      },
       goto(url) {
         wx.navigateTo({url: url})
       },
       send() {
-        wx.showModal({
-          title: '发送成功！',
-          content: '等待对方加你为好友！'
+        this.$post({url: service.wechat_user + '/' + this.id}, {
+          success: ({code, data}) => {
+            wx.showModal({
+              title: '发送成功！',
+              content: '等待对方加你微信！'
+            })
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
         })
       }
     }
@@ -202,5 +289,12 @@
   }
   .weui-cell__ft {
     margin-top: 10%;
+  }
+  .upload{
+    width: 400rpx;
+    height: 400rpx;
+    line-height: 400rpx;
+    font-size: 100rpx;
+    background: white;
   }
 </style>

@@ -42,7 +42,7 @@
       </view>
 
       <button open-type="share" class="btn flo_l text-center" style="width: 120rpx;height: 120rpx;">
-        <image src="../../images/tabbars/addmember.png"   mode="aspectFit" class="addmember" ></image>
+        <!--<image src="../../images/tabbars/addmember.png"   mode="aspectFit" class="addmember" ></image>-->
       </button>
       <!--<view class="flo_r font_32" style="margin-top: 32rpx">{{members.length}}人</view>-->
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r" style="margin-top: 32rpx;" @tap="gotosign('/pages/party/statistics_party?party_id={{party_id}}&title={{list.title}}')">{{members.length}}人</view>
@@ -152,10 +152,10 @@
       }, {
         success: ({code, data}) => {
           this.noMoreList = false
-          this.list = data
+          this.list = data.data
           this.notes = this.list.short_notes
-          this.user = data.user
-          this.members = data.members
+          this.user = data.data.user
+          this.members = data.data.members
           this.$apply()
           console.log(this.user)
         },

@@ -80,12 +80,13 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
+      questions: [],
       list:[
-        {name: '希望申请添加好友时，回答收入', checked: 'true'},
-        {name: '希望申请添加好友时，回答年龄'},
-        {name: '希望申请添加好友时，回答爱好'},
-        {name: '希望申请添加好友时，回答行业'},
-        {name: '希望申请添加好友时，回答单身状态'}
+        {name: '希望申请添加好友时，回答收入', checked: false},
+        {name: '希望申请添加好友时，回答年龄', checked: false},
+        {name: '希望申请添加好友时，回答爱好', checked: false},
+        {name: '希望申请添加好友时，回答行业', checked: false},
+        {name: '希望申请添加好友时，回答单身状态', checked: false}
       ]
 
     }
@@ -106,7 +107,6 @@
     }
 
     onLoad() {
-
     }
 
     onPullDownRefresh() {
@@ -146,18 +146,30 @@
         wx.navigateTo({url: url})
       },
       addQuestion(e){
-        var value = {name: e.detail.value}
+        var value = {name: e.detail.value, checked: false}
         console.log(value)
         this.list.push(value)
       },
       checkboxChange(e) {
-        console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+//        console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+        this.questions = e.detail.value
+        this.$apply()
+        console.log(this.questions)
       },
-      ensure(){
-        wx.showToast({
-          title: '设置成功',
-          icon: 'success',
-          duration: 2000
+      ensure() {
+        let data = {
+          questions: this.questions
+        }
+        this.$post({url: service.questions, data}, {
+          success: ({code, res}) => {
+            wx.showToast({
+              title: '设置成功',
+              icon: 'success',
+              duration: 2000
+            })
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loading = false }
         })
       }
     }

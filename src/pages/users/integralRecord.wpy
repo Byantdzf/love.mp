@@ -3,12 +3,12 @@
     <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
       <view class="flo_l" style="width: 78%;">
         <view  class="font_26 flo_l ellipsis_1 " style="margin-left: 12rpx;">
-          {{item.time}}
+          {{item.created_at}}
         </view>
       </view>
-      <view class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 34rpx;width: 96%;margin-bottom: -22rpx;">{{item.message}}</view>
+      <view class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 34rpx;width: 96%;margin-bottom: -22rpx;">{{item.message}}{{item.amount}}福分</view>
       <view  class="font_28 flo_r ellipsis_1" style="margin-left: 12rpx;">
-        剩余 <span class="font_36 orange  bold">{{item.num}}</span> 福分
+        剩余 <span class="font_36 orange  bold">{{item.value}}</span> 福分
       </view>
       <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
     </view>
@@ -35,28 +35,7 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list: [
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '充值了20元',
-          'num': 20
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '充值了20元',
-          'num': 40
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '充值了20元',
-          'num': 60
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '充值了20元',
-          'num': 80
-        },
-      ]
+      list: []
 
     }
 
@@ -68,7 +47,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -85,29 +64,15 @@
 
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      var self = this
+      self.loading = false
+      this.$get({url: service.scorehistory}, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
-          this.libraries.forEach((item) => {
-            if (item.type == 'SHARE') {
-              item.url = '/pages/library/shareLibrary?id=' + item.id
-            } else {
-              item.url = '/pages/library/library?id=' + item.id
-            }
-          })
-          wx.setStorageSync('openid', data.user.wechat.openid)
-          wx.setStorageSync('is_new', data.user.is_news)
-          if (data.user.is_news) {
-            wepy.showTabBarRedDot({
-              index: 4
-            })
-          } else {
-            wepy.hideTabBarRedDot({
-              index: 4
-            })
-          }
-        }
+          self.list = data.data
+          self.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
       })
     }
 

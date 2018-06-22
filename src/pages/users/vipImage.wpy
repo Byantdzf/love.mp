@@ -43,9 +43,16 @@
         <view class="title">{{uploadTitle}}</view>
         <view class="Paths" style="margin:30rpx;" @tap="chooseimage">+</view>
         <view style="padding: 22rpx ;border: 1rpx solid #d3d3d3;border-radius: 6rpx;margin: 10rpx">
-          <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{files}}" wx:key="*this" wx:if="{{files}}"/>
-          <image src="{{item}}" mode="widthFix" class="imge" wx:for="{{photosList}}" @tap="previewImage({{item}},{{photosList}})"
-                 wx:key="*this"/>
+          <view wx:for="{{files}}" wx:key="*this" wx:if="{{files}}" class="flo_l">
+            <image src="{{item}}" mode="widthFix" class="imge" />
+          </view>
+          <view wx:for="{{photosList}}" wx:key="*this" class="flo_l" @tap="previewImage({{item}},{{photosList}})" style="position: relative">
+            <image src="{{item}}" mode="widthFix" class="imge" />
+            <view class="white text-center font_26 deteleimage" @tap.stop="deteleimage({{index}})">X</view>
+          </view>
+          <view class="clearfloat"></view>
+          <!--<image src="{{item}}" mode="widthFix" class="imge" wx:for="{{photosList}}" @tap="previewImage({{item}},{{photosList}})"-->
+                 <!--wx:key="*this"/>-->
         </view>
       </view>
       <view style="height: 88rpx"></view>
@@ -87,8 +94,11 @@
       let that = this
       this.type_v = e.type
       this.uploadTitle = e.title
-      this.photosList = e.imageArr
-//      debugger
+      if(e.imageArr) {
+        this.photosList = e.imageArr.split(',')
+      }
+      console.log( e.imageArr)
+      console.log(this.photosList)
       setTimeout(() => {
         this.uploadTitle = e.title
         this.$apply()
@@ -115,6 +125,46 @@
       this.$parent.getTracker(this.$root.$name, '上传' + this.uploadTitle)
     }
     methods = {
+      deteleimage(index) {
+        console.log("all")
+        let that = this
+        wx.showModal({
+          title: '提示',
+          content: '是否确认删除该照片？',
+          success: function(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.photosList.splice(index, 1)
+              that.$apply()
+              let data = {}
+              if (that.type_v === 'photos') {
+                data = {photos: that.photosList}
+              } else if (that.type_v === 'graduate_photos') {
+                data = {graduate_photos: that.photosList}
+              } else if (that.type_v === 'identification_photos') {
+                data = {identification_photos: that.photosList}
+              } else if (that.type_v === 'other_photos') {
+                data = {other_photos: that.photosList}
+              } else {
+                data = {wechat_qrcode: that.photosList}
+              }
+              that.$put({url: service.profile, data}, {
+                success: ({code, res}) => {
+                  wx.showToast({
+                    title: '删除成功',
+                    icon: 'none',
+                    duration: 1500
+                  })
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loading = false }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
       chooseimage() {
         var that = this
         wx.chooseImage({
@@ -202,8 +252,9 @@
               icon: 'none',
               duration: 1500
             })
+            console.log(data)
             setTimeout(() => {
-              this.$put({url: service.courtship, data}, {
+              this.$put({url: service.profile, data}, {
                 success: ({code, res}) => {
                   wx.navigateBack({
                     delta: 1
@@ -409,4 +460,16 @@
     to {left:0rpx;}
   }
   .Pats:active{transform: scale(1.1)}
+  .deteleimage{
+    width: 42rpx;height: 42rpx;
+    border-radius: 50%;
+    background: orangered;
+    line-height: 42rpx;
+    box-shadow: 1rpx 1rpx 12rpx #ffffff;
+    position: absolute;right: 0;top: -12rpx;
+    z-index: 99999
+  }
+  .deteleimage:active{
+    animation:myMove 500ms 1;
+  }
 </style>

@@ -1,15 +1,15 @@
 <template>
   <view class="gift text-center">
-    <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
-      <image src="{{item.image}}" style="width:100px; height: 100px;margin: 12rpx "></image>
-      <view class="font_28">{{item.name}} /<span class='orange bold'>{{item.code}}</span> </view>
+    <view  class="text-center gift_list inline-block">
+      <image src="{{item.icon}}" style="width:100px; height: 100px;margin: 12rpx "></image>
+      <view class="font_28">一{{item.unit}}{{item.name}} /<span class='orange bold'>{{item.price}}福分</span> </view>
     </view>
   </view>
   <view class="gift text-center">
     <view class="gift_address inline-block">
     	<view class='font_28 gift_title'>填写信息</view>
     	<view class='gift_input font_28'>
-    		<input @input="typing('name')" type='text' value="{{name}}" placeholder="收货人姓名"/>
+    		<input @input="typing('name')" type='text' auto-focus	 value="{{name}}" placeholder="收货人姓名"/>
     	</view>
     	<view class='gift_input font_28'>
     		<input @input="typing('mobile')" type='number'  value="{{mobile}}" placeholder="收货手机号"/>
@@ -44,6 +44,7 @@
       name: '',
       address: '',
       mobile: '',
+      item: {},
       list:[
         {
           image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1Wrkpu792OPp8264ecf980b4c04dd0f5705b15fe6602.png',
@@ -71,7 +72,16 @@
     }
 
     onLoad(e) {
-//  	console.log(e)
+  	console.log(e)
+      this.item = {
+  	    name: e.name,
+        unit: e.unit,
+        price: e.price,
+        id: e.id,
+        icon: e.icon
+      }
+      this.$apply()
+      console.log(this.item)
     }
 
     onPullDownRefresh() {
@@ -129,9 +139,23 @@
         let data = {
         	name: this.name,
         	mobile: this.mobile,
-        	address: this.address
+        	address: this.address,
+          goods_id: this.item.id
         }
         console.log(data)
+        let self = this
+        self.loading = false
+        this.$post({url: service.exchange  + '/' + self.item.id}, {
+          success: ({code, data}) => {
+            debugger
+            self.user = data.user
+            self.other_user = data.other_user
+            self.$apply()
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+
       }
     }
 
@@ -208,6 +232,6 @@ page{
   }
   .gift{
   	width: 100%;
-  	
+
   }
 </style>

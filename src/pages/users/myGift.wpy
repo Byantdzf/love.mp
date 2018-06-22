@@ -1,8 +1,8 @@
 <template>
   <view class="weui-panel weui-panel_access">
     <view class="weui-navbar">
-      <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
-        <view class="weui-navbar__title" >{{item}}</view>
+      <view wx:for="{{tabs}}" wx:key="*this" id="{{item.id}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+        <view class="weui-navbar__title" >{{item.name}}</view>
       </view>
       <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
       <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>
@@ -64,7 +64,7 @@
       // 后置显示按钮
       loaded: false,
       mylibs: [],
-      tabs: ['玫瑰', '巧克力', '支持', '问候', '关怀'],
+      tabs: [],
       grit: {
           'name' : '玫瑰花',
           'image' : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.zaHz5Q5eFlMOffc0157532ac335690384bfc30f3113e.png',
@@ -120,6 +120,7 @@
     }
     async onLoad(e) {
       let _this = this
+      _this.giftsData()
       _this.tabIndex()
 //      this.list.forEach((item,index,arr)=>{
 //        arr[index].URL = encodeURIComponent(arr[index].mod_textUrl)
@@ -134,9 +135,11 @@
       wx.getSystemInfo({success: function (rst) {
         _this.screenWidth = rst.screenWidth
       }})
-      this.sliderWidth = _this.screenWidth / this.tabs.length
-      this.sliderLeft = 0
-      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
+//      this.sliderWidth = _this.screenWidth / this.tabs.length
+      _this.sliderWidth = _this.screenWidth / 6
+      _this.sliderLeft = 0
+//      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
+      _this.sliderOffset = _this.screenWidth / 6 * this.activeIndex
     }
     onPullDownRefresh() {
       this.getLibraries()
@@ -175,17 +178,23 @@
       }
     }
     // 初始化页面数据
-    initPageData() {
+    giftsData() {
       var self = this
       self.loading = false
-      // this.$get({url: service.my_libraries}, {
-      //   success: ({code, data}) => {
-      //     this.mylibs = data
-      //     self.config.navigationBarTitleText = data.name
-      //   },
-      //   fail: ({code, data}) => {},
-      //   complete: () => { this.loaded = false }
-      // })
+       this.$get({url: service.gifts}, {
+         success: ({code, data}) => {
+           data.gifts.forEach((item, index, arr) => {
+             return this.tabs.push({
+               name: arr[index].name,
+               id: arr[index].id
+             })
+           })
+           this.$apply()
+           debugger
+         },
+         fail: ({code, data}) => {},
+         complete: () => { this.loaded = false }
+       })
     }
     getLibraries(keyword) {
       let _this = this

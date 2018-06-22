@@ -57,7 +57,7 @@
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/loveLanguage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/sociability?title=爱情语言&type=市级VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
@@ -73,7 +73,7 @@
       <!--</navigator>-->
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/sociability" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/sociability?title=交往基因&type=省级VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <!--<view class="weui-cell__hd">-->
         <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         <!--</view>-->
@@ -82,7 +82,7 @@
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/advantage" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="/pages/users/sociability?title=自己的优势&type=全国VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
@@ -181,7 +181,7 @@
   @import "../../styles/custom/fn.less";
   @import "../../styles/custom/reset.less";
   page{
-    background: #ececec;
+    background: #f4f4f4;
   }
   .weui-cells {
     position: inherit;

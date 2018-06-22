@@ -43,7 +43,7 @@
         <view class="picker weui-cell__bd ">
           薪水级别
           <text class=" weui-cell__ft weui-cell__ft_in-access flo_r" wx:if="{{Salaryshow}}">{{salary[salaryIndex]}}</text>
-          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r" wx:else> {{salary[0]}}</text>
+          <text class=" weui-cell__ft weui-cell__ft_in-access flo_r" wx:else> {{salary[salaryIndex]}}</text>
         </view>
       </picker>
     </view>
@@ -168,7 +168,7 @@
     }
 
     onPullDownRefresh() {
-      this.initPageData()
+      this.getuser()
     }
     getsalaries() {
       let that = this
@@ -189,17 +189,23 @@
     getuser() {
       let that = this
       this.loading = true
-      this.$get({url: service.user}, {
+      this.$get({url: service.profile}, {
         success: ({code, data}) => {
-          this.profile_courtship = data.profile_courtship
-          this.$apply()
-
-//          that.residentIndex = result.resident_type === '城市户口' ? 0 : 1
-//          that.sex.forEach((item, index, arr) => {
-//            if (result.sex == index+1) {
-//              that.sexIndex = index
-//            }
-//          })
+//          debugger
+          that.profile_courtship = data
+          if (that.profile_courtship.h_car) {
+            that.carIndex = that.profile_courtship.h_car
+          }
+          if (that.profile_courtship.h_housing) {
+            that.housingIndex = that.profile_courtship.h_housing
+          }
+          that.salary_id = that.profile_courtship.salary_id
+          that.salaries.forEach(function (ele, index, array) {
+            if(that.salary_id == array[index].id){
+              console.log(index)
+              that.salaryIndex = index
+            }
+          })
           that.$apply()
         },
         fail: ({code, data}) => {},
@@ -231,21 +237,21 @@
       ensure() {
         let data = {
           salary_id: this.salary_id ? this.salary_id : this.salaries[0].id,
-          h_car: this.car[this.carIndex],
-          h_housing: this.housing[this.housingIndex]
+          h_car: Number(this.carIndex),
+          h_housing: Number(this.housingIndex)
         }
         console.log(data)
-        this.$put({url: service.courtship, data}, {
+        this.$put({url: service.profile, data}, {
           success: ({code, res}) => {
             wx.showToast({
-              title: '填写成功!',
+              title: '保存成功!',
               icon: 'success',
-              duration: 1200,
-              success: (res) => {
-                let url = '/pages/home/index'
-                wx.switchTab({url: url})
-              }
+              duration: 1200
             })
+//            setTimeout(() => {
+//              let url = '/pages/home/index'
+//              wx.switchTab({url: url})
+//            }, 1200)
           },
           fail: ({code, data}) => {},
           complete: () => { this.loading = false }

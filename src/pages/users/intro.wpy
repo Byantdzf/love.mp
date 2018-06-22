@@ -179,9 +179,9 @@
     getuser() {
       let that = this
       this.loading = true
-      this.$get({url: service.user}, {
+      this.$get({url: service.profile}, {
         success: ({code, data}) => {
-          let result = data.profile_marriage
+          let result = data
           that.age = result.age
 //          that.weight = result.weight
           that.stature = result.stature

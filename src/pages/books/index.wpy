@@ -40,10 +40,10 @@
   </view>
   <view class="font_32 bookTitle">推荐文章</view>
   <view class="booklist">
-    <view wx:for="{{list}}" class="book" wx:key="*this" @tap="gotoapp({{item.URL}})">
-      <view class="font_28 flo_l bold" style="width: 72%">{{item.title}}</view>
+    <view wx:for="{{list}}" class="book" wx:key="*this" @tap="gotoapp({{item.post.link}})">
+      <view class="font_28 flo_l bold ellipsis_2" style="width: 72%">{{item.post.title}}</view>
       <view class="flo_r">
-        <image class="book-avatar" src="{{item.image}}" background-size="cover"/>
+        <image class="book-avatar" src="{{item.post.cover}}" background-size="cover"/>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -87,28 +87,7 @@
           'title' : '《长恨歌》|爱情中，比陪伴更重要的是这件事',
           'six': 0,
           'mod_textUrl' :'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
-        },
-        {
-          'name' : '赵丽颖',
-          'image' : 'http://img0.imgtn.bdimg.com/it/u=2096616296,4033957106&fm=27&gp=0.jpg',
-          'title' : '婚姻也分等级，你在哪一级',
-          'six': 0,
-          'mod_textUrl' :'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
-        },
-        {
-          'name' : '舒淇',
-          'image' : 'http://img3.imgtn.bdimg.com/it/u=604561010,2398733113&fm=27&gp=0.jpg',
-          'title' : '选男人眼光差怎么了？老娘又红又美又有钱',
-          'six': 0,
-          'mod_textUrl' :'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
-        },
-        {
-          'name' : '吴亦凡',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=1995730738,2698011742&fm=27&gp=0.jpg',
-          'title' : '微信中，有这10个表现的男人最爱你',
-          'six': 1,
-          'mod_textUrl' :'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
-        },
+        }
       ],
       activeIndex: 0,
       sliderOffset: 0,
@@ -216,7 +195,7 @@
            if (data.data.length == 0 && data.data.last_page == 1) {
              _this.loading = false
              _this.noMore = true
-             _this.libs = []
+             _this.list = []
              return
            }
            if (data.current_page > data.last_page) {
@@ -227,20 +206,21 @@
            data = data.data
            if (this.isArray(data) && data.length === 0) {
              _this.noMore = true
-             _this.libs = []
+             _this.list = []
              return
            }
-           if (_this.libs.length === 0 || _this.page === 1) {
-             _this.libs = data
+           if (_this.list.length === 0 || _this.page === 1) {
+             _this.list = data
+
            } else {
              data.map(function (item, index) {
-               _this.libs.push(item)
+               _this.list.push(item)
              })
            }
            _this.noMore = true
            _this.page += 1
 
- //          _this.libs = data.data
+ //          _this.list = data.data
          },
          fail: ({code, data}) => {},
          complete: () => { this.loaded = false }
@@ -279,7 +259,17 @@
         wx.navigateTo({url: url})
       },
     gotoapp(item) {
-      wx.navigateTo({url: '/pages/books/bookDetail?url=' + item})
+        let data = {
+          url: item
+        }
+        this.$get({url: service.article, data}, {
+          success: ({code, data}) => {
+              console.log(encodeURIComponent(item))
+              wx.navigateTo({url: '/pages/books/bookDetail?url=' + encodeURIComponent(item)})
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loaded = false }
+          })
     },
       joinTip() {
         wx.showModal({

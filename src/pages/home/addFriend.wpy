@@ -3,10 +3,10 @@
     <view class="page__bd">
       <view class="weui-tab">
           <view class="weui-tab__content" >
-            <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
+            <view class="page__bd "  >
               <view class="flo_l borrowlist">
                 <view class="flo_l weui-cell__hd" >
-                  <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+                  <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
                 </view>
                 <view class="flo_l" style="width: 78%;position: relative">
                   <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
@@ -17,7 +17,7 @@
                     <view class="black_6 font_24 flo_l" style="position: absolute ;left: 64rpx;top: 100rpx;width: 250rpx;">
                       <view style="padding-left: 52rpx;width: 80%" class="ellipsis_1">
                         我叫
-                        <span class="orange bold font_28">angela</span>
+                        <span class="orange bold font_28">{{mylibs.name}}</span>
                       </view>
                       <text>感谢你加我为好友，请回复几个问题！</text>
                     </view>
@@ -26,26 +26,13 @@
               </view>
             </view>
             <view class="clearfloat"></view>
-            <view class="issue">
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">你的月薪:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入" />
+            <view class="issue text-center">
+              <view class="font_28" wx:for="{{list}}" wx:key="*this">
+                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">{{item.questions}}</view>
+                <view class="text-center">
+                  <input class="wx-input" style="margin: 22rpx auto" @blur="valueChange({{index}})" value="{{item.value}}" placeholder="请输入" />
                 </view>
               </view>
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">你的爱好:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入" />
-                </view>
-              </view>
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">你的年龄:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入" />
-                </view>
-              </view>
-            </view>
             <view class="btn_red font_28" style="margin: auto" @tap="addfriend">添加好友</view>
           </view>
         </view>
@@ -82,15 +69,11 @@
       loaded: false,
       // 我的图书馆
       mylibs: [],
-      list: [
-        {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '26岁/162cm/深圳',
-          'six': 0
-        }
-      ],
+      list: [],
       noMore: false,
+      id: '',
+      avatar: '',
+      name: '',
       loading: false
     }
 
@@ -102,12 +85,46 @@
     }
     async onLoad(e) {
       let _this = this
+////          image = e.image.split('!')
+////      console.log(image)
+//      _this.name = e.name
+      _this.id = e.id
+      _this.$apply()
+      console.log(e)
     }
     onShow() {
-      this.getLibraries()
+      this.getMessage()
+      this.getQuestions()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-
+    getMessage() {
+      let self = this
+      this.$get({url: service.users + '/' + self.id}, {
+        success: ({code, data}) => {
+          this.mylibs = data
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
+    getQuestions() {
+      let self = this
+      this.$get({url: service.users + '/' + self.id + '/friend/questions'}, {
+        success: ({code, data}) => {
+          let arr = {}
+          data.forEach((item, index, arr) => {
+            self.list.push({
+              questions: arr[index],
+              value: ''
+            })
+          })
+          self.$apply()
+          console.log(self.list)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
     onPullDownRefresh() {
       this.getLibraries()
     }
@@ -120,29 +137,6 @@
 //        }
 //        this.$apply()
       }, 200)
-    }
-    getMessage() {
-      var isNew = wx.getStorageSync('is_new')
-      if (!isNew) {
-        this.$get({url: service.user}, {
-          success: ({code, data}) => {
-            wepy.setStorageSync('is_new', data.user.is_news)
-            if (data.user.is_news) {
-              wepy.showTabBarRedDot({
-                index: 4
-              })
-            } else {
-              wepy.hideTabBarRedDot({
-                index: 4
-              })
-            }
-          }
-        })
-      } else {
-        wepy.showTabBarRedDot({
-          index: 4
-        })
-      }
     }
     // 初始化页面数据
     initPageData() {
@@ -208,11 +202,43 @@
     }
 
     methods = {
-      addfriend(){
-        wx.showModal({
-          title: '待审核',
-          content: '等待对方审核！'
+      valueChange(index , e) {
+        console.log(index)
+        this.list[index].value = e.detail.value
+      },
+      addfriend() {
+        let self = this,
+            data = {answer: self.list},
+            active = true
+        self.list.forEach((item, index, arr) => {
+          if (arr[index].value == '') {
+            wx.showToast({
+              title: '请先回答对应的问题',
+              icon: 'none',
+              duration: 1200
+            })
+            active = false
+          }
         })
+        if (active) {
+          self.$post({url: service.users + '/' + self.id + '/answer/questions', data}, {
+            success: ({code, data}) => {
+              self.$post({url: service.addFriend + '/' + self.id}, {
+                success: ({code, data}) => {
+                  wx.showModal({
+                    title: '请求发送成功！',
+                    content: '等待对方审核！'
+                  })
+                },
+                fail: ({code, data}) => {},
+                complete: () => { self.loaded = false }
+              })
+
+            },
+            fail: ({code, data}) => {},
+            complete: () => { self.loaded = false }
+          })
+        }
       }
     }
   }

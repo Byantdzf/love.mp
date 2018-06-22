@@ -6,18 +6,18 @@
     <view class="font_32 bold" style="margin-left: 32rpx;">替Ta支付VIP费用：</view>
     <view >
       <radio-group class="radio-group" bindchange="radioChange">
-        <view class="paylist"  wx:for="{{paylist}}">
+        <view class="paylist"  wx:for="{{paylist}}" wx:key="*this">
           <label class="radio">
-              <radio value="{{item.money}}" class="flo_l" checked="{{item.checked}}"/>
-              <view class="font_28 flo_l" style="margin-left: 12rpx;">{{item.name}} <span class="orange">{{item.money}}{{item.iv}}</span> </view>
-              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.message}}</view>
+              <radio value="{{item.id}}" class="flo_l" checked="{{item.checked}}"/>
+              <view class="font_28 flo_l" style="margin-left: 12rpx;">{{item.name}} <span class="orange">{{item.price}}元{{item.iv}}</span> </view>
+              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.content}}</view>
               <view class="clearfix"></view>
           </label>
           <view class="clearfix"></view>
         </view>
       </radio-group>
       <view class="text-center pay">
-        <view class="btn_red font_32" style="margin-left: 200rpx" @tap="goto('/pages/home/sharing')">确认支付</view>
+        <view class="btn_red font_32" style="margin-left: 200rpx" @tap="pay">确认支付</view>
       </view>
     </view>
   </view>
@@ -41,11 +41,15 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
+      money: '',
+      type: '',
+      pay_id: '',
+      trade_no: '',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
       paylist:[
-        {name: '市级VIP',money: '10元',message:'特权：仅可添加本市的好友', checked: 'true'},
-        {name: '省级vip',money: '100元',message:'特权：仅可添加本省的好友'},
-        {name: '全国vip',money: '500元',message:'特权：仅可添加全国的好友',iv:'(赠送500元礼物)'}
+        {name: '市级VIP',money: '10',message:'特权：仅可添加本市的好友', checked: 'true'},
+        {name: '省级vip',money: '100',message:'特权：仅可添加本省的好友'},
+        {name: '全国vip',money: '500',message:'特权：仅可添加全国的好友',iv:'(赠送500元礼物)'}
       ]
     }
     computed = {
@@ -56,7 +60,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -74,6 +78,17 @@
     // 初始化页面数据
     initPageData() {
       console.log("刷新成功")
+      let that = this
+      this.$get({url: service.ranks}, {
+        success: ({code, data}) => {
+          that.paylist = data
+          that.paylist.length = 3
+          that.$apply()
+          console.log(that.paylist)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
     }
 
     methods = {
@@ -82,6 +97,46 @@
       },
       radioChange: function(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.pay_id = e.detail.value
+//        this.paylist.forEach((item, index, arr) => {
+//          if (this.pay_id == arr[index].id) {
+//            this.type = arr[index].type
+//          }
+//        })
+        this.$apply()
+      },
+      pay() {
+        let that = this,
+            data = {
+              type: 'other_rank',
+              rank_id: that.pay_id
+            }
+        this.$post({url: service.charge, data}, {
+          success: ({code, data}) => {
+            that.trade_no = data.invite_order.trade_no
+            let wxconfig = data.order_pay.wx_pay.config
+            debugger
+//            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
+            wx.requestPayment({
+              timestamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+              package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: wxconfig.paySign, // 支付签名
+              success: function (res) {
+              },
+              fail: function (res) {
+                wx.showToast({
+                  title: '支付失败:'+res.errMsg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            });
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
       }
     }
 

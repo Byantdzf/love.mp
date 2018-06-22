@@ -43,14 +43,18 @@
       <radio-group class="radio-group" bindchange="radioChange">
         <view class="paylist"  wx:for="{{list}}" wx:key="*this">
           <label class="radio">
-            <radio value="{{item.money}}" class="flo_l" checked="{{item.checked}}"/>
-            <view class="font_28 flo_l" style="margin-left: 12rpx;margin-top: 8rpx;">{{item.name}}</view>
+            <radio value="{{item.value}}" class="flo_l" checked="{{item.checked}}"/>
+            <view class="font_28 flo_l" style="margin-left: 12rpx;margin-top: 8rpx;">{{item.title}}</view>
             <view class="clearfix"></view>
           </label>
           <view class="clearfix"></view>
         </view>
       </radio-group>
-      <view class="next btn_red" @tap="ensure">下一题</view>
+      <view class="font_32 flo_r black_6" style="margin-right: 4%">
+        <span class="orange">{{index+1}}</span> / {{questionsList.length}}
+      </view>
+      <view class="next btn_red" @tap="ensure" wx:if="{{show}}">下一题</view>
+      <view class="next btn_red" @tap="ensure_from" wx:else>完成</view>
     </view>
   </view>
 </template>
@@ -67,18 +71,20 @@
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '了解交往基因',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: false
     }
     data = {
       libraries: {},
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list:[
-        {name: '肯定的语言', checked: 'true'},
-        {name: '服务的行动'}
-      ]
-
+      type: '',
+      show: true,
+      index: 0,
+      value: '',
+      answer: [],
+      questionsList: [],
+      list:[]
     }
 
     computed = {
@@ -89,19 +95,41 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.getQuestions()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
 
-    onLoad() {
-
+    onLoad(e) {
+      console.log(e.title)
+      console.log(e.type)
+      this.type = e.type
+      this.$apply()
+      let title = '了解'+ e.title
+      wx.setNavigationBarTitle({
+         title: title
+     })
     }
 
     onPullDownRefresh() {
       this.initPageData()
+    }
+    getQuestions() {
+      let data = {type: this.type},
+          that = this
+      this.$get({url: service.vip + '/questions', data}, {
+        success: ({code, data}) => {
+          that.questionsList = data
+          that.list = data[that.index].option_arr
+          console.log(that.list)
+          that.list.forEach((item, index, arr) => {
+            arr[index].checked = false
+          })
+          that.$apply()
+        }
+      })
     }
 
     // 初始化页面数据
@@ -133,8 +161,92 @@
     }
 
     methods = {
+      radioChange(e) {
+        this.value = e.detail.value
+        this.$apply()
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+      },
       goto(url) {
         wx.navigateTo({url: url})
+      },
+      ensure_from() {
+        let that = this
+        if (that.value == '') {
+          return wx.showToast({
+            title: '请选择选项!',
+            icon: 'none',
+            duration: 1000
+          })
+        }else {
+            let quert = {
+              question_id: that.questionsList[that.index].id,
+              value: that.value
+            }
+            that.answer.push(quert)
+            that.$apply()
+            console.log(that.answer)
+          wx.showLoading({
+            title: '提交中...',
+          })
+          let data = {
+            answer: that.answer,
+            type: that.type
+          }
+          that.$post({url: service.vip + '/test', data}, {
+            success: ({code, res}) => {
+              setTimeout(function(){
+                wx.hideLoading()
+                wx.showToast({
+                  title: '提交成功!',
+                  icon: 'success',
+                  duration: 1200
+                })
+                setTimeout(() => {
+                  wx.redirectTo({url: '/pages/users/vipSetting'})
+                }, 1200)
+              },1000)
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loading = false }
+          })
+        }
+      },
+      ensure() {
+        let that = this
+        if (that.value == '') {
+          return wx.showToast({
+            title: '请选择选项!',
+            icon: 'none',
+            duration: 1000
+          })
+        }else {
+          console.log(that.value)
+          console.log(that.questionsList[that.index].id)
+          let quert = {
+            question_id: that.questionsList[that.index].id,
+            value: that.value
+          }
+          that.answer.push(quert)
+          that.$apply()
+          console.log(that.answer)
+        }
+        if(that.index < that.questionsList.length-1){
+//          debugger
+          that.index++
+          that.list = that.questionsList[that.index].option_arr
+          console.log(that.list)
+          that.list.forEach((item, index, arr) => {
+            arr[index].checked = false
+          })
+          that.value = ''
+          that.$apply()
+          console.log(that.index)
+          console.log(that.value)
+        }
+        if(that.index == that.questionsList.length-1) {
+          that.show = false
+          that.$apply()
+        }
       }
     }
 
