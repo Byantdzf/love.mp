@@ -113,7 +113,7 @@
           data = {
             price: that.price
           }
-        this.$post({url: service.recharge_score, data}, {
+        this.$post({url: service.rechargescore, data}, {
           success: ({code, data}) => {
             that.trade_no = data.trade_no
             that.$apply()
