@@ -101,7 +101,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -119,6 +119,29 @@
     // 初始化页面数据
     initPageData() {
       console.log("刷新成功")
+      let that = this
+      this.$get({url: service.ranks}, {
+        success: ({code, data}) => {
+          data.forEach((item, index, arr) => {
+            debugger
+            if(arr[index].type = '普通会员'){
+              that.paylist.push(arr[index])
+              that.$apply()
+            }else if(arr[index].type = '高级会员'){
+              that.paylist1.push(arr[index])
+              that.$apply()
+            }else if(arr[index].type = '海外VIP'){
+              that.paylist2.push(arr[index])
+              that.$apply()
+            }
+          })
+//          that.paylist = data
+//          that.paylist.length = 3
+          console.log(that.paylist)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
     }
 
     methods = {
