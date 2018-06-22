@@ -4,21 +4,21 @@
       <view class="weui-tab">
           <view class="weui-tab__content" >
             <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-              <view class="flo_l borrowlist" @tap="gototype('{{item.type}}')">
+              <view class="flo_l borrowlist" @tap="gototype('{{item}}')">
                 <view class="flo_l weui-cell__hd" >
-                  <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+                  <image src="{{item.other_user.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
                 </view>
                 <view class="flo_l" style="width: 78%;">
                   <view  class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 12rpx;">
-                    {{item.name}}
+                    {{item.other_user.name}}
                   </view>
-                  <view class="font_26 flo_r  ">{{item.time}}</view>
-                  <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
-                    <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
-                  </view>
+                  <view class="font_26 flo_r  ">{{item.created_at}}</view>
+                  <!--<view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">-->
+                    <!--<image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>-->
+                    <!--<image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>-->
+                  <!--</view>-->
                 </view>
-                <view class="font_28 flo_l bold orange ellipsis_1" style="margin-left: 26rpx">{{item.message}}</view>
+                <view class="font_28 flo_l bold orange ellipsis_1" style="margin-left: 26rpx">{{item.content}}</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
             </view>
@@ -172,66 +172,63 @@
       }
     }
     // 初始化页面数据
-    initPageData() {
-      var self = this
-      self.loading = false
-      // this.$get({url: service.my_libraries}, {
-      //   success: ({code, data}) => {
-      //     this.mylibs = data
-      //     self.config.navigationBarTitleText = data.name
-      //   },
-      //   fail: ({code, data}) => {},
-      //   complete: () => { this.loaded = false }
-      // })
-    }
-    getLibraries(keyword) {
-      let _this = this
-      _this.loading = true
-      let url = service.libraries
-      if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
-      }
-//       this.$get({
-//         url: url,
-//         data: {
-//           page: this.page
-//         }
-//       }, {
+//    initPageData() {
+//      var self = this
+//      self.loading = false
+//      self.$get({url: service.notices}, {
 //         success: ({code, data}) => {
-//           _this.noMore = false
-//           _this.loading = true
-//           if (data.data.length == 0 && data.data.last_page == 1) {
-//             _this.loading = false
-//             _this.noMore = true
-//             _this.libs = []
-//             return
-//           }
-//           if (data.current_page > data.last_page) {
-//             _this.noMore = true
-//             _this.loading = true
-//             return
-//           }
-//           data = data.data
-//           if (this.isArray(data) && data.length === 0) {
-//             _this.noMore = true
-//             _this.libs = []
-//             return
-//           }
-//           if (_this.libs.length === 0 || _this.page === 1) {
-//             _this.libs = data
-//           } else {
-//             data.map(function (item, index) {
-//               _this.libs.push(item)
-//             })
-//           }
-//           _this.noMore = true
-//           _this.page += 1
-//
-// //          _this.libs = data.data
+//           debugger
+//           this.mylibs = data
+//           self.config.navigationBarTitleText = data.name
 //         },
 //         fail: ({code, data}) => {},
 //         complete: () => { this.loaded = false }
 //       })
+//    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+       this.$get({
+         url: service.notices,
+         data: {
+           page: this.page
+         }
+       }, {
+         success: ({code, data}) => {
+           _this.noMore = false
+           _this.loading = true
+//           if (data.length == 0 && data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.list = []
+//             return
+//           }
+           if (data.current_page > data.last_page) {
+             _this.noMore = true
+             _this.loading = false
+             return
+           }
+           data = data.data
+           if (this.isArray(data) && data.length === 0) {
+             _this.noMore = true
+             _this.list = []
+             return
+           }
+           if (_this.list.length === 0 || _this.page === 1) {
+             _this.list = data
+           } else {
+             data.map(function (item, index) {
+               _this.list.push(item)
+             })
+           }
+           _this.noMore = true
+           _this.page += 1
+
+ //          _this.libs = data.data
+         },
+         fail: ({code, data}) => {},
+         complete: () => { this.loaded = false }
+       })
     }
 
     methods = {
@@ -263,20 +260,20 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      gototype(type) {
+      gototype(item) {
 //        wx.showModal({
 //          title: '提示',
 //          content: type
 //        })
         let url = ''
-        if (type =='grit') {
+        if (item.type =='gift') {
           url = '/pages/users/myGift'
-        }else if (type =='user') {
-          url = '/pages/home/information'
-        }else if (type == 'wechat') {
-          url = '/pages/users/examineWeChat'
-        }else if (type == 'addfriend') {
-          url = '/pages/users/auditFriend'
+        }else if (item.type =='folllow') {
+          url = '/pages/home/information?id=' + item.id
+        }else if (item.type == 'wechat') {
+          url = '/pages/users/examineWeChat?id=' + item.id
+        }else if (item.type == 'friend') {
+          url = '/pages/users/auditFriend?id=' + item.id
         }
         wx.navigateTo({url: url})
       },

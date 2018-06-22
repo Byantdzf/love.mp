@@ -97,6 +97,7 @@
       loaded: false,
       // 我的图书馆
       mylibs: [],
+      id: '',
       list: [
         {
           'name' : 'Angelababy',
@@ -116,20 +117,22 @@
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
     async onLoad(e) {
-      let _this = this
+      console.log(e.id)
+      this.id = e.id
+      this.$apply()
     }
     onShow() {
-      this.getLibraries()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
-      this.getLibraries()
+      this.initPageData()
     }
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
-        this.getLibraries()
+        this.initPageData()
 //        } else {
 //          this.initPageData()
 //        }
@@ -163,14 +166,15 @@
     initPageData() {
       var self = this
       self.loading = false
-      // this.$get({url: service.my_libraries}, {
-      //   success: ({code, data}) => {
-      //     this.mylibs = data
-      //     self.config.navigationBarTitleText = data.name
-      //   },
-      //   fail: ({code, data}) => {},
-      //   complete: () => { this.loaded = false }
-      // })
+      self.$get({url: service.friendrequest + '/' + self.id}, {
+         success: ({code, data}) => {
+           debugger
+           this.mylibs = data
+           self.config.navigationBarTitleText = data.name
+         },
+         fail: ({code, data}) => {},
+         complete: () => { this.loaded = false }
+       })
     }
     getLibraries(keyword) {
       let _this = this

@@ -50,16 +50,22 @@ export const service = {
     friends: `${host}/friends`,
     //送礼物
     sendgift: `${host}/send/users`,
+    //消息列表
+    notices: `${host}/notices`,
     //单身
     courtship: `${host}/courtship`,
     //文章列表
     articles: `${host}/articles`,
     //文章信息
     article: `${host}/article`,
+    //好友申请
+    friendrequest: `${host}/deal/friend/request`,
     //介绍人
     marriage  : `${host}/marriage`,
     //附近单身
     near_single  : `${host}/near/single`,
+    //微信申请消息
+    wechatNotices: `${host}/show/wechat/notices`,
     //解密手机号
     infor: `${host}/wechat/mobile`,
     //创建party
