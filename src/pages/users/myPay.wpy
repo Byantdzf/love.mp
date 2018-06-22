@@ -6,12 +6,12 @@
           {{item.type}}
         </view>
         <view  class="font_26 flo_r ellipsis_1 " style="margin-left: 12rpx;">
-          {{item.time}}
+          {{item.created_at}}
         </view>
       </view>
       <view class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 34rpx;">{{item.message}}</view>
       <view  class="font_28 flo_r ellipsis_1" style="margin-right: 10%;margin-bottom: -22rpx;">
-        消费 <span class="font_28 orange  bold">{{item.num}}</span> 元
+        消费 <span class="font_28 orange  bold">{{item.num * item.price}}</span> 元
       </view>
       <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{item.info}}"></view>
     </view>
@@ -35,6 +35,17 @@
       <span>{{message.time}}</span>
     </view>
   </modal>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
 </template>
 
 <script>
@@ -56,39 +67,11 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list: [
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '充值了20元',
-          'num': 20,
-          'info': '',
-          'type': '账户充值'
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '升级VIP V3',
-          'num': 40,
-          'type': 'VIP充值',
-          'info': '为Angelababy升级了 V3',
-          'code': '244121312321132'
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '购买巧克力',
-          'num': 60,
-          'info': '',
-          'type': '购买礼物'
-        },
-        {
-          'time' : '2018/05/26 13:25',
-          'message' : '苹果',
-          'num': 80,
-          'type': '兑换商品',
-          'info': '兑换了iPhone X',
-          'code': '244121312321132'
-        },
-      ],
+      list: [],
       hide: true,
+      noMore: false,
+      page: 1,
+      loading: false,
       message: {}
 
     }
@@ -101,7 +84,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -115,32 +98,46 @@
     onPullDownRefresh() {
       this.initPageData()
     }
-
+    onReachBottom() {
+      this.initPageData()
+    }
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      var _this = this
+      _this.loading = true
+      this.$get({url: service.users + '/orders?page=' +  _this.page }, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
-          this.libraries.forEach((item) => {
-            if (item.type == 'SHARE') {
-              item.url = '/pages/library/shareLibrary?id=' + item.id
-            } else {
-              item.url = '/pages/library/library?id=' + item.id
-            }
-          })
-          wx.setStorageSync('openid', data.user.wechat.openid)
-          wx.setStorageSync('is_new', data.user.is_news)
-          if (data.user.is_news) {
-            wepy.showTabBarRedDot({
-              index: 4
-            })
+          _this.noMore = false
+          _this.loading = true
+          if (data.data.length == 0 && data.last_page == 1) {
+            _this.loading = false
+            _this.noMore = true
+            _this.list = []
+            return
+          }
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            _this.list = []
+            return
+          }
+          if (_this.list.length === 0 || _this.page === 1) {
+            _this.list = data
           } else {
-            wepy.hideTabBarRedDot({
-              index: 4
+            data.map(function (item, index) {
+              _this.list.push(item)
             })
           }
-        }
+          _this.noMore = true
+          _this.page += 1
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
       })
     }
 

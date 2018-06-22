@@ -8,6 +8,14 @@
     <view class="orange integral_log flo_r font_26 btn_white" @tap="goto('/pages/users/integralRecord')">福分记录</view>
     <view class="clearfloat"></view>
   </view>
+  <view class="page-user">
+    <view class="bold orange integral_title">充值:</view>
+    <view class="text-center">
+      <input type="number" class="input_price flo_l font_28"  placeholder="请输入充值金额" @input="bindKeyInput"/>
+      <view class="btn_red font_26 flo_r" style="width: 200rpx;height: 100rpx;line-height: 115rpx;margin: auto;margin-top: -36rpx;margin-right: -42rpx;" @tap="recharge">充值</view>
+    </view>
+    <view class="clearfloat"></view>
+  </view>
   <view class="gift">
     <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
       <image src="{{item.icon}}" style="width:80px; height: 80px;margin: 12rpx "></image>
@@ -45,6 +53,8 @@
       is_vip: false,
       loading: false,
       nickName: '加载中...',
+      price: 0,
+      trade_no: '',
       list:[]
 
     }
@@ -94,6 +104,55 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
+      recharge(){
+        console.log(this.price)
+        if(!this.price){
+          return this.$showToast('请输入金额')
+        }
+        let that = this,
+          data = {
+            price: that.price
+          }
+        this.$post({url: service.recharge_score, data}, {
+          success: ({code, data}) => {
+            that.trade_no = data.trade_no
+            that.$apply()
+            let wxconfig = data.wx_pay.config
+            wx.requestPayment({
+              timestamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+              package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: wxconfig.paySign, // 支付签名
+              success: function (res) {
+                that.$post({url: service.orderpay  + that.trade_no}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '支付成功',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {},
+                  complete: () => { this.loaded = false }
+                })
+              },
+              fail: function (res) {
+                wx.showToast({
+                  title: '支付失败:'+res.errMsg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            });
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+      bindKeyInput(e){
+        this.price = e.detail.value
+        this.$apply()
+      },
       conversion(item){
 //      wx.showToast({
 //        title: item.name,
@@ -129,6 +188,10 @@ page{
     background-image: url("http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.9TmBzGGHW7w9470132e3efb72f0a1c8c06768b4cbd80.png");
     background-size: cover;
     position: relative;
+  }
+  .input_price{
+    width: 68%;
+    border-bottom: 1rpx solid #d3d3d3;
   }
 .page-user{
   .integral_title{

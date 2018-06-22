@@ -166,7 +166,6 @@
          success: ({code, data}) => {
            _this.noMore = false
            _this.loading = true
-           debugger
            if (data.data.length == 0 && data.last_page == 1) {
              _this.loading = false
              _this.noMore = true

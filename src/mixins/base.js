@@ -96,6 +96,13 @@ export default class baseMixin extends wepy.mixin {
   isPhone(str) {
     return /^1\d{10}$/.test(str)
   }
+  $showToast(title){
+    wx.showToast({
+       title: title,
+       icon: 'none',
+       duration: 1200
+    })
+  }
 
   // 警告框
   $alert(item = '标题', item2) {
