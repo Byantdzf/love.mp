@@ -40,13 +40,23 @@
   </view>
   <view class="font_32 bookTitle">推荐文章</view>
   <view class="booklist">
-    <view wx:for="{{list}}" class="book" wx:key="*this" @tap="gotoapp({{item.post.link}})">
-      <view class="font_28 flo_l bold ellipsis_2" style="width: 72%">{{item.post.title}}</view>
-      <view class="flo_r">
-        <image class="book-avatar" src="{{item.post.cover}}" background-size="cover"/>
+    <block wx:if="{{list.length}}">
+      <view wx:for="{{list}}" class="book" wx:key="*this" @tap="gotoapp({{item.post.link}})">
+        <view class="font_28 flo_l bold ellipsis_2" style="width: 72%">{{item.post.title}}</view>
+        <view class="flo_r">
+          <image class="book-avatar" src="{{item.post.cover}}" background-size="cover"/>
+        </view>
+        <view class="clearfloat"></view>
       </view>
-      <view class="clearfloat"></view>
-    </view>
+    </block>
+    <block wx:else>
+      <view  class="book" >
+        <view class="font_28" style="margin-top: 22rpx">
+          暂无搜索文章
+        </view>
+        <view class="clearfloat"></view>
+      </view>
+    </block>
   </view>
   <block wx:if="{{loading}}">
     <view class="weui-loadmore">
@@ -206,6 +216,7 @@
            data = data.data
            if (this.isArray(data) && data.length === 0) {
              _this.noMore = true
+             _this.loading = false
              _this.list = []
              return
            }

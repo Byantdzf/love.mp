@@ -30,6 +30,8 @@ export const service = {
     questions:`${host}/friend/questions`,
     //添加好友
     addFriend:`${host}/friend/users`,
+    //好友
+    friend:`${host}/friend`,
     //申请微信
     wechat:`${host}/show/wechat`,
     //微信好友

@@ -165,16 +165,16 @@
        }, {
          success: ({code, data}) => {
            _this.noMore = false
-           _this.loading = true
-           if (data.data.length == 0 && data.last_page == 1) {
-             _this.loading = false
-             _this.noMore = true
-             _this.list = []
-             return
-           }
+           _this.loading = false
+//           if (data.data.length == 0 && data.last_page == 1) {
+//             _this.loading = false
+//             _this.noMore = true
+//             _this.list = []
+//             return
+//           }
            if (data.current_page > data.last_page) {
              _this.noMore = true
-             _this.loading = true
+             _this.loading = false
              return
            }
            data = data.data

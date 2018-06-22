@@ -145,12 +145,17 @@
         console.log(data)
         let self = this
         self.loading = false
-        this.$post({url: service.exchange  + '/' + self.item.id}, {
+        this.$post({url: service.exchange  + '/' + self.item.id, data}, {
           success: ({code, data}) => {
-            debugger
             self.user = data.user
             self.other_user = data.other_user
             self.$apply()
+            self.$Toast_success('兑换成功')
+            setTimeout(() => {
+              wx.navigateBack({
+                delta: 1
+              })
+            }, 1200)
           },
           fail: ({code, data}) => {},
           complete: () => { this.loaded = false }

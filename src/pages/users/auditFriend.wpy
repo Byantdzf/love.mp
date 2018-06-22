@@ -3,21 +3,22 @@
     <view class="page__bd">
       <view class="weui-tab">
           <view class="weui-tab__content" >
-            <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-              <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{item.id}}')">
+            <view class="page__bd "  >
+              <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{user.id}}')">
                 <view class="flo_l weui-cell__hd" >
-                  <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+                  <image src="{{user.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
                 </view>
                 <view class="flo_l" style="width: 78%;">
                   <view  class="font_28 flo_l orange ellipsis_1 bold" style="margin-left: 12rpx;">
-                    {{item.name}}
+                    {{user.name}}
                   </view>
                   <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{user.sex}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
                     <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <span class="font_24" style="margin-left: 6rpx;color: #666666">{{user.age}}岁/{{user.province}}</span>
                   </view>
                 </view>
-                <view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{item.message}}</view>
+                <!--<view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{item.message}}</view>-->
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
                 <!--<view class="flo_l" style="width: 78%;position: relative">-->
                   <!--<view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">-->
@@ -39,22 +40,10 @@
             <view class="clearfloat"></view>
             <view class="font_32 bookTitle text-left bold black_6">请求加你为好友</view>
             <view class="issue">
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的月薪:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入"  value="6K"/>
-                </view>
-              </view>
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的爱好:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入" value="打篮球" />
-                </view>
-              </view>
-              <view class="font_28">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">Ta的年龄:</view>
-                <view class="">
-                  <input class="wx-input" placeholder="请输入" value="24岁"/>
+              <view class="font_28" wx:for="{{answer}}" wx:key="*this">
+                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">{{item.questions}}</view>
+                <view class="text-center">
+                  <input class="wx-input" style="margin: 22rpx auto" @blur="valueChange({{index}})" disabled value="{{item.value}}" placeholder="请输入" />
                 </view>
               </view>
             </view>
@@ -96,7 +85,8 @@
       // 后置显示按钮
       loaded: false,
       // 我的图书馆
-      mylibs: [],
+      user: {},
+      answer: {},
       id: '',
       list: [
         {
@@ -165,16 +155,17 @@
     // 初始化页面数据
     initPageData() {
       var self = this
-      self.loading = false
-      self.$get({url: service.friendrequest + '/' + self.id}, {
-         success: ({code, data}) => {
-           debugger
-           this.mylibs = data
-           self.config.navigationBarTitleText = data.name
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+      self.loading = true
+      self.$get({url: service.friend + '/request/' + self.id}, {
+        success: ({code, data}) => {
+          self.loading = false
+          self.user = data.user
+          self.answer = data.answer.question_answer
+          self.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
     }
     getLibraries(keyword) {
       let _this = this
@@ -227,22 +218,48 @@
     }
 
     methods = {
-      reject(){
-        wx.showToast({
-          title: '已拒绝',
-          icon: 'none',
-          duration: 1000
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      reject() {
+        var self = this,
+            data = {
+              status: -1
+            }
+        self.$post({url: service.friendrequest + '/' + self.id, data}, {
+          success: ({code, data}) => {
+            wx.showToast({
+              title: '已拒绝',
+              icon: 'none',
+              duration: 1000
+            })
+            setTimeout(() => {
+              wx.redirectTo({url: '/pages/users/myNews'})
+            }, 1000)
+          },
+          fail: ({code, data}) => {},
+          complete: () => { self.loaded = false }
         })
       },
-      consent(){
-        wx.showToast({
-          title: '已添加为好友',
-          icon: 'success',
-          duration: 1000
+      consent() {
+        var self = this,
+          data = {
+            status: 1
+          }
+        self.$post({url: service.friendrequest + '/' + self.id, data}, {
+          success: ({code, data}) => {
+            wx.showToast({
+              title: '已添加为好友',
+              icon: 'success',
+              duration: 1000
+            })
+            setTimeout(() => {
+              wx.redirectTo({url: '/pages/users/myNews'})
+            }, 1000)
+          },
+          fail: ({code, data}) => {},
+          complete: () => { self.loaded = false }
         })
-        setTimeout(() => {
-          wx.navigateTo({url: '/pages/users/myNews'})
-        }, 1000)
       }
     }
   }

@@ -297,6 +297,15 @@
        success: ({code, data}) => {
 //         debugger
          this.mylibs = data
+         if (data.is_followed == true) {
+           self.paramet_v = true,
+           self.text = '取消关注',
+           self.$apply()
+         } else{
+           self.paramet_v = false
+           self.text = '关注'
+           self.$apply()
+         }
          this.profile_courtship = data.profile_courtship
        },
        fail: ({code, data}) => {},

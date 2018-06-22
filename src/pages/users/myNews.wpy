@@ -13,10 +13,10 @@
                     {{item.other_user.name}}
                   </view>
                   <view class="font_26 flo_r  ">{{item.created_at}}</view>
-                  <!--<view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">-->
-                    <!--<image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>-->
-                    <!--<image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>-->
-                  <!--</view>-->
+                  <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
+                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.other_user.sex}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                  </view>
                 </view>
                 <view class="font_28 flo_l bold orange ellipsis_1" style="margin-left: 26rpx">{{item.content}}</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>

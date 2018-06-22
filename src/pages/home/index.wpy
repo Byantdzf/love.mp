@@ -127,7 +127,7 @@
       this.getSystem()
       // wx.setNavigationBarColor({
       //   frontColor: '#ffffff',
-      //   backgroundColor: #CDA6C1',
+      //   backgroundColor: '#CDA6C1',
       //   animation: {
       //     duration: 400,
       //     timingFunc: 'easeIn'

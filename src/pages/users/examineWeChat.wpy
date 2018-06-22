@@ -9,11 +9,12 @@
           {{user.name}}
         </view>
         <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-          <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+          <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{user.sex}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
           <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+          <span class="font_24" style="margin-left: 6rpx;color: #666666">{{user.age}}岁/{{user.province}}</span>
         </view>
       </view>
-      <view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{item.message}}</view>
+      <!--<view class="font_26 flo_l black_6 ellipsis_1" style="margin-left: 14rpx">{{user.content}}</view>-->
       <view class="weui-cell__ft weui-cell__ft_in-access"></view>
     </view>
   </view>

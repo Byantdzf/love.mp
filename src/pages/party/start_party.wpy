@@ -82,7 +82,7 @@
     config = {
       navigationBarTitleText: '聚会详情',
       navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#fafffb',
+      navigationBarBackgroundColor: '#ffffff',
       enablePullDownRefresh: true
     }
     data = {

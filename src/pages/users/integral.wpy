@@ -89,7 +89,7 @@
       this.$get({url: service.goodses}, {
         success: ({code, data}) => {
           self.loading = false
-          let num = data.score.used_amount.split('.')
+          let num = data.score.remain_amount.split('.')
           self.score = num[0]
           self.list = data.goodses
           self.$apply()

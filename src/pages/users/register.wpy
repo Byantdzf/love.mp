@@ -45,10 +45,14 @@
         </view>
       </view>
       <view style="width: 40%; background: white;margin-left: 32rpx" class="text-center flo_l">
-        <view @tap="do_register('single')" class="weui-btn btn_red font_28">我是单身</view>
+        <view  class="weui-btn btn_red font_28" >
+          <button class="btn text-center font_28 white" style="line-height: 140rpx" open-type="getUserInfo" @getuserinfo="getuserinfo('single')" >我是单身</button>
+        </view>
       </view>
       <view style="width: 40%; background: white;margin-right: 32rpx" class="text-center flo_r">
-        <view @tap="do_register('marriage')" class="weui-btn btn_red font_28">我是介绍人</view>
+        <view  class="weui-btn btn_red font_28" >
+          <button class="btn text-center font_28 white" style="line-height: 140rpx" open-type="getUserInfo" @getuserinfo="getuserinfo('marriage')" >我是介绍人</button>
+        </view>
       </view>
         <!--<view class="weui-cell weui-cell_input reset-input">-->
           <!--<view class="weui-cell__bd h4">-->
@@ -131,6 +135,7 @@
     }
 
     onShow() {
+//      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
@@ -150,27 +155,27 @@
 //        success: (res) => {
 //          wx.setStorageSync('user', res.userInfo)
 ////          code: wx.getStorageSync('code')
-//          console.log(res.userInfo)
 //          this.avatarUrl = res.userInfo.avatarUrl
 //          this.nickName = res.userInfo.nickName
 //          this.encryptedData = res.encryptedData
 //          this.iv = res.iv
+//          debugger
 //          console.log(this.iv)
 //          this.$apply()
-//          let data = {
-//            code: wx.getStorageSync('code'),
-//            iv: this.iv,
-//            encryptedData: this.encryptedData
-//          }
-//          debugger
-//          this.$post({url: service.infor, data}, {
-//            success: ({code, data}) => {
-////              debugger
-//              this.$setCode()
-//            },
-//            fail: ({code, data}) => {},
-//            complete: () => { this.loading = false }
-//          })
+////          let data = {
+////            code: wx.getStorageSync('code'),
+////            iv: this.iv,
+////            encryptedData: this.encryptedData
+////          }
+////          debugger
+////          this.$post({url: service.infor, data}, {
+////            success: ({code, data}) => {
+//////              debugger
+////              this.$setCode()
+////            },
+////            fail: ({code, data}) => {},
+////            complete: () => { this.loading = false }
+////          })
 //        },
 //        fail: (res) => { }
 //      })
@@ -200,6 +205,66 @@
         }
       })
     }
+    do_register(type) {
+      // 防抖
+      console.log(type)
+      if (this.loading) return
+      if (!this.getString(this.name)) {
+        return this.$alert('温馨提示', '请输入姓名')
+      }
+      if (!this.isPhone(this.mobile)) {
+        return this.$alert('温馨提示', '请输入正确的手机号码')
+      }
+//        if (!this.nickName) {
+//          return wx.openSetting({
+//            success: (res) => {
+//              this.initPageData()
+//            }
+//          })
+//        }
+      const data = {
+        mobile: this.getString(this.mobile),
+        code: wx.getStorageSync('code'),
+        name: this.getString(this.name),
+        encryptedData: this.encryptedData,
+        iv: this.iv,
+        type: type
+      }
+      // 绑定手机号
+      this.loading = true
+      this.$post({url: service.register, data}, {
+        success: ({code, data}) => {
+          wx.setStorageSync('token', data.token)
+          wx.showLoading({
+            title: '注册中...',
+            mask: true,
+            showCancel: false,
+            success: (res) => {
+            }
+          })
+          setTimeout(function(){
+            wx.hideLoading()
+            wx.showToast({
+              title: '注册成功!',
+              icon: 'success',
+              duration: 1200,
+              success: (res) => {
+                let url = ''
+                if(type == 'single'){
+                  url = '/pages/users/unmarri'
+                }else{
+                  url = '/pages/users/intro'
+                }
+                wx.redirectTo({url: url})
+              }
+            })
+
+          },1000)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loading = false }
+      })
+    }
 //    getInfo() {
 //      wepy.getUserInfo({
 //        success: (res) => {
@@ -220,68 +285,21 @@
 //      })
 //    }
     methods = {
+      getuserinfo(type, e) {
+        console.log(e.detail)
+        console.log(type)
+        if (e.detail.userInfo){
+          this.encryptedData = e.detail.encryptedData
+          this.iv = e.detail.iv
+          this.$apply()
+          this.do_register(type)
+          //用户按了允许授权按钮
+        } else {
+          //用户按了拒绝按钮
+        }
+      },
       goto(url) {
         wx.navigateTo({url: url})
-      },
-      do_register(type) {
-        // 防抖
-        console.log(type)
-        if (this.loading) return
-        if (!this.getString(this.name)) {
-          return this.$alert('温馨提示', '请输入姓名')
-        }
-        if (!this.isPhone(this.mobile)) {
-          return this.$alert('温馨提示', '请输入正确的手机号码')
-        }
-//        if (!this.nickName) {
-//          return wx.openSetting({
-//            success: (res) => {
-//              this.initPageData()
-//            }
-//          })
-//        }
-        const data = {
-          mobile: this.getString(this.mobile),
-          code: wx.getStorageSync('code'),
-          name: this.getString(this.name),
-          encryptedData: this.encryptedData,
-          iv: this.iv,
-          type: type
-        }
-        // 绑定手机号
-        this.loading = true
-        this.$post({url: service.register, data}, {
-          success: ({code, data}) => {
-            wx.setStorageSync('token', data.token)
-            wx.showLoading({
-              title: '注册中...',
-              mask: true,
-              showCancel: false,
-              success: (res) => {
-              }
-            })
-            setTimeout(function(){
-              wx.hideLoading()
-              wx.showToast({
-                title: '注册成功!',
-                icon: 'success',
-                duration: 1200,
-                success: (res) => {
-                  let url = ''
-                  if(type == 'single'){
-                    url = '/pages/users/unmarri'
-                  }else{
-                    url = '/pages/users/intro'
-                  }
-                  wx.redirectTo({url: url})
-                }
-              })
-
-            },1000)
-          },
-          fail: ({code, data}) => {},
-          complete: () => { this.loading = false }
-        })
       },
       typing (type, e) {
         if (this.isDefined(this[type])) {

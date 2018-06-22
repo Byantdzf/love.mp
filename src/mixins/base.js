@@ -103,7 +103,13 @@ export default class baseMixin extends wepy.mixin {
        duration: 1200
     })
   }
-
+  $Toast_success(title){
+    wx.showToast({
+      title: title,
+      icon: 'success',
+      duration: 1200
+    })
+  }
   // 警告框
   $alert(item = '标题', item2) {
     const param = this.isObject(item) ? Object.assign({

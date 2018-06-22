@@ -71,7 +71,8 @@
       noMore: false,
       loading: false,
       inputShowed: false,
-      inputVal: ''
+      inputVal: '',
+      formId: ''
     }
 
     computed = {
@@ -81,7 +82,7 @@
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
     async onLoad(e) {
-      this.update('ALL', 1)
+      this.update('ALL')
       let _this = this
     }
     onShow() {
@@ -125,7 +126,7 @@
         })
       }
     }
-    update(type, page) {
+    update(type) {
       let that = this
       that.type = type
       if (that.loading || that.noMoreList) return
@@ -136,7 +137,8 @@
         url: service.parties,
         data: {
           type: type,
-          page: page,
+          page: this.page,
+          keyword: this.inputVal,
           formId: this.formId
         }
       }, {
@@ -254,7 +256,7 @@
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
-        this.getLibraries(this.inputVal)
+        this.update('ALL')
       },
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft

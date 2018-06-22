@@ -31,7 +31,7 @@
               </view>
               <view class="message" @tap="goto('/pages/users/myNews')">
                 <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-                <view class="message_red" ></view>
+                <view class="message_red" wx:if="{{user.new_notice_count}}"></view>
               </view>
             </view>
           <!--</navigator>-->
