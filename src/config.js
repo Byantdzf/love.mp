@@ -3,8 +3,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-//  var host = 'https://love.ufutx.com/api'
-var host = 'http://love.hankin.com/api'
+ var host = 'https://love.ufutx.com/api'
+// var host = 'http://love.hankin.com/api'
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
@@ -40,8 +40,12 @@ export const service = {
     gifts: `${host}/gifts`,
     //我的关注
     followings:`${host}/followings`,
+    //充值积分
+    rechargescore:`${host}/recharge/score`,
     //我的粉丝
     followers:`${host}/followers`,
+    //支付回调
+    orderpay:`${host}/mark/order/pay`,
     //我的好友
     friends: `${host}/friends`,
     //送礼物
