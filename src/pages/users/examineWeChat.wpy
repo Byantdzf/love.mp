@@ -1,12 +1,12 @@
 <template>
-  <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-    <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{item.id}}')">
+  <view class="page__bd ">
+    <view class="flo_l borrowlist" @tap="goto('/pages/home/information?id={{user.id}}')">
       <view class="flo_l weui-cell__hd" >
-        <image src="{{item.image}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+        <image src="{{user.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
       </view>
       <view class="flo_l" style="width: 78%;">
         <view  class="font_28 flo_l orange ellipsis_1 bold" style="margin-left: 12rpx;">
-          {{item.name}}
+          {{user.name}}
         </view>
         <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
           <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
@@ -35,7 +35,7 @@
      Ta的二维码
     </view>
     <view class="white font_32" style="position: absolute;left: 0%;top: 36%;">
-      <image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1751385154,3008124413&fm=27&gp=0.jpg" mode="aspectFit"  ></image>
+      <image src="{{wechat_qrcode}}" mode="aspectFit"  ></image>
     </view>
   </view>
   <view class="clearfloat"></view>
@@ -64,6 +64,8 @@
       background_image:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.gQ3fN9tq3sAdd04fbfe3c52016f8f0f70c0725a0d315.png',
       background_imagev:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.bcHoGXBnVuoHaedde8274680eaaacffdd9fa9b9b7a51.png',
       message: {},
+      id: '',
+      wechat_qrcode: '',
       list: [
         {
           'name' : 'Angelababy',
@@ -83,15 +85,17 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
 
-    onLoad() {
-
+    onLoad(e) {
+      console.log(e.id)
+      this.id = e.id
+      this.$apply()
     }
 
     onPullDownRefresh() {
@@ -100,29 +104,16 @@
 
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      var self = this
+      self.loading = false
+      this.$get({url: service.wechatNotices + '/' + self.id}, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
-          this.libraries.forEach((item) => {
-            if (item.type == 'SHARE') {
-              item.url = '/pages/library/shareLibrary?id=' + item.id
-            } else {
-              item.url = '/pages/library/library?id=' + item.id
-            }
-          })
-          wx.setStorageSync('openid', data.user.wechat.openid)
-          wx.setStorageSync('is_new', data.user.is_news)
-          if (data.user.is_news) {
-            wepy.showTabBarRedDot({
-              index: 4
-            })
-          } else {
-            wepy.hideTabBarRedDot({
-              index: 4
-            })
-          }
-        }
+          self.user = data
+          self.wechat_qrcode = JSON.parse(data.wechat_qrcode)[0]
+          self.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
       })
     }
 

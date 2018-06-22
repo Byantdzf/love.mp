@@ -2,9 +2,9 @@
   <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
     <view class="flo_l borrowlist" @tap="info('{{item}}')">
       <view class="flo_l" style="width: 100%;">
-        <view  class="font_32 flo_l ellipsis_1 bold" style="margin-left: 12rpx;">
-          {{item.type}}
-        </view>
+        <!--<view  class="font_32 flo_l ellipsis_1 bold" style="margin-left: 12rpx;">-->
+          <!--{{item.type}}-->
+        <!--</view>-->
         <view  class="font_26 flo_r ellipsis_1 " style="margin-left: 12rpx;">
           {{item.created_at}}
         </view>
