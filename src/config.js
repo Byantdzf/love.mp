@@ -3,8 +3,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-//  var host = 'https://love.ufutx.com/api'
-var host = 'http://love.hankin.com/api'
+ var host = 'https://love.ufutx.com/api'
+// var host = 'http://love.hankin.com/api'
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
