@@ -1,11 +1,11 @@
 <template>
   <view class="weui-panel weui-panel_access">
     <view class="weui-navbar">
-      <view wx:for="{{tabs}}" wx:key="*this" id="{{item.id}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+      <view wx:for="{{tabs}}" wx:key="*this" id="{{item.id}}" class="weui-navbar__item {{activeIndex == item.id ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
         <view class="weui-navbar__title" >{{item.name}}</view>
       </view>
       <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
-      <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>
+      <!--<view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>-->
     </view>
     <view style="width: 100%;height: 100rpx"></view>
     <view class="weui-panel__bd">
@@ -14,24 +14,34 @@
       <!--</view>-->
     </view>
   </view>
-  <view class="grit text-center">
-        <image class="grit-avatar" src="{{grit.image}}" background-size="cover"/>
+  <view class="gift text-center">
+        <image class="gift-avatar" src="{{gift.icon}}" background-size="cover"/>
         <view class="font_28  bold orange" style="width: 56%;margin-bottom: 12rpx;">一共收到：</view>
-        <view class="font_28  bold text-center orange" style="width: 100%">{{grit.num}}朵{{grit.name}}</view>
+        <view class="font_28  bold text-center orange" style="width: 100%">{{user_gift.num}}{{gift.unit}}{{gift.name}}</view>
   </view>
   <view class="font_32 bookTitle">礼物记录</view>
   <view class="booklist">
-    <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.id}}')">
-      <view class="flo_l">
-        <image class="book-avatar" src="{{item.image}}" background-size="cover"/>
+    <block wx:if="{{list.length}}">
+      <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.id}}')">
+        <view class="flo_l">
+          <image class="book-avatar" src="{{item.image}}" background-size="cover"/>
+        </view>
+        <view class="font_28" style="margin-top: 22rpx">
+          <view class="flo_l">{{item.name}}</view>
+          <view class="flo_l" style="margin-left: 12rpx;">给你赠送 <span class="font_32 orange bold">{{item.num}}</span> 朵玫瑰</view>
+          <view class="font_26 flo_r black_6">{{item.time}}</view>
+        </view>
+        <view class="clearfloat"></view>
       </view>
-      <view class="font_28" style="margin-top: 22rpx">
-        <view class="flo_l">{{item.name}}</view>
-        <view class="flo_l" style="margin-left: 12rpx;">给你赠送 <span class="font_32 orange bold">{{item.num}}</span> 朵玫瑰</view>
-        <view class="font_26 flo_r black_6">{{item.time}}</view>
+    </block>
+    <block wx:else>
+      <view  class="book" >
+        <view class="font_28" style="margin-top: 22rpx">
+          暂无赠送记录
+        </view>
+        <view class="clearfloat"></view>
       </view>
-      <view class="clearfloat"></view>
-    </view>
+    </block>
   </view>
   <block wx:if="{{loading}}">
     <view class="weui-loadmore">
@@ -65,41 +75,9 @@
       loaded: false,
       mylibs: [],
       tabs: [],
-      grit: {
-          'name' : '玫瑰花',
-          'image' : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/13/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.zaHz5Q5eFlMOffc0157532ac335690384bfc30f3113e.png',
-          'num': 2351565
-        },
-      list: [
-        {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'title' : '《长恨歌》|爱情中，比陪伴更重要的是这件事',
-          'num': 88,
-          'time' :'2018/12/21 13:45'
-        },
-        {
-          'name' : '赵丽颖',
-          'image' : 'http://img0.imgtn.bdimg.com/it/u=2096616296,4033957106&fm=27&gp=0.jpg',
-          'title' : '婚姻也分等级，你在哪一级',
-          'num': 998,
-          'time' :'2018/12/21 13:45'
-        },
-        {
-          'name' : '舒淇',
-          'image' : 'http://img3.imgtn.bdimg.com/it/u=604561010,2398733113&fm=27&gp=0.jpg',
-          'title' : '选男人眼光差怎么了？老娘又红又美又有钱',
-          'num': 98,
-          'time' :'2018/12/21 13:45'
-        },
-        {
-          'name' : '吴亦凡',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=1995730738,2698011742&fm=27&gp=0.jpg',
-          'title' : '微信中，有这10个表现的男人最爱你',
-          'num': 188,
-          'time' :'2018/12/21 13:45'
-        },
-      ],
+      user_gift: {},
+      gift: {},
+      list: [],
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
@@ -146,12 +124,12 @@
     }
     onReachBottom() {
       setTimeout(() => {
-//        if (this.activeIndex == '1') {
-        this.getLibraries()
-//        } else {
+        if (this.activeIndex == '1') {
+//          this.getLibraries()
+        } else {
 //          this.initPageData()
-//        }
-//        this.$apply()
+        }
+        this.$apply()
       }, 200)
     }
     getMessage() {
@@ -180,29 +158,35 @@
     // 初始化页面数据
     giftsData() {
       var self = this
-      self.loading = false
-       this.$get({url: service.gifts}, {
+      self.loading = true
+      self.$get({url: service.gifts}, {
          success: ({code, data}) => {
            data.gifts.forEach((item, index, arr) => {
-             return this.tabs.push({
+             return self.tabs.push({
                name: arr[index].name,
                id: arr[index].id
              })
            })
-           this.$apply()
-           debugger
+           self.$apply()
+           self.$get({url: service.gifts + '/' + self.tabs[0].id + '/histories' }, {
+             success: ({code, data}) => {
+               self.loading = false
+               self.list = data.gift_histories
+               self.user_gift = data.user_gift
+               self.gift = data.user_gift.gift
+               self.$apply()
+             },
+             fail: ({code, data}) => {},
+             complete: () => { self.loaded = false }
+           })
          },
          fail: ({code, data}) => {},
          complete: () => { this.loaded = false }
        })
     }
     getLibraries(keyword) {
-      let _this = this
-      _this.loading = true
-      let url = service.libraries
-      if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
-      }
+      let that = this
+//      _this.loading = true
 //       this.$get({
 //         url: url,
 //         data: {
@@ -264,14 +248,22 @@
         this.getLibraries(this.inputVal)
       },
       tabClick (e) {
-        this.sliderOffset = e.currentTarget.offsetLeft
-        this.activeIndex = e.currentTarget.id
+        let that = this
+        that.loading = true
+        that.sliderOffset = e.currentTarget.offsetLeft
+        that.activeIndex = e.currentTarget.id
         console.log(this.activeIndex)
-//        if (this.activeIndex == '1') {
-        this.getLibraries()
-//        } else {
-//          this.initPageData()
-//        }
+        that.$get({url: service.gifts + '/' + that.activeIndex + '/histories' }, {
+          success: ({code, data}) => {
+            that.loading = false
+            that.list = data.gift_histories
+            that.user_gift = data.user_gift
+            that.gift = data.user_gift.gift
+            that.$apply()
+          },
+          fail: ({code, data}) => {},
+          complete: () => { that.loaded = false }
+        })
       },
 
       goto(url) {
@@ -431,7 +423,7 @@
   .weui-panel {
     margin-top: 0px;
   }
-  .grit{
+  .gift{
     margin: 72rpx 100rpx;
     background: white;
     padding: 32rpx 32rpx 78rpx 12rpx;
@@ -445,7 +437,7 @@
     background: white;
     padding: 14rpx 32rpx;
   }
-  .grit-avatar{
+  .gift-avatar{
     width: 260rpx;
     height: 260rpx;
   }
