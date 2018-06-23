@@ -53,9 +53,9 @@
         </cover-view>
       </cover-view>
       <cover-view class="commodity_screen" @tap="saveImage" wx:if="{{showModal}}"></cover-view>
-      <cover-view animation="{{animationImage}}"class="commodity_attr_box text-center" wx:if="{{showModal}}" @tap="saveImage" style="background: none !important;height: 100% !important;">
+      <cover-view animation="{{animationImage}}"class="commodity_attr_box text-center" wx:if="{{showModal}}"  style="background: none !important;height: 100% !important;">
           <cover-image style="position: relative;left: 10%;top:10%" src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png" class="shaerImage"></cover-image>
-          <cover-view style="position: relative;left: 42% ;top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0" @tap="saveImage('save')">保存</cover-view>
+          <cover-view style="position: relative;left: 42% ;top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0" @tap.stop="saveImage('save')">保存</cover-view>
       </cover-view>
     </map>
     <modal class="modal" hidden="{{hide}}" title="提示" no-cancel no-confirm>
@@ -458,6 +458,42 @@
         }.bind(this), 200)
       },
       saveImage(type) {
+        var that = this
+        if (type) {
+          wx.downloadFile({
+            url: 'https://bpic.588ku.com/element_banner/20/18/06/8dbe1e7aa34ff29197c45d216bbadb25.jpg',
+            success:function(res){
+              console.log(res)
+              that.$showToast('下')
+              wx.saveImageToPhotosAlbum({
+                filePath: res.tempFilePath,
+                success: function (res) {
+                  wx.showModal({
+                    title: '下载成功',
+                    content: '下载成功',
+                  })
+                },
+                fail: function (res) {
+                  that.$showToast('下载失败')
+                }
+              })
+            },
+            fail:function(){
+              console.log('fail')
+            }
+          })
+//          downloadTask.onProgressUpdate((res) => {
+//            console.log('下载进度', res.progress)
+//            console.log('已经下载的数据长度', res.totalBytesWritten)
+//            console.log('预期需要下载的数据总长度', res.totalBytesExpectedToWrite)
+//          })
+
+//          downloadTask.abort()
+//          wx.showToast({
+//             title: '下载成功！',
+//             duration: 1500
+//          })
+        }
         var animation = wx.createAnimation({
           duration: 200,
           timingFunction:"linear",
@@ -472,43 +508,6 @@
           this.showModal = false
           this.$apply()
         }.bind(this), 200)
-        if (type) {
-          wx.downloadFile({
-            url: 'https://bpic.588ku.com/element_banner/20/18/06/8dbe1e7aa34ff29197c45d216bbadb25.jpg',
-            success:function(res){
-              console.log(res)
-              wx.saveImageToPhotosAlbum({
-                filePath: res.tempFilePath,
-                success: function (res) {
-                  wx.showModal({
-                    title: '下载成功',
-                    content: '下载成功',
-                  })
-                },
-                fail: function (res) {
-                  console.log(res)
-                  console.log('fail')
-                }
-              })
-            },
-            fail:function(){
-              console.log('fail')
-            }
-          })
-
-
-//          downloadTask.onProgressUpdate((res) => {
-//            console.log('下载进度', res.progress)
-//            console.log('已经下载的数据长度', res.totalBytesWritten)
-//            console.log('预期需要下载的数据总长度', res.totalBytesExpectedToWrite)
-//          })
-
-//          downloadTask.abort()
-//          wx.showToast({
-//             title: '下载成功！',
-//             duration: 1500
-//          })
-        }
       },
       showModal_v() {
         // 显示遮罩层
