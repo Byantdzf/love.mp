@@ -7,31 +7,31 @@
           <view class="userinfo clearfix">
             <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
             <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
-            <image class="userinfo-avatar" src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png" background-size="cover"/>
+            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover" @tap="gotofriends({{user}})"/>
             <view class="userinfo-info">
               <view class="userinfo-nickname font_32">
-                manber
+                {{ user.name }}
                 <block wx:if="{{is_vip}}">
-                  <view class="orange font_26 text-center flo_r menber">
+                  <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
                     <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
                     <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
                   </view>
                 </block>
                 <block wx:else>
-                  <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                  <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx" @tap="goto('/pages/users/upgradeVIP')">
                     <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
                     <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">会员</view>
                   </view>
                 </block>
               </view>
             </view>
-            <view class="flo_r font_26 white">
-              <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-              <view style="margin-top: 5rpx"class="flo_r">完善个人资料，让更多的人认识你</view>
+            <view class="flo_r font_26 white" @tap="gotoUser({{user.type}})">
+              <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; " ></image>
+              <view style="margin-top: 5rpx"class="flo_r" >完善个人资料，让更多的人认识你</view>
             </view>
-            <view class="message">
+            <view class="message" @tap="goto('/pages/users/myNews')">
               <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-              <view class="message_red"></view>
+              <view class="message_red" wx:if="{{user.new_notice_count}}"></view>
             </view>
           </view>
           <!--</navigator>-->
@@ -119,9 +119,18 @@
     getQuestions() {
       let data = {type: this.type},
           that = this
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data
+          this.$apply()
+        }
+      })
       this.$get({url: service.vip + '/questions', data}, {
         success: ({code, data}) => {
           that.questionsList = data
+          if(!data.length){
+            return this.$showToast('数据显示错误')
+          }
           that.list = data[that.index].option_arr
           console.log(that.list)
           that.list.forEach((item, index, arr) => {
@@ -161,6 +170,24 @@
     }
 
     methods = {
+      gotofriends(item) {
+        let url = ''
+        if (item.type == 'single') {
+          url = '/pages/home/information?id=' + item.id
+        } else {
+          url = '/pages/home/introducer?id=' + item.id
+        }
+        wx.navigateTo({url: url})
+      },
+      gotoUser(type) {
+        let url = ''
+        if(type == 'single'){
+          url = '/pages/users/unmarri'
+        }else{
+          url = '/pages/users/intro'
+        }
+        wx.navigateTo({url: url})
+      },
       radioChange(e) {
         this.value = e.detail.value
         this.$apply()

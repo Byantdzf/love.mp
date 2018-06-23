@@ -1,19 +1,29 @@
 <template>
-  <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-    <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
-      <view class="flo_l" style="width: 78%;">
-        <view  class="font_26 flo_l ellipsis_1 " style="margin-left: 12rpx;">
-          {{item.created_at}}
+  <block wx:if="{{list.length}}">
+    <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
+      <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+        <view class="flo_l" style="width: 78%;">
+          <view  class="font_26 flo_l ellipsis_1 " style="margin-left: 12rpx;">
+            {{item.created_at}}
+          </view>
         </view>
+        <view class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 34rpx;width: 96%;margin-bottom: -22rpx;">{{item.message}}{{item.amount}}福分</view>
+        <view  class="font_28 flo_r ellipsis_1" style="margin-left: 12rpx;">
+          剩余 <span class="font_36 orange  bold">{{item.value}}</span> 福分
+        </view>
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
       </view>
-      <view class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 34rpx;width: 96%;margin-bottom: -22rpx;">{{item.message}}{{item.amount}}福分</view>
-      <view  class="font_28 flo_r ellipsis_1" style="margin-left: 12rpx;">
-        剩余 <span class="font_36 orange  bold">{{item.value}}</span> 福分
-      </view>
-      <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
     </view>
-  </view>
-  <view class="clearfloat"></view>
+    <view class="clearfloat"></view>
+  </block>
+  <block wx:else>
+    <view  class="text-center" >
+      <view class="font_28 black_6" style="margin-top: 22rpx">
+        暂无记录
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+  </block>
 </template>
 
 <script>

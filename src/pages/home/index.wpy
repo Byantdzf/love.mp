@@ -52,10 +52,10 @@
           </cover-view>
         </cover-view>
       </cover-view>
-      <cover-view class="commodity_screen" @tap="saveImage" wx:if="{{showModal}}"></cover-view>
+      <!--<cover-view class="commodity_screen" @tap="saveImage" wx:if="{{showModal}}"></cover-view>-->
       <cover-view animation="{{animationImage}}"class="commodity_attr_box text-center" wx:if="{{showModal}}"  style="background: none !important;height: 100% !important;">
           <cover-image style="position: relative;left: 10%;top:10%" src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png" class="shaerImage"></cover-image>
-          <cover-view style="position: relative;left: 42% ;top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0" @tap.stop="saveImage('save')">保存</cover-view>
+          <cover-view style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0" @tap.stop="saveImage('save')">保存</cover-view>
       </cover-view>
     </map>
     <modal class="modal" hidden="{{hide}}" title="提示" no-cancel no-confirm>
@@ -171,7 +171,7 @@
             that.nearFriends.forEach((item, index, arr) => {
               markersNew.push(
                 {
-                  iconPath: '../../images/icon/icon_position.png',
+                  iconPath: '../../images/icon/icon-position.png',
                   id: item.id,
                   latitude: item.location_latitude,
                   longitude: item.location_longitude,
@@ -218,7 +218,7 @@
           that.myLat = res.latitude
           wx.setStorageSync('myLong', res.longitude)
           wx.setStorageSync('myLat', res.latitude)
-          that.mapFunction()
+//          that.mapFunction()
           that.$apply()
         },
         fail: function () {
@@ -426,6 +426,10 @@
     }
     methods = {
       shareFriend() {
+        this.$showLoading('加载中...')
+        setTimeout(() => {
+          wx.hideLoading()
+        }, 200)
         var animation = wx.createAnimation({
           duration: 200,
           timingFunction:"linear",
@@ -459,26 +463,32 @@
       },
       saveImage(type) {
         var that = this
+        wx.getSetting({
+          success: (res) => {
+            console.log(res)
+          }
+        })
         if (type) {
-          wx.downloadFile({
-            url: 'https://bpic.588ku.com/element_banner/20/18/06/8dbe1e7aa34ff29197c45d216bbadb25.jpg',
-            success:function(res){
+          wepy.downloadFile({
+            url: 'http://pic.qiantucdn.com/images/banner/5b2cabd9084e0.jpg',
+            success: (res) => {
               console.log(res)
-              that.$showToast('下')
-              wx.saveImageToPhotosAlbum({
+              that.$showLoading('下载中...')
+              wepy.saveImageToPhotosAlbum({
                 filePath: res.tempFilePath,
-                success: function (res) {
+                success:(res)=> {
+                  wx.hideLoading()
                   wx.showModal({
                     title: '下载成功',
                     content: '下载成功',
                   })
                 },
-                fail: function (res) {
+                fail: ()=>{
                   that.$showToast('下载失败')
                 }
               })
             },
-            fail:function(){
+            fail: () => {
               console.log('fail')
             }
           })
@@ -499,14 +509,14 @@
           timingFunction:"linear",
           delay: 0
         })
-        this.animation = animation
+        that.animation = animation
         animation.translateY(300).step()
-        this.animationImage = animation.export()
+        that.animationImage = animation.export()
         setTimeout(function() {
           animation.translateY(0).step()
-          this.animationImage = animation.export()
-          this.showModal = false
-          this.$apply()
+          that.animationImage = animation.export()
+          that.showModal = false
+          that.$apply()
         }.bind(this), 200)
       },
       showModal_v() {
@@ -641,16 +651,16 @@
       markertap(e) {
         console.log(e.markerId)
         let that = this
-        this.showfriend = true
+        that.showfriend = true
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
-            this.friends = arr[index]
-            this.$apply()
+            that.friends = arr[index]
+            that.$apply()
             console.log(arr[index])
-            arr[index].iconPath = 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png'
+            arr[index].iconPath = '../../images/icon/icon-position_red.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {
-            arr[index].iconPath = '../../images/icon/icon_position.png'
+            arr[index].iconPath = '../../images/icon/icon-position.png'
           }
         })
       }

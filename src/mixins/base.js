@@ -110,6 +110,11 @@ export default class baseMixin extends wepy.mixin {
       duration: 1200
     })
   }
+  $showLoading(title){
+    wx.showLoading({
+       title: title
+    })
+  }
   // 警告框
   $alert(item = '标题', item2) {
     const param = this.isObject(item) ? Object.assign({

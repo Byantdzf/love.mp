@@ -3,26 +3,36 @@
     <view class="page__bd">
       <view class="weui-tab">
           <view class="weui-tab__content" >
-            <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-              <view class="flo_l borrowlist" @tap="gototype('{{item}}')">
-                <view class="flo_l weui-cell__hd" >
-                  <image src="{{item.other_user.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
-                </view>
-                <view class="flo_l" style="width: 78%;">
-                  <view  class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 12rpx;">
-                    {{item.other_user.name}}
+            <block wx:if="{{list.length}}">
+              <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
+                <view class="flo_l borrowlist" @tap="gototype('{{item}}')">
+                  <view class="flo_l weui-cell__hd" >
+                    <image src="{{item.other_user.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
                   </view>
-                  <view class="font_26 flo_r  ">{{item.created_at}}</view>
-                  <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.other_user.sex}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
-                    <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                  <view class="flo_l" style="width: 78%;">
+                    <view  class="font_28 flo_l black_6 ellipsis_1 bold" style="margin-left: 12rpx;">
+                      {{item.other_user.name}}
+                    </view>
+                    <view class="font_26 flo_r  ">{{item.created_at}}</view>
+                    <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
+                      <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.other_user.sex}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                      <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    </view>
                   </view>
+                  <view class="font_28 flo_l bold orange ellipsis_1" style="margin-left: 26rpx">{{item.content}}</view>
+                  <view class="weui-cell__ft weui-cell__ft_in-access"></view>
                 </view>
-                <view class="font_28 flo_l bold orange ellipsis_1" style="margin-left: 26rpx">{{item.content}}</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
-            </view>
-            <view class="clearfloat"></view>
+              <view class="clearfloat"></view>
+            </block>
+            <block wx:else>
+              <view  class="" >
+                <view class="font_28 black_6" style="margin-top: 22rpx">
+                  暂无消息列表
+                </view>
+                <view class="clearfloat"></view>
+              </view>
+            </block>
           </view>
         </view>
       </view>
@@ -59,56 +69,7 @@
       loaded: false,
       // 我的图书馆
       mylibs: [],
-      list: [
-        {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '申请加你为好友！',
-          'six': 0,
-          'time': '2018/05/26  13:25',
-          'type': 'addfriend'
-        },
-        {
-          'name' : '赵丽颖',
-          'image' : 'http://img0.imgtn.bdimg.com/it/u=2096616296,4033957106&fm=27&gp=0.jpg',
-          'message' : '关注你了！',
-          'six': 0,
-          'time': '2018/05/26  13:25',
-          'type': 'user'
-        },
-        {
-          'name' : '舒淇',
-          'image' : 'http://img3.imgtn.bdimg.com/it/u=604561010,2398733113&fm=27&gp=0.jpg',
-          'message' : '送了99多朵玫瑰花给你！',
-          'six': 0,
-          'time': '2018/05/26  13:25',
-          'type': 'grit'
-        },
-        {
-          'name' : '系统',
-          'image' : 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2925099883,3440549663&fm=27&gp=0.jpg',
-          'message' : '福分消费：兑换礼物',
-          'six': 1,
-          'time': '2018/05/26  13:25',
-          'type': 'xitong'
-        },
-        {
-          'name' : '吴亦凡',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=1995730738,2698011742&fm=27&gp=0.jpg',
-          'message' : '发送了他的二维码给你',
-          'six': 1,
-          'time': '2018/05/26  13:25',
-          'type': 'wechat'
-        },
-        {
-          'name' : '系统',
-          'image' : 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2925099883,3440549663&fm=27&gp=0.jpg',
-          'message' : 'VIP V4 好友推荐',
-          'six': 1,
-          'time': '2018/05/26  13:25',
-          'type': 'xitong'
-        }
-      ],
+      list: [],
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
@@ -196,7 +157,7 @@
        }, {
          success: ({code, data}) => {
            _this.noMore = false
-           _this.loading = true
+           _this.loading = false
 //           if (data.length == 0 && data.last_page == 1) {
 //             _this.loading = false
 //             _this.noMore = true

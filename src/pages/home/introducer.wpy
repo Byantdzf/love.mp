@@ -2,61 +2,63 @@
   <view class="navbar borrow">
     <view class="page__bd">
       <view class="weui-tab">
-          <view class="weui-tab__content" >
-            <view>
-              <image src="{{background_image}}" mode="aspectFit"   style="width: 100%;height: 384rpx;" class=""></image>
-            </view>
-            <view class="page__bd "  wx:for="{{user}}" wx:key="*this" style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
-              <view class="flo_l weui-cell__hd" >
-                <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
-              </view>
-              <view class="flo_l" style="margin-top: 26rpx">
-                <view  class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
-                  {{mylibs.name}}
-                </view>
-                <view class="orange font_26 text-center flo_l menber"  style="width: 68rpx">
-                  <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                  <view style="font-size: 26rpx;line-height: 32rpx;"class="flo_r black_6 ">{{mylibs.age}}</view>
-                </view>
-                <block wx:if="{{is_vip}}">
-                  <view class="orange font_26 text-center flo_r menber">
-                    <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                    <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
-                  </view>
-                </block>
-                <block wx:else>
-                  <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
-                    <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                    <view style="font-size: 20rpx;margin-top: 0rpx"class="flo_r">会员</view>
-                  </view>
-                </block>
-              </view>
-              <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
-                {{item.distance}}
-                <span>{{item.time}}</span>
-              </view>
-              <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
-                由Byant推荐加入福恋
-              </view>
-              <view  class="font_32 white flo_r atten_btn">
-                ...
-              </view>
-              <view  class="font_32 orange btn_red text-center flo_r atten {{parameter? 'atten_w' : ''}}"  @tap="attention">
-                {{text}}
-              </view>
-            </view>
-            <view class="clearfloat"></view>
+        <view class="weui-tab__content" >
+          <view>
+            <image src="{{background_image}}" mode="aspectFit"   style="width: 100%;height: 384rpx;" class=""></image>
           </view>
+          <view class="page__bd "  wx:for="{{user}}" wx:key="*this" style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
+            <view class="flo_l weui-cell__hd" >
+              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+            </view>
+            <view class="flo_l" style="margin-top: 26rpx">
+              <view  class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
+                {{mylibs.name}}
+              </view>
+              <view class="orange font_26 text-center flo_l menber"  style="width: 68rpx">
+                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                <view style="font-size: 26rpx;line-height: 32rpx;"class="flo_r black_6 ">{{mylibs.age}}</view>
+              </view>
+              <block wx:if="{{is_vip}}">
+                <view class="orange font_26 text-center flo_r menber">
+                  <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
+                </view>
+              </block>
+              <block wx:else>
+                <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                  <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 0rpx"class="flo_r">会员</view>
+                </view>
+              </block>
+            </view>
+            <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
+              {{item.distance}}
+              <span>{{item.time}}</span>
+            </view>
+            <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
+              由Byant推荐加入福恋
+            </view>
+            <view  class="font_32 white flo_r atten_btn">
+              <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
+                ...
+              </picker>
+            </view>
+            <view  class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}"  @tap="attention">
+              {{text}}
+            </view>
+          </view>
+          <view class="clearfloat"></view>
         </view>
       </view>
     </view>
-  <view class="font_32 wx_Title orange">Ta的人脉</view>
-  <view class="font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-    <view class="btn_red flo_l" style="margin-left: 24rpx" @tap="goto('/pages/home/addFriend')">介绍人</view>
-    <view class="btn_red flo_l" @tap="goto('/pages/home/swopWeChat')">单身男</view>
-    <view class="btn_red flo_l" style="margin-top: 0rpx"  @tap="goto('/pages/home/giveGift')">单身女</view>
-    <view class="clearfloat"></view>
   </view>
+  <!--<view class="font_32 wx_Title orange">Ta的人脉</view>-->
+  <!--<view class="font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">-->
+    <!--<view class="btn_red flo_l" style="margin-left: 24rpx" @tap="goto('/pages/home/addFriend')">介绍人</view>-->
+    <!--<view class="btn_red flo_l" @tap="goto('/pages/home/swopWeChat')">单身男</view>-->
+    <!--<view class="btn_red flo_l" style="margin-top: 0rpx"  @tap="goto('/pages/home/giveGift')">单身女</view>-->
+    <!--<view class="clearfloat"></view>-->
+  <!--</view>-->
   <view class="font_32 wx_Title orange">基本资料</view>
   <view class="booklist  font_28">
     <view style="margin: 0 44rpx;" class="wx_Title">
@@ -78,24 +80,23 @@
       <span>{{profile_marriage.slogan}}</span>
     </view>
   </view>
-    <view style="height: 35rpx;width: 100%"></view>
-    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend')">加好友</view>
-      <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat')">交换微信</view>
-      <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift')">送礼物</view>
-      <view class="clearfloat"></view>
+  <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
+    <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友</view>
+    <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
+    <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物</view>
+    <view class="clearfloat"></view>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <!--<view class="weui-loading"></view>-->
+      <view class="weui-loadmore__tips">正在加载</view>
     </view>
-    <!--<block wx:if="{{loading}}">-->
-      <!--<view class="weui-loadmore">-->
-        <!--&lt;!&ndash;<view class="weui-loading"></view>&ndash;&gt;-->
-        <!--<view class="weui-loadmore__tips">正在加载</view>-->
-      <!--</view>-->
-    <!--</block>-->
-    <block wx:if="{{noMore}}">
-      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
-        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
-      </view>
-    </block>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
   </view>
 </template>
 
@@ -107,16 +108,16 @@
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
 
-  export default class introducer extends wepy.page {
+  export default class information extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "个人信息"
+      navigationBarTitleText: "介绍人个人信息"
     }
     data = {
       // 后置显示按钮
       loaded: false,
-      // 我的图书馆
       mylibs: [],
+      array: ['举报', '取消好友'],
       background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.CaShiFjcO2Q7dd44e9547b343f1c8c4f6ae9424ab900.png',
       user: [
         {
@@ -131,30 +132,7 @@
           'vip': true,
         }
       ],
-      list: [
-        {listName: '爱情语言',
-          item: [{
-            itemName: '需要肯定的语言', content: '13', time: '2017-05-06'
-          }, {
-            itemName: '关注精心时刻', content: '22', time: '2015-08-06'
-          }, {
-            itemName: '喜好接受礼物', content: '9', time: '2015-11-06'
-          }, {
-            itemName: '需求服务行动', content: '32', time: '2015-08-06'
-          }, {
-            itemName: '喜欢身体接触', content: '44', time: '2015-08-06'
-          }]
-        }, {listName: '交往基因',
-          item: [{
-            itemName: '力量型', content: '12', time: '2015-05-15'
-          }, {
-            itemName: '活泼型', content: '5', time: '2015-05-24'
-          }, {
-            itemName: '完美型', content: '6', time: '2015-05-30'
-          }, {
-            itemName: '和平型', content: '21', time: '2015-05-30'
-          }]
-        }],
+      list: [],
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
@@ -167,8 +145,9 @@
       inputVal: '',
       text: '关注',
       id: '',
+      profile_courtship: [],
       profile_marriage: [],
-      parameter: false
+      paramet_v: false
     }
 
     computed = {
@@ -206,6 +185,15 @@
         success: ({code, data}) => {
 //         debugger
           this.mylibs = data
+          if (data.is_followed == true) {
+            self.paramet_v = true,
+              self.text = '取消关注',
+              self.$apply()
+          } else{
+            self.paramet_v = false
+            self.text = '关注'
+            self.$apply()
+          }
           this.profile_marriage = data.profile_marriage
         },
         fail: ({code, data}) => {},
@@ -286,10 +274,58 @@
       }
     }
     methods = {
+      bindPickerChange(id,e) {
+        console.log(id)
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        let than = this
+        if (e.detail.value == 0) {
+          wx.showModal({
+            title: '提示',
+            content: '是否确认举报Ta',
+            success: function(res) {
+              if (res.confirm) {
+                than.$post({url: service.complaint + '/' + id}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '举报成功',
+                      icon: 'success',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {},
+                  complete: () => { than.loaded = false }
+                })
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '是否确认取消该好友',
+            success: function(res) {
+              if (res.confirm) {
+                than.$post({url: service.addFriend + '/' + id}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '取消成功',
+                      icon: 'success',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {},
+                  complete: () => { than.loaded = false }
+                })
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      },
       //预览图片
-      previewImage(image){
-        let array = []
-        array.push(image)
+      previewImage(image, array){
         wx.previewImage({
           current: image, // 当前显示图片的http链接
           urls: array // 需要预览的图片http链接列表
@@ -332,26 +368,31 @@
         this.setData({list});
       },
       attention() {
-        if(this.parameter) {
-          this.text = '关注'
-          this.$apply()
-          wx.showToast({
-            title: '取消成功',
-            icon: 'none',
-            duration: 1000
-          })
-//          wx.navigateTo({url: '/pages/users/list'})
-          return this.parameter = false
-        }else {
-          wx.showToast({
-            title: '成功关注',
-            icon: 'none',
-            duration: 1000
-          })
-          this.text = '取消关注'
-          this.$apply()
-          return this.parameter = true
-        }
+        let _this = this
+        _this.$post({url: service.follow + '/' + _this.id}, {
+          success: ({code, data}) => {
+            if (data.is_followed == true) {
+              wx.showToast({
+                title: '成功关注',
+                icon: 'none',
+                duration: 1000
+              })
+              _this.paramet_v = true,
+                _this.text = '取消关注',
+                _this.$apply()
+            } else{
+              _this.paramet_v = false
+              _this.text = '关注'
+              _this.$apply()
+              wx.showToast({
+                title: '取消成功',
+                icon: 'none',
+                duration: 1000
+              })
+            }
+          }
+        })
+
       },
       showInput () {
         this.inputShowed = true
@@ -539,14 +580,14 @@
     width: 140rpx;
   }
   .atten_btn{
-     width: 68rpx;
-     /*background: red;*/
-     padding:2rpx 12rpx;
-     /*height: 52rpx;*/
-     font-size: 80rpx;
-     margin-top: -82rpx;
+    width: 68rpx;
+    /*background: red;*/
+    padding:2rpx 12rpx;
+    /*height: 52rpx;*/
+    font-size: 80rpx;
+    margin-top: -82rpx;
     margin-right: -12rpx;
-   }
+  }
   .list_name_box {
     background: #fff;
     border-bottom: 1px solid #efefef;

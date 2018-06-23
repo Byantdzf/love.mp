@@ -88,16 +88,16 @@
         <view class="weui-cell__hd">
           <image src="../../images/icon/service.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
-        <button  class="btn weui-cell__bd" open-type="contact" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>意见反馈</button>
+        <button  class="btn weui-cell__bd" open-type="feedback" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>意见反馈</button>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </view>
-      <navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view  class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <image src="../../images/icon/share.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <button  class="btn weui-cell__bd" open-type="share" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>分享给好友</button>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
-      </navigator>
+      </view>
     </view>
   </view>
 </template>
@@ -153,25 +153,6 @@
         success: ({code, data}) => {
           this.user = data
           this.$apply()
-//          this.libraries = data.libraries
-//          this.libraries.forEach((item) => {
-//            if (item.type == 'SHARE') {
-//              item.url = '/pages/library/shareLibrary?id=' + item.id
-//            } else {
-//              item.url = '/pages/library/library?id=' + item.id
-//            }
-//          })
-//          wx.setStorageSync('openid', data.user.wechat.openid)
-//          wx.setStorageSync('is_new', data.user.is_news)
-//          if (data.user.is_news) {
-//            wepy.showTabBarRedDot({
-//              index: 4
-//            })
-//          } else {
-//            wepy.hideTabBarRedDot({
-//              index: 4
-//            })
-//          }
         }
       })
     }
