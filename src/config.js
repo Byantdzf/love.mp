@@ -3,8 +3,10 @@
                         小程序配置文件
 ======================================================== */
 // 域名
- var host = 'https://love.ufutx.com/api'
-// var host = 'http://love.hankin.com/api'
+//  var host = 'https://love.ufutx.com/api'
+var host = 'http://love.hankin.com/api',
+    book = 'http://scraper.hankin.ufutx.cn/api',
+    party= 'https://party.ufutx.com/api'
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
@@ -57,7 +59,7 @@ export const service = {
     //单身
     courtship: `${host}/courtship`,
     //文章列表
-    articles: `${host}/articles`,
+    articles: `${book}/label/posts`,
     //文章信息
     article: `${host}/article`,
     //好友申请
@@ -71,7 +73,7 @@ export const service = {
     //解密手机号
     infor: `${host}/wechat/mobile`,
     //创建party
-    parties: `${host}/parties`,
+    parties: `${party}/parties`,
     //vip等级列表
     ranks: `${host}/ranks`,
     //我的福分 兑换礼物列表

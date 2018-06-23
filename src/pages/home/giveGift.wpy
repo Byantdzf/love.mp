@@ -11,6 +11,9 @@
       </view>
     </view>
   </view>
+  <view class="font_32 bookTitle">你拥有
+    <span class="orange bold">{{score}}</span>
+    福分</view>
   <view class="gift">
     <view wx:for="{{list}}" wx:key="*this" class="text-center gift_list inline-block">
       <image src="{{item.pic}}" style="width:80px; height: 80px;margin: 12rpx "></image>
@@ -27,14 +30,27 @@
       <span class="bold">订单详情：</span>
       <span class="flo_r">{{message.price}}元</span>
     </view>
-    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
-      <span class="bold">福分支付：</span>
-      <span class="flo_r">{{message.price}}</span>
-    </view>
-    <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
-      <span class="bold">现金支付：</span>
-      <span class="flo_r">0元</span>
-    </view>
+    <block  wx:if="{{cash == 0}}">
+      <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+        <span class="bold">福分支付：</span>
+        <span class="flo_r">{{message.price}}</span>
+      </view>
+      <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+        <span class="bold">现金支付：</span>
+        <span class="flo_r">0元</span>
+      </view>
+    </block>
+    <block wx:else>
+      <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+        <span class="bold">福分支付：</span>
+        <span class="flo_r">{{score}}福分</span>
+      </view>
+      <view style="padding: 12rpx;border-bottom: 1rpx solid #d3d3d3;">
+        <span class="bold">现金支付：</span>
+        <span class="flo_r">{{cash}}元</span>
+      </view>
+    </block>
+
   </modal>
 </template>
 
@@ -56,10 +72,13 @@
       other_user: {},
       user: {},
       is_vip: false,
+      score: '',
       nickName: '加载中...',
       hide: true,
       message: {},
       id: '',
+      cash: 0,
+      remain_amount: '',
       gift_id: '',
       list1: [
         {
@@ -69,6 +88,7 @@
           'six': 0
         }
       ],
+      trade_no:'',
       list:[]
 
     }
@@ -81,7 +101,7 @@
 
     onShow() {
       // 初始化页面数据
-      this.initPageData()
+//      this.initPageData()
       this.getGifts()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
@@ -95,29 +115,32 @@
       _this.$apply()
     }
     onPullDownRefresh() {
-      this.initPageData()
+      this.getGifts()
     }
 
     // 初始化页面数据
-    initPageData() {
-      var self = this
-      self.loading = false
-      this.$get({url: service.wechat + '/users/' + self.id}, {
-        success: ({code, data}) => {
-          self.user = data.user
-          self.other_user = data.other_user
-          self.$apply()
-        },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
-      })
-    }
+//    initPageData() {
+//      var self = this
+//      self.loading = false
+//      this.$get({url: service.wechat + '/users/' + self.id}, {
+//        success: ({code, data}) => {
+//          self.user = data.user
+//          self.other_user = data.other_user
+//          self.$apply()
+//        },
+//        fail: ({code, data}) => {},
+//        complete: () => { this.loaded = false }
+//      })
+//    }
     getGifts() {
       var self = this
       self.loading = false
-      this.$get({url: service.gifts}, {
+      this.$get({url: service.users + '/' + self.id + '/gifts'}, {
         success: ({code, data}) => {
           self.list = data.gifts
+          self.other_user = data.user
+          self.remain_amount = data.score.remain_amount
+          self.score = data.score.remain_amount.split('.')[0]
           self.$apply()
         },
         fail: ({code, data}) => {},
@@ -132,11 +155,45 @@
         that.$apply()
         that.$post({url: service.sendgift + '/' + that.id + '/gifts/' + that.gift_id}, {
           success: ({code, data}) => {
-            wx.showToast({
-              title: '赠送成功！',
-              icon: 'success',
-              duration: 1000
-            })
+            if (that.cash > 0) {
+                that.trade_no = data.trade_no
+                that.$apply()
+                let wxconfig = data.wx_pay.config
+//            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
+                wx.requestPayment({
+                  timeStamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                  nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+                  package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                  signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                  paySign: wxconfig.paySign, // 支付签名
+                  success: function (res) {
+                    that.$post({url: service.orderpay + '/' + that.trade_no}, {
+                      success: ({code, data}) => {
+                        wx.showToast({
+                          title: '赠送成功！',
+                          icon: 'success',
+                          duration: 1000
+                        })
+                      },
+                      fail: ({code, data}) => {},
+                      complete: () => { this.loaded = false }
+                    })
+                  },
+                  fail: function (res) {
+                    wx.showToast({
+                      title: '支付失败:'+res.errMsg,
+                      icon: 'none',
+                      duration: 2000
+                    })
+                  }
+                });
+            } else {
+              wx.showToast({
+                title: '赠送成功！',
+                icon: 'success',
+                duration: 1000
+              })
+            }
           },
           fail: ({code, data}) => {},
           complete: () => { this.loaded = false }
@@ -151,6 +208,12 @@
 //        icon: 'success',
 //        duration: 1000
 //      })
+        console.log(item.price)
+        console.log(this.remain_amount)
+        if (Number(item.price) > Number(this.remain_amount)) {
+          this.cash = Number(item.price) - Number(this.remain_amount)
+          this.$apply()
+        }
         console.log(item.id)
         this.gift_id = item.id
         this.hide = false
@@ -203,6 +266,13 @@
     padding: 22rpx;
     background: white;
     /*position: relative*/
+  }
+  .bookTitle{
+    border-bottom: 1rpx solid #dedede;
+    margin: 22rpx;
+    margin-bottom: 4rpx;
+    background: white;
+    padding: 14rpx 32rpx;
   }
   .weui-cell__ft {
     margin-top: 10%;

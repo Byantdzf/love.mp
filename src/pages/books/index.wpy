@@ -105,6 +105,7 @@
       sliderWidth: 180,
       screenWidth: 360,
       page: 1,
+      title: '专题',
       noMore: false,
       loading: false,
       inputShowed: false,
@@ -193,10 +194,11 @@
       if (keyword) {
         url = service.articles + '?keyword=' + keyword
       }
-       this.$get({
+      _this.$get({
          url: url,
          data: {
-           page: this.page
+           page: _this.page,
+           title: _this.title
          }
        }, {
          success: ({code, data}) => {
@@ -259,11 +261,15 @@
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
         console.log(this.activeIndex)
-//        if (this.activeIndex == '1') {
+        if(this.activeIndex == 1){
+          this.title = '单身会'
+        }else if(this.activeIndex == 2){
+          this.title = '预备婚恋'
+        }else if(this.activeIndex == 3) {
+          this.title = '个人成长'
+        }
+        this.$apply()
         this.getLibraries()
-//        } else {
-//          this.initPageData()
-//        }
       },
 
       goto(url) {

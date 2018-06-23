@@ -152,10 +152,10 @@
       }, {
         success: ({code, data}) => {
           this.noMoreList = false
-          this.list = data.data
+          this.list = data
           this.notes = this.list.short_notes
-          this.user = data.data.user
-          this.members = data.data.members
+          this.user = data.user
+          this.members = data.members
           this.$apply()
           console.log(this.user)
         },

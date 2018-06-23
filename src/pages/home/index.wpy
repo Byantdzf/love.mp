@@ -472,11 +472,42 @@
           this.showModal = false
           this.$apply()
         }.bind(this), 200)
-        if(type) {
-          wx.showToast({
-             title: '下载成功！',
-             duration: 1500
+        if (type) {
+          wx.downloadFile({
+            url: 'https://bpic.588ku.com/element_banner/20/18/06/8dbe1e7aa34ff29197c45d216bbadb25.jpg',
+            success:function(res){
+              console.log(res)
+              wx.saveImageToPhotosAlbum({
+                filePath: res.tempFilePath,
+                success: function (res) {
+                  wx.showModal({
+                    title: '下载成功',
+                    content: '下载成功',
+                  })
+                },
+                fail: function (res) {
+                  console.log(res)
+                  console.log('fail')
+                }
+              })
+            },
+            fail:function(){
+              console.log('fail')
+            }
           })
+
+
+//          downloadTask.onProgressUpdate((res) => {
+//            console.log('下载进度', res.progress)
+//            console.log('已经下载的数据长度', res.totalBytesWritten)
+//            console.log('预期需要下载的数据总长度', res.totalBytesExpectedToWrite)
+//          })
+
+//          downloadTask.abort()
+//          wx.showToast({
+//             title: '下载成功！',
+//             duration: 1500
+//          })
         }
       },
       showModal_v() {

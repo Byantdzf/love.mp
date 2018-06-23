@@ -134,7 +134,7 @@
       // 请求列表
 //      let url = ''
       this.$get({
-        url: service.parties,
+        url: service.parties + '/v2',
         data: {
           type: type,
           page: this.page,
@@ -257,12 +257,13 @@
         console.log(this.inputVal)
         this.page = 1
         this.update('ALL')
+        this.$apply()
       },
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
 //        if (this.activeIndex == '1') {
-        this.getLibraries()
+//        this.getLibraries()
 //        } else {
 //          this.initPageData()
 //        }
