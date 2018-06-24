@@ -44,7 +44,7 @@
   export default class swopWeChat extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "交换微信"
+      navigationBarTitleText: '交换微信'
     }
     data = {
       // 后置显示按钮
@@ -56,13 +56,13 @@
       files: '',
       ShowUpload: false,
       BookImage: '',
-      background_image:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.8cKMn755GiaIda2fc0b90c70f7c6f97d3ff312df6794.png',
-      list:{
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '26岁/162cm/深圳',
-          'six': 0
-        }
+      background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.8cKMn755GiaIda2fc0b90c70f7c6f97d3ff312df6794.png',
+      list: {
+        'name': 'Angelababy',
+        'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+        'message': '26岁/162cm/深圳',
+        'six': 0
+      }
     }
 
     computed = {
@@ -121,15 +121,18 @@
     initPageData() {
       var self = this
       self.loading = false
-       this.$get({url: service.wechat + '/users/' + self.id}, {
-         success: ({code, data}) => {
-           self.user = data.user
-           self.other_user = data.other_user
-           self.$apply()
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+      this.$get({url: service.wechat + '/users/' + self.id}, {
+        success: ({code, data}) => {
+          self.user = data.user
+          self.other_user = data.other_user
+          self.$apply()
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
       let that = this
@@ -153,9 +156,9 @@
           that.Image = JSON.parse(resp.data).data
           console.log(that.Image)
           let array = []
-            array.push(that.Image)
+          array.push(that.Image)
           let data = {
-            wechat_qrcode : array
+            wechat_qrcode: array
           }
           that.$put({url: service.profile, data}, {
             success: ({code, res}) => {
@@ -166,8 +169,11 @@
               })
               that.initPageData()
             },
-            fail: ({code, data}) => {},
-            complete: () => { that.loading = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              that.loading = false
+            }
           })
           that.$apply()
         },

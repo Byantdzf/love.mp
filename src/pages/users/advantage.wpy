@@ -74,7 +74,7 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list:[
+      list: [
         {name: '我会做饭', checked: 'true'},
         {name: '我不会做饭'}
       ]
@@ -92,6 +92,7 @@
       // this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -138,8 +139,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

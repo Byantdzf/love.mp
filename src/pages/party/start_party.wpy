@@ -104,6 +104,7 @@
       this.party_id = e.party_id
       this.update(this.party_id)
     }
+
     onShareAppMessage(res) {
 //      wx.canvasToTempFilePath({
 //        x: 100,
@@ -125,24 +126,27 @@
       return {
         title: '邀请你参加聚会',
         path: '',
-        success: function(res) {
+        success: function (res) {
           // 转发成功
           that.showmember = true
           that.$apply()
         },
-        fail: function(res) {
+        fail: function (res) {
           // 转发失败
           that.showmember = true
           that.$apply()
         }
       }
     }
+
     onPullDownRefresh() {
       this.update(this.party_id)
     }
+
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     update(partyId) {
       if (this.loading || this.noMoreList) return
       this.loading = true
@@ -465,8 +469,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

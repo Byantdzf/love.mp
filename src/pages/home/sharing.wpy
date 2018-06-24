@@ -41,8 +41,8 @@
       is_vip: false,
       nickName: '加载中...',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1tLfwJxq23Oma0294409f50b26300af2046aefa10286.png',
-      paylist:[
-        {name: '市级VIP',money: '10元',code:'陈牧师', message:'特权：仅可添加本市的好友',iv: '邀请你加入福恋，并替你升级为'}
+      paylist: [
+        {name: '市级VIP', money: '10元', code: '陈牧师', message: '特权：仅可添加本市的好友', iv: '邀请你加入福恋，并替你升级为'}
       ]
     }
     computed = {
@@ -70,7 +70,7 @@
 
     // 初始化页面数据
     initPageData() {
-      console.log("刷新成功")
+      // console.log("刷新成功")
     }
 
     methods = {

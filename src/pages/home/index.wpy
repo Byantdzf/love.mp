@@ -123,6 +123,7 @@
       this.getCenterLocation()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onLoad() {
       this.getSystem()
       // wx.setNavigationBarColor({
@@ -136,21 +137,21 @@
       // wx.setNavigationBarTitle({
       //   title: 'Ta的信息'
       // })
-
     }
     getSystem(type) {
       let that = this
       wx.getSystemInfo({
-        success: function(res) {
+        success: function (res) {
           if (type) {
             that.height = res.windowHeight - 156 + 'px'
-          }else {
-            that.height = res.windowHeight   + 'px'
+          } else {
+            that.height = res.windowHeight + 'px'
           }
           that.$apply()
         }
       })
     }
+
     updataMap() {
       let token = wx.getStorageSync('token')
       let myLong = wx.getStorageSync('myLong')
@@ -200,15 +201,14 @@
             that.$apply()
             that.noMoreList = false
           },
-          fail: ({code, data}) => {},
+          fail: ({code, data}) => {
+          },
           complete: () => {
             this.loading = false
           }
         })
       }
-
     }
-
     getCenterLocation() {
       let that = this
       wx.getLocation({
@@ -432,7 +432,7 @@
         }, 200)
         var animation = wx.createAnimation({
           duration: 200,
-          timingFunction:"linear",
+          timingFunction: 'linear',
           delay: 0
         })
         this.animation = animation
@@ -447,7 +447,7 @@
         this.showImage()
         var animation = wx.createAnimation({
           duration: 200,
-          timingFunction:"linear",
+          timingFunction: 'linear',
           delay: 0
         })
         this.animation = animation
@@ -476,14 +476,14 @@
               that.$showLoading('下载中...')
               wepy.saveImageToPhotosAlbum({
                 filePath: res.tempFilePath,
-                success:(res)=> {
+                success: (res) => {
                   wx.hideLoading()
                   wx.showModal({
                     title: '下载成功',
-                    content: '下载成功',
+                    content: '下载成功'
                   })
                 },
-                fail: ()=>{
+                fail: () => {
                   that.$showToast('下载失败')
                 }
               })
@@ -506,13 +506,13 @@
         }
         var animation = wx.createAnimation({
           duration: 200,
-          timingFunction:"linear",
+          timingFunction: 'linear',
           delay: 0
         })
         that.animation = animation
         animation.translateY(300).step()
         that.animationImage = animation.export()
-        setTimeout(function() {
+        setTimeout(function () {
           animation.translateY(0).step()
           that.animationImage = animation.export()
           that.showModal = false
@@ -523,27 +523,26 @@
         // 显示遮罩层
         var animation = wx.createAnimation({
           duration: 200,
-          timingFunction:"linear",
+          timingFunction: 'linear',
           delay: 0
         })
         this.animation = animation
         animation.translateY(300).step()
-          this.animationData = animation.export()
-          this.showModalStatus = true
-          this.$apply()
-        setTimeout(function() {
+        this.animationData = animation.export()
+        this.showModalStatus = true
+        this.$apply()
+        setTimeout(function () {
           animation.translateY(0).step()
           this.animationData = animation.export()
           this.$apply()
           this.getSystem()
         }.bind(this), 200)
-
       },
       hideModal() {
         // 隐藏遮罩层
         var animation = wx.createAnimation({
           duration: 200,
-          timingFunction:"linear",
+          timingFunction: 'linear',
           delay: 0
         })
         this.animation = animation
@@ -565,7 +564,7 @@
               console.log(res.tapIndex)
             }
           }
-        });
+        })
       },
       gotofriends(item) {
         let url = ''
@@ -582,8 +581,8 @@
       moveToLocation() {
         this.mapCtx.moveToLocation()
         if (!this.myLat) {
-           this.hide = true
-           this.$apply()
+          this.hide = true
+          this.$apply()
         }
       },
       translateMarker() {
@@ -626,7 +625,8 @@
         let that = this
         this.hide = false
         this.$apply()
-        if (e.detail.authSetting["scope.userLocation"]){//如果打开了地理位置，就会为true
+        if (e.detail.authSetting['scope.userLocation']) {
+          //如果打开了地理位置，就会为true
           wepy.getLocation({
             altitude: true,
             type: 'gcj02',

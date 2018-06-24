@@ -96,7 +96,7 @@
       industry: '',
       industry_sub: '',
       multiIndex2: [0, 0],
-      birthday:'1990-01-01',
+      birthday: '1990-01-01',
       NameFocus: false,
       WordFocus: false,
       WechatFocus: false,
@@ -107,6 +107,7 @@
         mobile: '15361454427'
       }
     }
+
     onLoad() {
       this.getindustry()
       this.getuser()
@@ -146,6 +147,7 @@
 //        }
 //      })
     }
+
     ShowModal(text) {
       wx.showToast({
         title: text,
@@ -153,13 +155,15 @@
         duration: 1500
       })
     }
+
     onShow() {
       this.$parent.getTracker(this.$root.$name, '介绍人信息注册/修改')
     }
+
     getindustry() {
       let that = this
       this.loading = true
-      this.$get({url: service.industry, }, {
+      this.$get({url: service.industry}, {
         success: ({code, data}) => {
           let result = data
           that.Business = result
@@ -172,10 +176,14 @@
           that.$apply()
           console.log(that.objectMultiArray)
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loading = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loading = false
+        }
       })
     }
+
     getuser() {
       let that = this
       this.loading = true
@@ -204,7 +212,7 @@
 //            }
 //          })
           that.sex.forEach((item, index, arr) => {
-            if (result.sex == index+1) {
+            if (result.sex == index + 1) {
               that.sexIndex = index
             }
           })
@@ -212,19 +220,23 @@
           that.industry_sub = data.industry_sub
           that.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loading = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loading = false
+        }
       })
     }
+
     methods = {
-      bindMultiPickerChange2 (e) {
+      bindMultiPickerChange2(e) {
         console.log(e)
         console.log('picker发送选择改变，携带值为', e.detail.value)
         this.setData({
           multiIndex2: e.detail.value
         })
       },
-      bindMultiPickerColumnChange2 (e) {
+      bindMultiPickerColumnChange2(e) {
         let that = this
         var data = {
           objectMultiArray: that.data.objectMultiArray,
@@ -246,7 +258,7 @@
         }
         this.setData(data)
       },
-      typing (type, e) {
+      typing(type, e) {
         if (this.isDefined(this[type])) {
           this[type] = e.detail.value
         }
@@ -279,7 +291,7 @@
           sex: this.sexIndex == 0 ? 1 : 2,
 //          wechat_id: this.wechat_id,
           industry: this.objectMultiArray[0][this.multiIndex2[0]],
-          industry_sub: this.objectMultiArray[1][this.multiIndex2[1]],
+          industry_sub: this.objectMultiArray[1][this.multiIndex2[1]]
 //          degree: this.degree[this.degreeIndex]
         }
         if (!this.company) {
@@ -299,15 +311,17 @@
                 }
               })
             },
-            fail: ({code, data}) => {},
-            complete: () => { this.loading = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loading = false
+            }
           })
         }
 //        else if (!this.wechat_id) {
 //          this.WechatFocus = true
 //          this.ShowModal('请填写微信号')
 //        }
-
       },
       stateChange(e) {
         this.stateiIndex = e.detail.value

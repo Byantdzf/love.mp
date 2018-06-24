@@ -68,7 +68,7 @@
   export default class friendlist extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "我的关注"
+      navigationBarTitleText: '我的关注'
     }
     data = {
       // 后置显示按钮
@@ -89,30 +89,30 @@
       type: ''
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       let type = e.type
       this.type = e.type
-      if(type == 'fans'){
+      if (type == 'fans') {
         wx.setNavigationBarTitle({
           title: '我的粉丝'
         })
-      }else if(type == 'friend') {
+      } else if (type == 'friend') {
         wx.setNavigationBarTitle({
           title: '我的好友'
         })
-      }else{
+      } else {
         wx.setNavigationBarTitle({
           title: '我的关注'
         })
       }
-
     }
+
     onShow() {
       this.getLibraries()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -121,6 +121,7 @@
     onPullDownRefresh() {
       this.getLibraries()
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
@@ -131,20 +132,25 @@
 //        this.$apply()
       }, 200)
     }
+
     // 初始化页面数据
     initPageData() {
       var self = this
       console.log(this.type)
       self.loading = false
-       this.$get({url: service.my_libraries}, {
-         success: ({code, data}) => {
-           this.mylibs = data
-           self.config.navigationBarTitleText = data.name
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+      this.$get({url: service.my_libraries}, {
+        success: ({code, data}) => {
+          this.mylibs = data
+          self.config.navigationBarTitleText = data.name
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
     }
+
     getLibraries(keyword) {
       let _this = this
       _this.loading = true
@@ -157,65 +163,68 @@
       } else {
         url = service.followings
       }
-       this.$get({
-         url: url,
-         data: {
-           page: this.page
-         }
-       }, {
-         success: ({code, data}) => {
-           _this.noMore = false
-           _this.loading = false
+      this.$get({
+        url: url,
+        data: {
+          page: this.page
+        }
+      }, {
+        success: ({code, data}) => {
+          _this.noMore = false
+          _this.loading = false
 //           if (data.data.length == 0 && data.last_page == 1) {
 //             _this.loading = false
 //             _this.noMore = true
 //             _this.list = []
 //             return
 //           }
-           if (data.current_page > data.last_page) {
-             _this.noMore = true
-             _this.loading = false
-             return
-           }
-           data = data.data
-           if (this.isArray(data) && data.length === 0) {
-             _this.noMore = true
-             _this.list = []
-             return
-           }
-           if (_this.list.length === 0 || _this.page === 1) {
-             _this.list = data
-           } else {
-             data.map(function (item, index) {
-               _this.list.push(item)
-             })
-           }
-           _this.noMore = true
-           _this.page += 1
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = false
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            _this.list = []
+            return
+          }
+          if (_this.list.length === 0 || _this.page === 1) {
+            _this.list = data
+          } else {
+            data.map(function (item, index) {
+              _this.list.push(item)
+            })
+          }
+          _this.noMore = true
+          _this.page += 1
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
     }
 
     methods = {
-      showInput () {
+      showInput() {
         this.inputShowed = true
       },
-      hideInput () {
+      hideInput() {
         this.inputVal = ''
         this.inputShowed = false
       },
-      clearInput () {
+      clearInput() {
         this.inputVal = ''
       },
-      inputTyping (e) {
+      inputTyping(e) {
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)
       },
-      tabClick (e) {
+      tabClick(e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
 //        if (this.activeIndex == '1') {
@@ -240,8 +249,11 @@
           success: ({code, data}) => {
             wx.reLaunch({url: '/pages/borrow'})
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
 
@@ -260,8 +272,11 @@
                 success: ({code, data}) => {
                   wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -287,8 +302,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }

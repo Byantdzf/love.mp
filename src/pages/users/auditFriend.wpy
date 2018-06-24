@@ -79,7 +79,7 @@
   export default class auditFriend extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "好友审核"
+      navigationBarTitleText: '好友审核'
     }
     data = {
       // 后置显示按钮
@@ -90,9 +90,9 @@
       id: '',
       list: [
         {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '26岁/162cm/深圳',
+          'name': 'Angelababy',
+          'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'message': '26岁/162cm/深圳',
           'six': 0
         }
       ],
@@ -100,17 +100,18 @@
       loading: false
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       console.log(e.id)
       this.id = e.id
       this.$apply()
     }
+
     onShow() {
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -119,6 +120,7 @@
     onPullDownRefresh() {
       this.initPageData()
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
@@ -129,6 +131,7 @@
 //        this.$apply()
       }, 200)
     }
+
     getMessage() {
       var isNew = wx.getStorageSync('is_new')
       if (!isNew) {
@@ -152,6 +155,7 @@
         })
       }
     }
+
     // 初始化页面数据
     initPageData() {
       var self = this
@@ -163,17 +167,21 @@
           self.answer = data.answer.question_answer
           self.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
+
     getLibraries(keyword) {
       let _this = this
       _this.loading = true
-      let url = service.libraries
-      if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
-      }
+      // let url = service.libraries
+      // if (keyword) {
+      //   url = service.libraries + '?keyword=' + keyword
+      // }
 //       this.$get({
 //         url: url,
 //         data: {
@@ -223,9 +231,9 @@
       },
       reject() {
         var self = this,
-            data = {
-              status: -1
-            }
+          data = {
+            status: -1
+          }
         self.$post({url: service.friendrequest + '/' + self.id, data}, {
           success: ({code, data}) => {
             wx.showToast({
@@ -237,8 +245,11 @@
               wx.redirectTo({url: '/pages/users/myNews'})
             }, 1000)
           },
-          fail: ({code, data}) => {},
-          complete: () => { self.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            self.loaded = false
+          }
         })
       },
       consent() {
@@ -257,8 +268,11 @@
               wx.redirectTo({url: '/pages/users/myNews'})
             }, 1000)
           },
-          fail: ({code, data}) => {},
-          complete: () => { self.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            self.loaded = false
+          }
         })
       }
     }

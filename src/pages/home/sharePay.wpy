@@ -46,10 +46,10 @@
       pay_id: '',
       trade_no: '',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
-      paylist:[
-        {name: '市级VIP',money: '10',message:'特权：仅可添加本市的好友', checked: 'true'},
-        {name: '省级vip',money: '100',message:'特权：仅可添加本省的好友'},
-        {name: '全国vip',money: '500',message:'特权：仅可添加全国的好友',iv:'(赠送500元礼物)'}
+      paylist: [
+        {name: '市级VIP', money: '10', message: '特权：仅可添加本市的好友', checked: 'true'},
+        {name: '省级vip', money: '100', message: '特权：仅可添加本省的好友'},
+        {name: '全国vip', money: '500', message: '特权：仅可添加全国的好友', iv: '(赠送500元礼物)'}
       ]
     }
     computed = {
@@ -77,7 +77,7 @@
 
     // 初始化页面数据
     initPageData() {
-      console.log("刷新成功")
+      // console.log("刷新成功")
       let that = this
       this.$get({url: service.ranks}, {
         success: ({code, data}) => {
@@ -86,8 +86,11 @@
           that.$apply()
           console.log(that.paylist)
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
 
@@ -107,10 +110,11 @@
       },
       pay() {
         let that = this,
-            data = {
-              type: 'other_rank',
-              rank_id: that.pay_id
-            }
+          data = {
+            type: 'other_rank',
+            rank_id: that.pay_id
+          }
+
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {
             that.trade_no = data.invite_order.trade_no
@@ -131,21 +135,27 @@
                       duration: 2000
                     })
                   },
-                  fail: ({code, data}) => {},
-                  complete: () => { this.loaded = false }
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    this.loaded = false
+                  }
                 })
               },
               fail: function (res) {
                 wx.showToast({
-                  title: '支付失败:'+res.errMsg,
+                  title: '支付失败:' + res.errMsg,
                   icon: 'none',
                   duration: 2000
                 })
               }
-            });
+            })
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       }
     }

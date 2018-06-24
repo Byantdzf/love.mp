@@ -87,6 +87,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -98,17 +99,19 @@
     onPullDownRefresh() {
       this.initPageData()
     }
+
     onReachBottom() {
       this.initPageData()
     }
+
     // 初始化页面数据
     initPageData() {
       var _this = this,
-          data = {
-            page: _this.page
-          }
+        data = {
+          page: _this.page
+        }
       _this.loading = true
-      this.$get({url: service.users + '/orders', data }, {
+      this.$get({url: service.users + '/orders', data}, {
         success: ({code, data}) => {
           _this.noMore = false
           _this.loading = false
@@ -139,8 +142,11 @@
           _this.noMore = true
           _this.page += 1
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
 
@@ -151,7 +157,7 @@
         this.$apply()
       },
       info(item) {
-        if(item.info) {
+        if (item.info) {
           this.hide = false
           this.message = item
           this.$apply()
@@ -160,7 +166,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      conversion(item){
+      conversion(item) {
         wx.showToast({
           title: item.name,
           icon: 'success',
@@ -169,8 +175,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

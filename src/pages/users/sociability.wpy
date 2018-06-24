@@ -84,7 +84,7 @@
       value: '',
       answer: [],
       questionsList: [],
-      list:[]
+      list: []
     }
 
     computed = {
@@ -98,6 +98,7 @@
       this.getQuestions()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -107,18 +108,19 @@
       console.log(e.type)
       this.type = e.type
       this.$apply()
-      let title = '了解'+ e.title
+      let title = '了解' + e.title
       wx.setNavigationBarTitle({
-         title: title
-     })
+        title: title
+      })
     }
 
     onPullDownRefresh() {
       this.initPageData()
     }
+
     getQuestions() {
       let data = {type: this.type},
-          that = this
+        that = this
       this.$get({url: service.user}, {
         success: ({code, data}) => {
           this.user = data
@@ -128,7 +130,7 @@
       this.$get({url: service.vip + '/questions', data}, {
         success: ({code, data}) => {
           that.questionsList = data
-          if(!data.length){
+          if (!data.length) {
             return this.$showToast('数据显示错误')
           }
           that.list = data[that.index].option_arr
@@ -181,9 +183,9 @@
       },
       gotoUser(type) {
         let url = ''
-        if(type == 'single'){
+        if (type == 'single') {
           url = '/pages/users/unmarri'
-        }else{
+        } else {
           url = '/pages/users/intro'
         }
         wx.navigateTo({url: url})
@@ -204,16 +206,16 @@
             icon: 'none',
             duration: 1000
           })
-        }else {
-            let quert = {
-              question_id: that.questionsList[that.index].id,
-              value: that.value
-            }
-            that.answer.push(quert)
-            that.$apply()
-            console.log(that.answer)
+        } else {
+          let quert = {
+            question_id: that.questionsList[that.index].id,
+            value: that.value
+          }
+          that.answer.push(quert)
+          that.$apply()
+          console.log(that.answer)
           wx.showLoading({
-            title: '提交中...',
+            title: '提交中...'
           })
           let data = {
             answer: that.answer,
@@ -221,7 +223,7 @@
           }
           that.$post({url: service.vip + '/test', data}, {
             success: ({code, res}) => {
-              setTimeout(function(){
+              setTimeout(function () {
                 wx.hideLoading()
                 wx.showToast({
                   title: '提交成功!',
@@ -231,10 +233,13 @@
                 setTimeout(() => {
                   wx.redirectTo({url: '/pages/users/vipSetting'})
                 }, 1200)
-              },1000)
+              }, 1000)
             },
-            fail: ({code, data}) => {},
-            complete: () => { this.loading = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loading = false
+            }
           })
         }
       },
@@ -246,7 +251,7 @@
             icon: 'none',
             duration: 1000
           })
-        }else {
+        } else {
           console.log(that.value)
           console.log(that.questionsList[that.index].id)
           let quert = {
@@ -257,7 +262,7 @@
           that.$apply()
           console.log(that.answer)
         }
-        if(that.index < that.questionsList.length-1){
+        if (that.index < that.questionsList.length - 1) {
 //          debugger
           that.index++
           that.list = that.questionsList[that.index].option_arr
@@ -270,15 +275,14 @@
           console.log(that.index)
           console.log(that.value)
         }
-        if(that.index == that.questionsList.length-1) {
+        if (that.index == that.questionsList.length - 1) {
           that.show = false
           that.$apply()
         }
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

@@ -74,7 +74,7 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list:[
+      list: [
         {name: '我喜欢收到满是赞美得到纸条', checked: 'true'},
         {name: '我喜欢被拥抱的感觉'}
       ]
@@ -92,6 +92,7 @@
       // this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -138,8 +139,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

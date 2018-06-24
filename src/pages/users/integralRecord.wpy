@@ -60,6 +60,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -81,8 +82,11 @@
           self.list = data.data
           self.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
 
@@ -90,7 +94,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      conversion(item){
+      conversion(item) {
         wx.showToast({
           title: item.name,
           icon: 'success',
@@ -99,8 +103,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

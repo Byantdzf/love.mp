@@ -82,7 +82,7 @@
       nickName: '加载中...',
       questions: [],
       friend_question: [],
-      list:[
+      list: [
         {name: '希望申请添加好友时，回答收入', checked: false},
         {name: '希望申请添加好友时，回答年龄', checked: false},
         {name: '希望申请添加好友时，回答爱好', checked: false},
@@ -103,6 +103,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -120,12 +121,12 @@
         success: ({code, data}) => {
           this.user = data
           this.friend_question = data.friend_question
-          if(!this.friend_question){
+          if (!this.friend_question) {
             return this.$showToast('数据显示错误')
           }
           this.list.forEach((item, index, arr) => {
             this.friend_question.forEach((item1, index1, arr1) => {
-              if(arr1[index1] == arr[index].name) {
+              if (arr1[index1] == arr[index].name) {
                 this.list[index].checked = true
               }
             })
@@ -147,9 +148,9 @@
       },
       gotoUser(type) {
         let url = ''
-        if(type == 'single'){
+        if (type == 'single') {
           url = '/pages/users/unmarri'
-        }else{
+        } else {
           url = '/pages/users/intro'
         }
         wx.navigateTo({url: url})
@@ -157,7 +158,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      addQuestion(e){
+      addQuestion(e) {
         var value = {name: e.detail.value, checked: false}
         console.log(value)
         this.list.push(value)
@@ -180,14 +181,16 @@
               duration: 2000
             })
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loading = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loading = false
+          }
         })
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

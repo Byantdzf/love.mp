@@ -68,7 +68,7 @@
   export default class myGift extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "我的礼物"
+      navigationBarTitleText: '我的礼物'
     }
     data = {
       // 后置显示按钮
@@ -90,12 +90,12 @@
       inputVal: ''
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       let _this = this
       _this.giftsData()
@@ -104,24 +104,30 @@
 //        arr[index].URL = encodeURIComponent(arr[index].mod_textUrl)
 //      })
     }
+
     onShow() {
       this.getLibraries()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     tabIndex() {
       let _this = this
-      wx.getSystemInfo({success: function (rst) {
-        _this.screenWidth = rst.screenWidth
-      }})
+      wx.getSystemInfo({
+        success: function (rst) {
+          _this.screenWidth = rst.screenWidth
+        }
+      })
 //      this.sliderWidth = _this.screenWidth / this.tabs.length
       _this.sliderWidth = _this.screenWidth / 6
       _this.sliderLeft = 0
 //      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
       _this.sliderOffset = _this.screenWidth / 6 * this.activeIndex
     }
+
     onPullDownRefresh() {
       this.getLibraries()
     }
+
     onReachBottom() {
       setTimeout(() => {
         if (this.activeIndex == '1') {
@@ -132,6 +138,7 @@
         this.$apply()
       }, 200)
     }
+
     getMessage() {
       var isNew = wx.getStorageSync('is_new')
       if (!isNew) {
@@ -155,37 +162,45 @@
         })
       }
     }
+
     // 初始化页面数据
     giftsData() {
       var self = this
       self.loading = true
       self.$get({url: service.gifts}, {
-         success: ({code, data}) => {
-           data.gifts.forEach((item, index, arr) => {
-             return self.tabs.push({
-               name: arr[index].name,
-               id: arr[index].id
-             })
-           })
-           self.$apply()
-           self.$get({url: service.gifts + '/' + self.tabs[0].id + '/histories' }, {
-             success: ({code, data}) => {
-               self.loading = false
-               self.list = data.gift_histories
-               self.user_gift = data.user_gift
-               self.gift = data.user_gift.gift
-               self.$apply()
-             },
-             fail: ({code, data}) => {},
-             complete: () => { self.loaded = false }
-           })
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+        success: ({code, data}) => {
+          data.gifts.forEach((item, index, arr) => {
+            return self.tabs.push({
+              name: arr[index].name,
+              id: arr[index].id
+            })
+          })
+          self.$apply()
+          self.$get({url: service.gifts + '/' + self.tabs[0].id + '/histories'}, {
+            success: ({code, data}) => {
+              self.loading = false
+              self.list = data.gift_histories
+              self.user_gift = data.user_gift
+              self.gift = data.user_gift.gift
+              self.$apply()
+            },
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              self.loaded = false
+            }
+          })
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
     }
+
     getLibraries(keyword) {
-      let that = this
+      // let that = this
 //      _this.loading = true
 //       this.$get({
 //         url: url,
@@ -231,29 +246,29 @@
     }
 
     methods = {
-      showInput () {
+      showInput() {
         this.inputShowed = true
       },
-      hideInput () {
+      hideInput() {
         this.inputVal = ''
         this.inputShowed = false
       },
-      clearInput () {
+      clearInput() {
         this.inputVal = ''
       },
-      inputTyping (e) {
+      inputTyping(e) {
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)
       },
-      tabClick (e) {
+      tabClick(e) {
         let that = this
         that.loading = true
         that.sliderOffset = e.currentTarget.offsetLeft
         that.activeIndex = e.currentTarget.id
         console.log(this.activeIndex)
-        that.$get({url: service.gifts + '/' + that.activeIndex + '/histories' }, {
+        that.$get({url: service.gifts + '/' + that.activeIndex + '/histories'}, {
           success: ({code, data}) => {
             that.loading = false
             that.list = data.gift_histories
@@ -261,8 +276,11 @@
             that.gift = data.user_gift.gift
             that.$apply()
           },
-          fail: ({code, data}) => {},
-          complete: () => { that.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            that.loaded = false
+          }
         })
       },
 
@@ -285,8 +303,11 @@
           success: ({code, data}) => {
             wx.reLaunch({url: '/pages/borrow'})
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
 
@@ -305,8 +326,11 @@
                 success: ({code, data}) => {
                   wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -332,8 +356,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }

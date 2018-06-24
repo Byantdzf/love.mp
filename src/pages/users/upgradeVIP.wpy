@@ -80,7 +80,7 @@
       paylist1: [],
       paylist2: [],
       hide: true,
-      message: {},
+      message: {}
     }
     computed = {
       nickName() {
@@ -93,6 +93,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -107,7 +108,7 @@
 
     // 初始化页面数据
     initPageData() {
-      console.log("刷新成功")
+      // console.log("刷新成功")
       let that = this
       this.$get({url: service.ranks}, {
         success: ({code, data}) => {
@@ -129,8 +130,11 @@
           console.log(that.paylist1)
           console.log(that.paylist2)
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
 
@@ -148,7 +152,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      conversion(item){
+      conversion(item) {
 //        this.hide = false
 //        this.message = item
 //        this.$apply()
@@ -177,32 +181,37 @@
                       duration: 2000
                     })
                   },
-                  fail: ({code, data}) => {},
-                  complete: () => { this.loaded = false }
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    this.loaded = false
+                  }
                 })
               },
               fail: function (res) {
                 wx.showToast({
-                  title: '支付失败:'+res.errMsg,
+                  title: '支付失败:' + res.errMsg,
                   icon: 'none',
                   duration: 2000
                 })
               }
-            });
+            })
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
 //        let url = '/pages/users/integralAddress?id=' + item.id
 //        wx.navigateTo({url: url})
       },
-      radioChange: function(e) {
+      radioChange: function (e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

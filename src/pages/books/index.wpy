@@ -83,7 +83,7 @@
   export default class search extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "阅读列表"
+      navigationBarTitleText: '阅读列表'
     }
     data = {
       // 后置显示按钮
@@ -92,11 +92,11 @@
       tabs: ['专题', '单身会', '预备婚恋', '个人成长'],
       list: [
         {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'title' : '《长恨歌》|爱情中，比陪伴更重要的是这件事',
+          'name': 'Angelababy',
+          'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'title': '《长恨歌》|爱情中，比陪伴更重要的是这件事',
           'six': 0,
-          'mod_textUrl' :'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
+          'mod_textUrl': 'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb'
         }
       ],
       activeIndex: 0,
@@ -112,35 +112,41 @@
       inputVal: ''
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       let _this = this
       _this.tabIndex()
-      this.list.forEach((item,index,arr)=>{
+      this.list.forEach((item, index, arr) => {
         arr[index].URL = encodeURIComponent(arr[index].mod_textUrl)
       })
     }
+
     onShow() {
       this.getLibraries()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     tabIndex() {
       let _this = this
-      wx.getSystemInfo({success: function (rst) {
+      wx.getSystemInfo({
+        success: function (rst) {
           _this.screenWidth = rst.screenWidth
-        }})
+        }
+      })
       this.sliderWidth = _this.screenWidth / this.tabs.length
       this.sliderLeft = 0
       this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
     }
+
     onPullDownRefresh() {
       this.getLibraries()
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
@@ -151,6 +157,7 @@
 //        this.$apply()
       }, 200)
     }
+
     getMessage() {
       var isNew = wx.getStorageSync('is_new')
       if (!isNew) {
@@ -174,6 +181,7 @@
         })
       }
     }
+
     // 初始化页面数据
     initPageData() {
       var self = this
@@ -187,6 +195,7 @@
       //   complete: () => { this.loaded = false }
       // })
     }
+
     getLibraries(keyword) {
       let _this = this
       _this.loading = true
@@ -195,77 +204,79 @@
         url = service.articles + '?keyword=' + keyword
       }
       _this.$get({
-         url: url,
-         data: {
-           page: _this.page,
-           title: _this.title
-         }
-       }, {
-         success: ({code, data}) => {
-           _this.noMore = false
-           _this.loading = true
-           if (data.data.length == 0 && data.data.last_page == 1) {
-             _this.loading = false
-             _this.noMore = true
-             _this.list = []
-             return
-           }
-           if (data.current_page > data.last_page) {
-             _this.noMore = true
-             _this.loading = true
-             return
-           }
-           data = data.data
-           if (this.isArray(data) && data.length === 0) {
-             _this.noMore = true
-             _this.loading = false
-             _this.list = []
-             return
-           }
-           if (_this.list.length === 0 || _this.page === 1) {
-             _this.list = data
+        url: url,
+        data: {
+          page: _this.page,
+          title: _this.title
+        }
+      }, {
+        success: ({code, data}) => {
+          _this.noMore = false
+          _this.loading = true
+          if (data.data.length == 0 && data.data.last_page == 1) {
+            _this.loading = false
+            _this.noMore = true
+            _this.list = []
+            return
+          }
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            _this.loading = false
+            _this.list = []
+            return
+          }
+          if (_this.list.length === 0 || _this.page === 1) {
+            _this.list = data
+          } else {
+            data.map(function (item, index) {
+              _this.list.push(item)
+            })
+          }
+          _this.noMore = true
+          _this.page += 1
 
-           } else {
-             data.map(function (item, index) {
-               _this.list.push(item)
-             })
-           }
-           _this.noMore = true
-           _this.page += 1
-
- //          _this.list = data.data
-         },
-         fail: ({code, data}) => {},
-         complete: () => { this.loaded = false }
-       })
+          //          _this.list = data.data
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
     }
 
     methods = {
-      showInput () {
+      showInput() {
         this.inputShowed = true
       },
-      hideInput () {
+      hideInput() {
         this.inputVal = ''
         this.inputShowed = false
       },
-      clearInput () {
+      clearInput() {
         this.inputVal = ''
       },
-      inputTyping (e) {
+      inputTyping(e) {
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)
       },
-      tabClick (e) {
+      tabClick(e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
         console.log(this.activeIndex)
-        if(this.activeIndex == 1){
+        if (this.activeIndex == 1) {
           this.title = '单身会'
-        }else if(this.activeIndex == 2){
+        } else if (this.activeIndex == 2) {
           this.title = '预备婚恋'
-        }else if(this.activeIndex == 3) {
+        } else if (this.activeIndex == 3) {
           this.title = '个人成长'
         }
         this.$apply()
@@ -275,19 +286,22 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-    gotoapp(item) {
+      gotoapp(item) {
         let data = {
           url: item
         }
         this.$get({url: service.article, data}, {
           success: ({code, data}) => {
-              console.log(encodeURIComponent(item))
-              wx.navigateTo({url: '/pages/books/bookDetail?url=' + encodeURIComponent(item)})
-            },
-            fail: ({code, data}) => {},
-            complete: () => { this.loaded = false }
-          })
-    },
+            console.log(encodeURIComponent(item))
+            wx.navigateTo({url: '/pages/books/bookDetail?url=' + encodeURIComponent(item)})
+          },
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
+        })
+      },
       joinTip() {
         wx.showModal({
           title: '待审核',
@@ -301,8 +315,11 @@
           success: ({code, data}) => {
             wx.reLaunch({url: '/pages/borrow'})
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
 
@@ -321,8 +338,11 @@
                 success: ({code, data}) => {
                   wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -348,8 +368,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }

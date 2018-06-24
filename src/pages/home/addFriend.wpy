@@ -62,7 +62,7 @@
   export default class addFriend extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "申请加为好友"
+      navigationBarTitleText: '申请加为好友'
     }
     data = {
       // 后置显示按钮
@@ -85,8 +85,8 @@
     }
     async onLoad(e) {
       let _this = this
-////          image = e.image.split('!')
-////      console.log(image)
+//      image = e.image.split('!')
+//      console.log(image)
 //      _this.name = e.name
       _this.id = e.id
       _this.$apply()
@@ -111,7 +111,7 @@
       let self = this
       this.$get({url: service.users + '/' + self.id + '/friend/questions'}, {
         success: ({code, data}) => {
-          let arr = {}
+          // let arr = {}
           data.forEach((item, index, arr) => {
             self.list.push({
               questions: arr[index],
@@ -154,10 +154,10 @@
     getLibraries(keyword) {
       let _this = this
       _this.loading = true
-      let url = service.libraries
-      if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
-      }
+      // let url = service.libraries
+      // if (keyword) {
+      //   url = service.libraries + '?keyword=' + keyword
+      // }
 //       this.$get({
 //         url: url,
 //         data: {
@@ -202,14 +202,14 @@
     }
 
     methods = {
-      valueChange(index , e) {
+      valueChange(index, e) {
         console.log(index)
         this.list[index].value = e.detail.value
       },
       addfriend() {
         let self = this,
-            data = {answer: self.list},
-            active = true
+          data = {answer: self.list},
+          active = true
         self.list.forEach((item, index, arr) => {
           if (arr[index].value == '') {
             wx.showToast({
@@ -233,7 +233,6 @@
                 fail: ({code, data}) => {},
                 complete: () => { self.loaded = false }
               })
-
             },
             fail: ({code, data}) => {},
             complete: () => { self.loaded = false }

@@ -192,7 +192,7 @@
           housingIndex: 0,
           region: ['广东省', '广州市'],
           region_id: [''],
-          birthday:'1990-01-01',
+          birthday: '1990-01-01',
           user: {
             avatarUrl: '',
             nickName: '艾丽丝',
@@ -229,6 +229,7 @@
           Ideal_mateFocus: false,
           ShowButton: true
         }
+
         onLoad() {
           this.getindustry()
           this.getuser()
@@ -291,10 +292,11 @@
 //            }
 //          })
         }
+
         getindustry() {
           let that = this
           this.loading = true
-          this.$get({url: service.industry }, {
+          this.$get({url: service.industry}, {
             success: ({code, data}) => {
               let result = data
               that.Business = result
@@ -307,10 +309,14 @@
               that.$apply()
               console.log(that.objectMultiArray)
             },
-            fail: ({code, data}) => {},
-            complete: () => { this.loading = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loading = false
+            }
           })
         }
+
         getuser() {
           let that = this
           this.loading = true
@@ -344,7 +350,7 @@
                 }
               })
               that.sex.forEach((item, index, arr) => {
-                if (result.sex == index+1) {
+                if (result.sex == index + 1) {
                   that.sexIndex = index
                 }
               })
@@ -352,10 +358,14 @@
               that.industry_sub = data.industry_sub
               that.$apply()
             },
-            fail: ({code, data}) => {},
-            complete: () => { this.loading = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loading = false
+            }
           })
         }
+
         ShowModal(text) {
           wx.showToast({
             title: text,
@@ -363,9 +373,11 @@
             duration: 1500
           })
         }
+
         onShow() {
           this.$parent.getTracker(this.$root.$name, '个人信息（单身）修改')
         }
+
         methods = {
           ensure() {
             this.NameFocus = false
@@ -420,7 +432,7 @@
             } else if (!this.graduate_school) {
               this.Graduate_schoolFocus = true
               this.ShowModal('请填写毕业学校')
-            }else if (!this.company) {
+            } else if (!this.company) {
               this.companyFocus = true
               this.ShowModal('请填写工作单位')
             } else if (!this.introduction) {
@@ -443,19 +455,22 @@
                     }
                   })
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loading = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loading = false
+                }
               })
             }
           },
-          bindMultiPickerChange2 (e) {
+          bindMultiPickerChange2(e) {
             console.log(e)
             console.log('picker发送选择改变，携带值为', e.detail.value)
             this.setData({
               multiIndex2: e.detail.value
             })
           },
-          bindMultiPickerColumnChange2 (e) {
+          bindMultiPickerColumnChange2(e) {
             let that = this
             var data = {
               objectMultiArray: that.data.objectMultiArray,
@@ -477,7 +492,7 @@
             }
             this.setData(data)
           },
-          typing (type, e) {
+          typing(type, e) {
             if (this.isDefined(this[type])) {
               this[type] = e.detail.value
             }

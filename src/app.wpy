@@ -1,270 +1,275 @@
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-import {service} from './config.js'
-var ga = require('./ga.js')
-var GoogleAnalytics = ga.GoogleAnalytics
-var HitBuilders = ga.HitBuilders
-var fundebug = require('./fundebug.0.2.0.min.js')
-fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e5ee'
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import {service} from './config.js'
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/home/index',
-      'pages/home/search',
-      'pages/home/sharePay',
-      'pages/home/sharing',
-      'pages/home/information',
-      'pages/home/introducer',
-      'pages/home/addFriend',
-      'pages/home/swopWeChat',
-      'pages/home/giveGift',
-      'pages/books/index',
-      'pages/books/bookDetail',
-      'pages/party/index',
-      'pages/party/start_party',
-      'pages/users/register',
-      'pages/users/index',
-      'pages/users/integral',
-      'pages/users/myGift',
-      'pages/users/vipSetting',
-      'pages/users/vipData',
-      'pages/users/integralRecord',
-      'pages/users/myPay',
-      'pages/users/myNews',
-      'pages/users/friendlist',
-      'pages/users/list',
-      'pages/users/examineWeChat',
-      'pages/users/auditFriend',
-      'pages/users/intro',
-      'pages/users/unmarri',
-      'pages/users/vipImage',
-      'pages/users/loveLanguage',
-      'pages/users/sociability',
-      'pages/users/advantage',
-      'pages/users/addFriendSet',
-      'pages/users/upgradeVIP',
-      'pages/users/integralAddress'
-    ],
-    window: {
-      navigationBarTitleText: '福恋',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#FFFFFF',
-      backgroundColor: '#eaeaea',
-      backgroundTextStyle: 'light',
-      enablePullDownRefresh: true
-    },
-    tabBar: {
-      color: '#707070',
-      selectedColor: '#fb5c56',
-      backgroundColor: '#fff',
-      borderStyle: 'black',
-      list: [{
-        pagePath: 'pages/home/index',
-        selectedIconPath: './images/icon/map_active.png',
-        iconPath: './images/icon/map.png',
-        text: '首页'
-      }, {
-        pagePath: 'pages/books/index',
-        selectedIconPath: './images/icon/friends_active.png',
-        iconPath: './images/icon/friends.png',
-        text: '阅读'
-      }, {
-        pagePath: 'pages/party/index',
-        selectedIconPath: './images/icon/initiate_active.png',
-        iconPath: './images/icon/initiate.png',
-        text: '活动'
-      }, {
-        pagePath: 'pages/users/index',
-        selectedIconPath: './images/icon/my_active.png',
-        iconPath: './images/icon/my.png',
-        text: '我的'
-      }]
-    },
-    networkTimeout: {
-      request: 5000,
-      downloadFile: 10000
-    },
-    debug: true
-  }
+  var ga = require('./ga.js')
+  var GoogleAnalytics = ga.GoogleAnalytics
+  var HitBuilders = ga.HitBuilders
+  var fundebug = require('./fundebug.0.2.0.min.js')
+  fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e5ee'
 
-  globalData = {
-    user: null,
-    cart: null,
-    tracker: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch(options) {
-    console.log(options)
-    if (options.scene == 1037 || options.scene == 1038){
-      let uid = options.referrerInfo.extraData.uid
-//      console.log(JSON.stringify(uid))
-      wx.setStorageSync('uid', uid)
-      wepy.login({
-        success: (res) => {
-         let code = res.code
-          let data = {
-            wechat_code : code
-          }
-          wx.request({
-            url: service.register_infor,
-            header: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            method: "get",
-            data: data,
-            success: function( res ) {
-              let  is_register = res.data.data.is_register
-              if (is_register == 1) {
-                wepy.login({
-                  success: (res) => {
-                    let codeV = res.code
-                    wx.request({
-                      url: service.skip + '/infor',
-                      header: {"Content-Type": "application/x-www-form-urlencoded"},
-                      method: "get",
-                      data: {
-                        wechat_code: codeV,
-                        uid: uid
-                      },
-                      success: function( res ) {
-                        let token = res.data.data.access_token
-                        wx.setStorageSync('token', token)
-                        console.log('success')
-                        console.log(res)
-                      }
-                    })
-                  },
-                  fail: (res) => {
-                    console.log('wepy.login.fail:', res)
-                  }
-                })
-              } else {
-                wepy.getUserInfo({
-                  success: (res) => {
-                    let iv = res.iv
-                    let encryptedData = res.encryptedData
-                    wepy.login({
-                      success: (res) => {
-                        let codeV = res.code
-                        wx.request({
-                          url: service.skip,
-                          header: {"Content-Type": "application/x-www-form-urlencoded"},
-                          method: "get",
-                          data: {
-                            wechat_code: codeV,
-                            uid: uid,
-                            iv: iv,
-                            encryptedData: encryptedData
-                          },
-                          success: function( res ) {
-                            let token = res.data.data.access_token
-                            wx.setStorageSync('token', token)
-                            console.log('success')
-                            console.log(res)
-                          }
-                        })
-                      },
-                      fail: (res) => {
-                        console.log('wepy.login.fail:', res)
-                      }
-                    })
-                  },
-                  fail: (res) => { }
-                })
-              }
-            }
-          })
-        },
-        fail: (res) => {
-          console.log('wepy.login.fail:', res)
-        }
-      })
-    }
-  }
-
-  onShow(options) {
-  }
-
-  onShareAppMessage(title = '友福聚会') {
-    return {
-      title: title,
-//      path: '/pages/index.wpy',
-      // imageUrl: '',
-      success: function(res) {
-        // 转发成功
-        console.log(res.errMsg)
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/home/index',
+        'pages/home/search',
+        'pages/home/sharePay',
+        'pages/home/sharing',
+        'pages/home/information',
+        'pages/home/introducer',
+        'pages/home/addFriend',
+        'pages/home/swopWeChat',
+        'pages/home/giveGift',
+        'pages/books/index',
+        'pages/books/bookDetail',
+        'pages/party/index',
+        'pages/party/start_party',
+        'pages/users/register',
+        'pages/users/index',
+        'pages/users/integral',
+        'pages/users/myGift',
+        'pages/users/vipSetting',
+        'pages/users/vipData',
+        'pages/users/integralRecord',
+        'pages/users/myPay',
+        'pages/users/myNews',
+        'pages/users/friendlist',
+        'pages/users/list',
+        'pages/users/examineWeChat',
+        'pages/users/auditFriend',
+        'pages/users/intro',
+        'pages/users/unmarri',
+        'pages/users/vipImage',
+        'pages/users/loveLanguage',
+        'pages/users/sociability',
+        'pages/users/advantage',
+        'pages/users/addFriendSet',
+        'pages/users/upgradeVIP',
+        'pages/users/integralAddress'
+      ],
+      window: {
+        navigationBarTitleText: '福恋',
+        navigationBarTextStyle: 'black',
+        navigationBarBackgroundColor: '#FFFFFF',
+        backgroundColor: '#eaeaea',
+        backgroundTextStyle: 'light',
+        enablePullDownRefresh: true
       },
-      fail: function(res) {
-        // 转发失败
-        console.log(res.errMsg)
+      tabBar: {
+        color: '#707070',
+        selectedColor: '#fb5c56',
+        backgroundColor: '#fff',
+        borderStyle: 'black',
+        list: [{
+          pagePath: 'pages/home/index',
+          selectedIconPath: './images/icon/map_active.png',
+          iconPath: './images/icon/map.png',
+          text: '首页'
+        }, {
+          pagePath: 'pages/books/index',
+          selectedIconPath: './images/icon/friends_active.png',
+          iconPath: './images/icon/friends.png',
+          text: '阅读'
+        }, {
+          pagePath: 'pages/party/index',
+          selectedIconPath: './images/icon/initiate_active.png',
+          iconPath: './images/icon/initiate.png',
+          text: '活动'
+        }, {
+          pagePath: 'pages/users/index',
+          selectedIconPath: './images/icon/my_active.png',
+          iconPath: './images/icon/my.png',
+          text: '我的'
+        }]
+      },
+      networkTimeout: {
+        request: 5000,
+        downloadFile: 10000
+      },
+      debug: true
+    }
+
+    globalData = {
+      user: null,
+      cart: null,
+      tracker: null
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+    }
+
+    onLaunch(options) {
+      console.log(options)
+      if (options.scene == 1037 || options.scene == 1038) {
+        let uid = options.referrerInfo.extraData.uid
+//      console.log(JSON.stringify(uid))
+        wx.setStorageSync('uid', uid)
+        wepy.login({
+          success: (res) => {
+            let code = res.code
+            let data = {
+              wechat_code: code
+            }
+            wx.request({
+              url: service.register_infor,
+              header: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              method: 'get',
+              data: data,
+              success: function (res) {
+                let is_register = res.data.data.is_register
+                if (is_register == 1) {
+                  wepy.login({
+                    success: (res) => {
+                      let codeV = res.code
+                      wx.request({
+                        url: service.skip + '/infor',
+                        header: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        method: 'get',
+                        data: {
+                          wechat_code: codeV,
+                          uid: uid
+                        },
+                        success: function (res) {
+                          let token = res.data.data.access_token
+                          wx.setStorageSync('token', token)
+                          console.log('success')
+                          console.log(res)
+                        }
+                      })
+                    },
+                    fail: (res) => {
+                      console.log('wepy.login.fail:', res)
+                    }
+                  })
+                } else {
+                  wepy.getUserInfo({
+                    success: (res) => {
+                      let iv = res.iv
+                      let encryptedData = res.encryptedData
+                      wepy.login({
+                        success: (res) => {
+                          let codeV = res.code
+                          wx.request({
+                            url: service.skip,
+                            header: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            method: 'get',
+                            data: {
+                              wechat_code: codeV,
+                              uid: uid,
+                              iv: iv,
+                              encryptedData: encryptedData
+                            },
+                            success: function (res) {
+                              let token = res.data.data.access_token
+                              wx.setStorageSync('token', token)
+                              console.log('success')
+                              console.log(res)
+                            }
+                          })
+                        },
+                        fail: (res) => {
+                          console.log('wepy.login.fail:', res)
+                        }
+                      })
+                    },
+                    fail: (res) => {
+                    }
+                  })
+                }
+              }
+            })
+          },
+          fail: (res) => {
+            console.log('wepy.login.fail:', res)
+          }
+        })
       }
     }
-  }
 
-  /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
-  isObject(item) {
-    return typeof item === 'object' && !this.isArray(item)
-  }
-  isArray(item) {
-    return Object.prototype.toString.apply(item) === '[object Array]'
-  }
-  isUndefined(item) {
-    return typeof item === 'undefined'
-  }
-
-  // Google analytics
-  getTracker(name, text) {
-    if (!this.globalData.tracker) {
-      // 初始化GoogleAnalytics Tracker
-      this.globalData.tracker = GoogleAnalytics.getInstance(this)
-      .setAppName('福恋')
-      .setAppVersion('v0.1')
-      .newTracker('UA-98664364-7')
+    onShow(options) {
     }
-    var t = this.globalData.tracker
-    t.setScreenName(text)
-    t.send(new HitBuilders.ScreenViewBuilder().build())
-    t.send(new HitBuilders.ExceptionBuilder()
-      .setDescription(wx.getStorageSync('message'))
-      .setFatal(false).build())
-    t.set('&uid', '12345')
-    t.send(new HitBuilders.EventBuilder()
-      .setCategory('UX')
-      .setAction('User Sign In')
-      .build())
-  }
-  /* ========================= 更新缓存信息 ======================== */
 
-  $updateGlobalData(name, obj) {
-    // 校验: globalData
-    if (!this.globalData) return
-    // 校验: 操作字段
-    if (typeof name !== 'string' || name === '') return {}
-    // 取已有信息
-    const info = this.globalData[name] || {}
-    // 更新缓存
-    if (obj && this.isObject(obj)) {
-      // Object合并第一层
-      this.globalData[name] = Object.assign({}, info, obj)
-    } else if (!this.isUndefined(obj)) {
-      // 其他非undefined数据直接覆盖
-      this.globalData[name] = obj
+    onShareAppMessage(title = '友福聚会') {
+      return {
+        title: title,
+//      path: '/pages/index.wpy',
+        // imageUrl: '',
+        success: function (res) {
+          // 转发成功
+          console.log(res.errMsg)
+        },
+        fail: function (res) {
+          // 转发失败
+          console.log(res.errMsg)
+        }
+      }
     }
-    this.$apply && this.$apply()
-    console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
-    return this.globalData[name]
+
+    /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
+    isObject(item) {
+      return typeof item === 'object' && !this.isArray(item)
+    }
+
+    isArray(item) {
+      return Object.prototype.toString.apply(item) === '[object Array]'
+    }
+
+    isUndefined(item) {
+      return typeof item === 'undefined'
+    }
+
+    // Google analytics
+    getTracker(name, text) {
+      if (!this.globalData.tracker) {
+        // 初始化GoogleAnalytics Tracker
+        this.globalData.tracker = GoogleAnalytics.getInstance(this)
+          .setAppName('福恋')
+          .setAppVersion('v0.1')
+          .newTracker('UA-98664364-7')
+      }
+      var t = this.globalData.tracker
+      t.setScreenName(text)
+      t.send(new HitBuilders.ScreenViewBuilder().build())
+      t.send(new HitBuilders.ExceptionBuilder()
+        .setDescription(wx.getStorageSync('message'))
+        .setFatal(false).build())
+      t.set('&uid', '12345')
+      t.send(new HitBuilders.EventBuilder()
+        .setCategory('UX')
+        .setAction('User Sign In')
+        .build())
+    }
+
+    /* ========================= 更新缓存信息 ======================== */
+
+    $updateGlobalData(name, obj) {
+      // 校验: globalData
+      if (!this.globalData) return
+      // 校验: 操作字段
+      if (typeof name !== 'string' || name === '') return {}
+      // 取已有信息
+      const info = this.globalData[name] || {}
+      // 更新缓存
+      if (obj && this.isObject(obj)) {
+        // Object合并第一层
+        this.globalData[name] = Object.assign({}, info, obj)
+      } else if (!this.isUndefined(obj)) {
+        // 其他非undefined数据直接覆盖
+        this.globalData[name] = obj
+      }
+      this.$apply && this.$apply()
+      console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
+      return this.globalData[name]
+    }
   }
-}
 </script>
 
 <style lang="less">
-@import "./styles/weui/index.less";
-@import "./styles/custom/index.less";
+  @import "./styles/weui/index.less";
+  @import "./styles/custom/index.less";
 </style>

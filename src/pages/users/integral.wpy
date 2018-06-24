@@ -55,7 +55,7 @@
       nickName: '加载中...',
       price: 0,
       trade_no: '',
-      list:[]
+      list: []
 
     }
 
@@ -70,6 +70,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -95,8 +96,11 @@
           self.$apply()
 //          debugger
         },
-        fail: ({code, data}) => {},
-        complete: () => { self.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          self.loaded = false
+        }
       })
     }
 
@@ -104,9 +108,9 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      recharge(){
+      recharge() {
         console.log(this.price)
-        if(!this.price){
+        if (!this.price) {
           return this.$showToast('请输入金额')
         }
         let that = this,
@@ -125,47 +129,52 @@
               signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
               paySign: wxconfig.paySign, // 支付签名
               success: function (res) {
-                that.$post({url: service.orderpay  + '/' +  that.trade_no}, {
+                that.$post({url: service.orderpay + '/' + that.trade_no}, {
                   success: ({code, data}) => {
                     wx.showToast({
                       title: '支付成功',
                       duration: 2000
                     })
                   },
-                  fail: ({code, data}) => {},
-                  complete: () => { this.loaded = false }
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    this.loaded = false
+                  }
                 })
               },
               fail: function (res) {
                 wx.showToast({
-                  title: '支付失败:'+res.errMsg,
+                  title: '支付失败:' + res.errMsg,
                   icon: 'none',
                   duration: 2000
                 })
               }
-            });
+            })
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
-      bindKeyInput(e){
+      bindKeyInput(e) {
         this.price = e.detail.value
         this.$apply()
       },
-      conversion(item){
+      conversion(item) {
 //      wx.showToast({
 //        title: item.name,
 //        icon: 'success',
 //        duration: 1000
 //      })
-        let url = '/pages/users/integralAddress?id=' + item.id + '&price=' + item.price + '&name=' +item.name +'&unit=' +item.unit + '&icon=' + item.icon
+        let url = '/pages/users/integralAddress?id=' + item.id + '&price=' + item.price + '&name=' + item.name + '&unit=' + item.unit + '&icon=' + item.icon
         wx.navigateTo({url: url})
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

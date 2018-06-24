@@ -111,7 +111,7 @@
   export default class information extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "介绍人个人信息"
+      navigationBarTitleText: '介绍人个人信息'
     }
     data = {
       // 后置显示按钮
@@ -121,15 +121,15 @@
       background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.CaShiFjcO2Q7dd44e9547b343f1c8c4f6ae9424ab900.png',
       user: [
         {
-          'name' : 'Angela',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'age' : '26',
+          'name': 'Angela',
+          'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'age': '26',
           'address': '深圳',
           'stature': '164cm',
           'distance': '200m',
           'six': 0,
           'time': '3分钟前活跃',
-          'vip': true,
+          'vip': true
         }
       ],
       list: [],
@@ -150,17 +150,18 @@
       paramet_v: false
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       let _this = this
       console.log(e.id)
       _this.id = e.id
     }
+
     onShow() {
       this.getMessage()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -169,6 +170,7 @@
     onPullDownRefresh() {
       this.getLibraries()
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
@@ -179,6 +181,7 @@
 //        this.$apply()
       }, 200)
     }
+
     getMessage() {
       let self = this
       this.$get({url: service.users + '/' + self.id}, {
@@ -186,20 +189,24 @@
 //         debugger
           this.mylibs = data
           if (data.is_followed == true) {
-            self.paramet_v = true,
-              self.text = '取消关注',
-              self.$apply()
-          } else{
+            self.paramet_v = true
+            self.text = '取消关注'
+            self.$apply()
+          } else {
             self.paramet_v = false
             self.text = '关注'
             self.$apply()
           }
           this.profile_marriage = data.profile_marriage
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
+
     // 初始化页面数据
     initPageData() {
       var self = this
@@ -213,13 +220,14 @@
       //   complete: () => { this.loaded = false }
       // })
     }
+
     getLibraries(keyword) {
       let _this = this
       _this.loading = true
-      let url = service.libraries
-      if (keyword) {
-        url = service.libraries + '?keyword=' + keyword
-      }
+      // let url = service.libraries
+      // if (keyword) {
+      //   url = service.libraries + '?keyword=' + keyword
+      // }
 //       this.$get({
 //         url: url,
 //         data: {
@@ -262,19 +270,21 @@
 //         complete: () => { this.loaded = false }
 //       })
     }
-//让所有的展开项，都变为收起
+
+// 让所有的展开项，都变为收起
     packUp(data, index) {
-      for (let i = 0, len = data.length; i < len; i++) {//其他最外层列表变为关闭状态
+      for (let i = 0, len = data.length; i < len; i++) {// 其他最外层列表变为关闭状态
         if (index != i) {
-          data[i].show = false;
-          for (let j = 0; j < data[i].item.length; j++) {//其他所有内层也为关闭状态
-            data[i].item[j].show = false;
+          data[i].show = false
+          for (let j = 0; j < data[i].item.length; j++) {// 其他所有内层也为关闭状态
+            data[i].item[j].show = false
           }
         }
       }
     }
+
     methods = {
-      bindPickerChange(id,e) {
+      bindPickerChange(id, e) {
         console.log(id)
         console.log('picker发送选择改变，携带值为', e.detail.value)
         let than = this
@@ -282,7 +292,7 @@
           wx.showModal({
             title: '提示',
             content: '是否确认举报Ta',
-            success: function(res) {
+            success: function (res) {
               if (res.confirm) {
                 than.$post({url: service.complaint + '/' + id}, {
                   success: ({code, data}) => {
@@ -292,8 +302,11 @@
                       duration: 2000
                     })
                   },
-                  fail: ({code, data}) => {},
-                  complete: () => { than.loaded = false }
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    than.loaded = false
+                  }
                 })
               } else if (res.cancel) {
                 console.log('用户点击取消')
@@ -304,7 +317,7 @@
           wx.showModal({
             title: '提示',
             content: '是否确认取消该好友',
-            success: function(res) {
+            success: function (res) {
               if (res.confirm) {
                 than.$post({url: service.addFriend + '/' + id}, {
                   success: ({code, data}) => {
@@ -314,8 +327,11 @@
                       duration: 2000
                     })
                   },
-                  fail: ({code, data}) => {},
-                  complete: () => { than.loaded = false }
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    than.loaded = false
+                  }
                 })
               } else if (res.cancel) {
                 console.log('用户点击取消')
@@ -324,8 +340,8 @@
           })
         }
       },
-      //预览图片
-      previewImage(image, array){
+      // 预览图片
+      previewImage(image, array) {
         wx.previewImage({
           current: image, // 当前显示图片的http链接
           urls: array // 需要预览的图片http链接列表
@@ -340,32 +356,32 @@
         })
       },
       listTap(e) {
-        console.log('触发了最外层');
-        let Index = e.currentTarget.dataset.parentindex, //获取点击的下标值
-          list=this.data.list;
-        list[Index].show = !list[Index].show || false;//变换其打开、关闭的状态
-//        if (list[Index].show){//如果点击后是展开状态，则让其他已经展开的列表变为收起状态
+        console.log('触发了最外层')
+        let Index = e.currentTarget.dataset.parentindex, // 获取点击的下标值
+          list = this.data.list
+        list[Index].show = !list[Index].show || false// 变换其打开、关闭的状态
+//        if (list[Index].show){// 如果点击后是展开状态，则让其他已经展开的列表变为收起状态
 //          this.packUp(list,Index);
 //        }
         this.setData({
           list
-        });
+        })
       },
-      //点击里面的子列表展开收起
+      // 点击里面的子列表展开收起
       listItemTap(e) {
-        let parentindex = e.currentTarget.dataset.parentindex,//点击的内层所在的最外层列表下标
-          Index = e.currentTarget.dataset.index,//点击的内层下标
-          list = this.data.list;
-        console.log(list[parentindex].item, Index);
-        list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false;//变换其打开、关闭的状态
-        if (list[parentindex].item[Index].show) {//如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
+        let parentindex = e.currentTarget.dataset.parentindex, // 点击的内层所在的最外层列表下标
+          Index = e.currentTarget.dataset.index, // 点击的内层下标
+          list = this.data.list
+        // console.log(list[parentindex].item, Index);
+        list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false// 变换其打开、关闭的状态
+        if (list[parentindex].item[Index].show) {// 如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
           for (let i = 0, len = list[parentindex].item.length; i < len; i++) {
             if (i != Index) {
-              list[parentindex].item[i].show = false;
+              list[parentindex].item[i].show = false
             }
           }
         }
-        this.setData({list});
+        this.setData({list})
       },
       attention() {
         let _this = this
@@ -377,10 +393,10 @@
                 icon: 'none',
                 duration: 1000
               })
-              _this.paramet_v = true,
-                _this.text = '取消关注',
-                _this.$apply()
-            } else{
+              _this.paramet_v = true
+              _this.text = '取消关注'
+              _this.$apply()
+            } else {
               _this.paramet_v = false
               _this.text = '关注'
               _this.$apply()
@@ -392,25 +408,24 @@
             }
           }
         })
-
       },
-      showInput () {
+      showInput() {
         this.inputShowed = true
       },
-      hideInput () {
+      hideInput() {
         this.inputVal = ''
         this.inputShowed = false
       },
-      clearInput () {
+      clearInput() {
         this.inputVal = ''
       },
-      inputTyping (e) {
+      inputTyping(e) {
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)
       },
-      tabClick (e) {
+      tabClick(e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
 //        if (this.activeIndex == '1') {
@@ -435,8 +450,11 @@
           success: ({code, data}) => {
             wx.reLaunch({url: '/pages/borrow'})
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
 
@@ -455,8 +473,11 @@
                 success: ({code, data}) => {
                   wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -482,8 +503,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }

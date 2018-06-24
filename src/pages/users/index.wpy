@@ -132,9 +132,10 @@
 
     onShow() {
       // 初始化页面数据
-       this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -172,17 +173,16 @@
       },
       gotoUser(type) {
         let url = ''
-        if(type == 'single'){
+        if (type == 'single') {
           url = '/pages/users/unmarri'
-        }else{
+        } else {
           url = '/pages/users/intro'
         }
         wx.navigateTo({url: url})
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

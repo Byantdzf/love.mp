@@ -62,16 +62,16 @@
       is_vip: false,
       nickName: '加载中...',
       hide: true,
-      background_image:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.gQ3fN9tq3sAdd04fbfe3c52016f8f0f70c0725a0d315.png',
-      background_imagev:'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.bcHoGXBnVuoHaedde8274680eaaacffdd9fa9b9b7a51.png',
+      background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.gQ3fN9tq3sAdd04fbfe3c52016f8f0f70c0725a0d315.png',
+      background_imagev: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.bcHoGXBnVuoHaedde8274680eaaacffdd9fa9b9b7a51.png',
       message: {},
       id: '',
       wechat_qrcode: '',
       list: [
         {
-          'name' : 'Angelababy',
-          'image' : 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'message' : '26岁/162cm/深圳',
+          'name': 'Angelababy',
+          'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
+          'message': '26岁/162cm/深圳',
           'six': 0
         }
       ]
@@ -89,6 +89,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -113,8 +114,11 @@
           self.wechat_qrcode = JSON.parse(data.wechat_qrcode)[0]
           self.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loaded = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
       })
     }
 
@@ -132,7 +136,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      conversion(item){
+      conversion(item) {
 //      wx.showToast({
 //        title: item.name,
 //        icon: 'success',
@@ -146,8 +150,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 

@@ -73,7 +73,7 @@
   export default class vipImage extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: "上传照片"
+      navigationBarTitleText: '上传照片'
     }
     data = {
       user: {
@@ -91,13 +91,13 @@
 
     onLoad(e) {
       console.log(this)
-      let that = this
+      // let that = this
       this.type_v = e.type
       this.uploadTitle = e.title
-      if(e.imageArr) {
+      if (e.imageArr) {
         this.photosList = e.imageArr.split(',')
       }
-      console.log( e.imageArr)
+      console.log(e.imageArr)
       console.log(this.photosList)
       setTimeout(() => {
         this.uploadTitle = e.title
@@ -121,17 +121,19 @@
       //   }
       // })
     }
+
     onShow() {
       this.$parent.getTracker(this.$root.$name, '上传' + this.uploadTitle)
     }
+
     methods = {
       deteleimage(index) {
-        console.log("all")
+        // console.log("all")
         let that = this
         wx.showModal({
           title: '提示',
           content: '是否确认删除该照片？',
-          success: function(res) {
+          success: function (res) {
             if (res.confirm) {
               console.log('用户点击确定')
               that.photosList.splice(index, 1)
@@ -156,8 +158,11 @@
                     duration: 1500
                   })
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loading = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loading = false
+                }
               })
             } else if (res.cancel) {
               console.log('用户点击取消')
@@ -260,8 +265,11 @@
                     delta: 1
                   })
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loading = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loading = false
+                }
               })
             }, 1000)
           }

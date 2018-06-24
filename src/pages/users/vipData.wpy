@@ -160,6 +160,7 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
@@ -171,6 +172,7 @@
     onPullDownRefresh() {
       this.getuser()
     }
+
     // 初始化页面数据
     initPageData() {
       this.$get({url: service.user}, {
@@ -180,10 +182,11 @@
         }
       })
     }
+
     getsalaries() {
       let that = this
       this.loading = true
-      this.$get({url: service.salaries }, {
+      this.$get({url: service.salaries}, {
         success: ({code, data}) => {
           that.salaries = data
           that.salaries.forEach(function (ele, index, array) {
@@ -192,10 +195,14 @@
           that.$apply()
           console.log(that.objectMultiArray)
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loading = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loading = false
+        }
       })
     }
+
     getuser() {
       let that = this
       this.loading = true
@@ -211,17 +218,21 @@
           }
           that.salary_id = that.profile_courtship.salary_id
           that.salaries.forEach(function (ele, index, array) {
-            if(that.salary_id == array[index].id){
+            if (that.salary_id == array[index].id) {
               console.log(index)
               that.salaryIndex = index
             }
           })
           that.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.loading = false }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loading = false
+        }
       })
     }
+
     methods = {
       gotofriends(item) {
         let url = ''
@@ -237,9 +248,9 @@
       },
       gotoUser(type) {
         let url = ''
-        if(type == 'single'){
+        if (type == 'single') {
           url = '/pages/users/unmarri'
-        }else{
+        } else {
           url = '/pages/users/intro'
         }
         wx.navigateTo({url: url})
@@ -281,8 +292,11 @@
 //              wx.switchTab({url: url})
 //            }, 1200)
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loading = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loading = false
+          }
         })
       },
       hrefing(type, title, imageArr) {
@@ -293,8 +307,7 @@
       }
     }
 
-    components = {
-    }
+    components = {}
   }
 </script>
 
