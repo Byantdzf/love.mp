@@ -4,14 +4,14 @@
       <image src="{{image}}" mode="aspectFill" class="image"></image>
     </view>
     <view >
-        <view class="paylist"  wx:for="{{paylist}}">
+        <view class="paylist">
               <view class="flo_l" >
-                <span  class="font_32 flo_l bold" style="margin-right: 22rpx;">{{item.code}}</span>
-                <span class="font_28">{{item.iv}}</span>
+                <span  class="font_32 flo_l bold" style="margin-right: 22rpx;">{{inviteData.user.name}}</span>
+                <span class="font_28">邀请你加入福恋，并替你升级为</span>
               </view>
-              <view class="flo_l orange bold" style="margin-left: 48rpx">{{item.name}}</view>
+              <view class="flo_l orange bold" style="margin-left: 48rpx">{{inviteData.rank.name}}</view>
               <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 62rpx;height: 62rpx" class="flo_l"></image>
-              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.message}}</view>
+              <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{inviteData.rank.content}}</view>
               <view class="clearfix"></view>
           <view class="clearfix"></view>
         </view>
@@ -39,11 +39,14 @@
     data = {
       user: {},
       is_vip: false,
-      nickName: '加载中...',
+      sharePay_id: '',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.1tLfwJxq23Oma0294409f50b26300af2046aefa10286.png',
       paylist: [
         {name: '市级VIP', money: '10元', code: '陈牧师', message: '特权：仅可添加本市的好友', iv: '邀请你加入福恋，并替你升级为'}
-      ]
+      ],
+      openid: '',
+      loading: false,
+      inviteData: {}
     }
     computed = {
       nickName() {
@@ -53,7 +56,7 @@
 
     onShow() {
       // 初始化页面数据
-      // this.initPageData()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -61,7 +64,8 @@
     }
 
     onLoad() {
-
+      this.sharePay_id = wx.getStorageSync('sharePay_id')
+      this.$apply()
     }
 
     onPullDownRefresh() {
@@ -70,7 +74,33 @@
 
     // 初始化页面数据
     initPageData() {
-      // console.log("刷新成功")
+      let self = this
+      self.$showLoading('加载中')
+      setTimeout(() => {
+        wx.hideLoading()
+      }, 800)
+      wepy.login({
+        success: (res) => {
+          let data = {
+            code: res.code
+          }
+          this.$get({url: service.invitee + '/' + self.sharePay_id, data}, {
+            success: ({code, data}) => {
+              self.inviteData = data.order
+              self.openid = data.openid
+              self.$apply()
+            },
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loaded = false
+            }
+          })
+        },
+        fail: (res) => {
+          self.$showToast('code获取失败')
+        }
+      })
     }
 
     methods = {
@@ -81,9 +111,27 @@
         console.log('radio发生change事件，携带value值为：', e.detail.value)
       },
       binding() {
-        wx.showToast({
-          title: '绑定成功！',
-          duration: 1500
+        var self = this,
+          data = {
+            other_openid: self.openid
+          }
+        self.$showLoading('处理中')
+        setTimeout(() => {
+          wx.hideLoading()
+        }, 800)
+        this.$post({url: service.inviteBind + '/' + self.sharePay_id, data}, {
+          success: ({code, data}) => {
+            wx.showToast({
+              title: '绑定成功！',
+              duration: 1500
+            })
+            setTimeout(() => {
+              wx.switchTab({url: '/pages/home/index'})
+            }, 1000)
+            self.$apply()
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
         })
       }
     }

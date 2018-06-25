@@ -4,42 +4,49 @@
       <view class="weui-cells_after-title">
         <view class="weui-cell user_back">
           <!--<navigator url="/pages/user/registerV2" >-->
-            <view class="userinfo clearfix">
-              <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
-              <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
-              <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover" @tap="gotofriends({{user}})"/>
-              <view class="userinfo-info">
-                <view class="userinfo-nickname font_32">
-                  {{ user.name }}
-                  <block wx:if="{{is_vip}}">
-                    <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
-                      <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                      <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
-                    </view>
-                  </block>
-                  <block wx:else>
-                    <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx" @tap="goto('/pages/users/upgradeVIP')">
-                      <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                      <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">会员</view>
-                    </view>
-                  </block>
-                </view>
-              </view>
-              <view class="flo_r font_26 white" @tap="gotoUser({{user.type}})">
-                <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; " ></image>
-                <view style="margin-top: 5rpx"class="flo_r" >完善个人资料，让更多的人认识你</view>
-              </view>
-              <view class="message" @tap="goto('/pages/users/myNews')">
-                <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r" style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
-                <view class="message_red" wx:if="{{user.new_notice_count}}"></view>
+          <view class="userinfo clearfix">
+            <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
+            <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
+            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"
+                   @tap="gotofriends({{user}})"/>
+            <view class="userinfo-info">
+              <view class="userinfo-nickname font_32">
+                {{ user.name }}
+                <block wx:if="{{is_vip}}">
+                  <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
+                    <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                           class="flo_l"></image>
+                    <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">非会员</view>
+                  </view>
+                </block>
+                <block wx:else>
+                  <view class="orange font_26 text-center flo_r menber" style="width: 76rpx"
+                        @tap="goto('/pages/users/upgradeVIP')">
+                    <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                           class="flo_l"></image>
+                    <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">会员</view>
+                  </view>
+                </block>
               </view>
             </view>
+            <view class="flo_r font_26 white" @tap="gotoUser({{user.type}})">
+              <image src="../../images/icon/edit_red.png" mode="aspectFill" class="flo_r"
+                     style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
+              <view style="margin-top: 5rpx" class="flo_r">完善个人资料，让更多的人认识你</view>
+            </view>
+            <view class="message" @tap="goto('/pages/users/myNews')">
+              <image src="../../images/icon/message.png" mode="aspectFill" class="flo_r"
+                     style="width: 48rpx;height: 48rpx;margin:0 -6rpx 0 12rpx; "></image>
+              <view class="message_red" wx:if="{{user.new_notice_count}}"></view>
+            </view>
+          </view>
           <!--</navigator>-->
         </view>
       </view>
     </view>
     <view style="background: white;width: 100%;height: 100rpx;padding: 8rpx 0">
-      <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=attention')">
+      <view style="width: 33%;height: 100%;" class="text-center flo_l"
+            @tap="goto('/pages/users/friendlist?type=attention')">
         <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.follow_count}}</view>
         <view class=" font_26">关注</view>
       </view>
@@ -47,7 +54,8 @@
         <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.fans_count}}</view>
         <view class=" font_26">粉丝</view>
       </view>
-      <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=friend')">
+      <view style="width: 33%;height: 100%;" class="text-center flo_l"
+            @tap="goto('/pages/users/friendlist?type=friend')">
         <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.friend_count}}</view>
         <view class=" font_26">好友</view>
       </view>
@@ -56,46 +64,56 @@
     <view class="weui-cells weui-cells_after-title">
       <navigator url="/pages/users/integral" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/order.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/order.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">我的福分</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">福分商城</view>
       </navigator>
       <navigator url="/pages/users/myGift" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/gift.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/gift.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">我的礼物</view>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </navigator>
       <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/text1.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">VIP设置</view>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </navigator>
       <navigator url="/pages/users/myPay" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/pay.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">我的订单</view>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <view  class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/service.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/service.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
-        <button  class="btn weui-cell__bd" open-type="feedback" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>意见反馈</button>
+        <button class="btn weui-cell__bd" open-type="feedback" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>
+          意见反馈
+        </button>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </view>
-      <view  class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <image src="../../images/icon/share.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../images/icon/share.png"
+                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
-        <button  class="btn weui-cell__bd" open-type="share" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>分享给好友</button>
+        <button class="btn weui-cell__bd" open-type="share" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>
+          分享给好友
+        </button>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </view>
     </view>

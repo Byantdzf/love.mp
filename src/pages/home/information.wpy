@@ -2,56 +2,61 @@
   <view class="navbar borrow">
     <view class="page__bd">
       <view class="weui-tab">
-          <view class="weui-tab__content" >
-            <view>
-              <image src="{{background_image}}" mode="aspectFit"   style="width: 100%;height: 384rpx;" class=""></image>
-            </view>
-            <view class="page__bd "  wx:for="{{user}}" wx:key="*this" style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
-              <view class="flo_l weui-cell__hd" >
-                <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
-              </view>
-              <view class="flo_l" style="margin-top: 26rpx">
-                <view  class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
-                  {{mylibs.name}}
-                </view>
-                <view class="orange font_26 text-center flo_l menber"  style="width: 68rpx">
-                  <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                  <view style="font-size: 26rpx;line-height: 32rpx;"class="flo_r black_6 ">{{mylibs.profile_courtship.age}}</view>
-                </view>
-                <block wx:if="{{is_vip}}">
-                  <view class="orange font_26 text-center flo_r menber">
-                    <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                    <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
-                  </view>
-                </block>
-                <block wx:else>
-                  <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
-                    <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                    <view style="font-size: 20rpx;margin-top: 0rpx"class="flo_r">会员</view>
-                  </view>
-                </block>
-              </view>
-              <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
-                {{item.distance}}
-                <span>{{item.time}}</span>
-              </view>
-              <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
-                由Byant推荐加入福恋
-              </view>
-              <view  class="font_32 white flo_r atten_btn">
-                <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
-                  ...
-                </picker>
-              </view>
-              <view  class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}"  @tap="attention">
-                {{text}}
-              </view>
-            </view>
-            <view class="clearfloat"></view>
+        <view class="weui-tab__content">
+          <view>
+            <image src="{{background_image}}" mode="aspectFit" style="width: 100%;height: 384rpx;" class=""></image>
           </view>
+          <view class="page__bd " wx:for="{{user}}" wx:key="*this"
+                style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
+            <view class="flo_l weui-cell__hd">
+              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+                     style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+            </view>
+            <view class="flo_l" style="margin-top: 26rpx">
+              <view class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
+                {{mylibs.name}}
+              </view>
+              <view class="orange font_26 text-center flo_l menber" style="width: 68rpx">
+                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                       class="flo_l"></image>
+                <view style="font-size: 26rpx;line-height: 32rpx;" class="flo_r black_6 ">{{mylibs.profile_courtship.age}}</view>
+              </view>
+              <block wx:if="{{is_vip}}">
+                <view class="orange font_26 text-center flo_r menber">
+                  <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                         class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">非会员</view>
+                </view>
+              </block>
+              <block wx:else>
+                <view class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                  <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                         class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 0rpx" class="flo_r">会员</view>
+                </view>
+              </block>
+            </view>
+            <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
+              {{item.distance}}
+              <span>{{item.time}}</span>
+            </view>
+            <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
+              由Byant推荐加入福恋
+            </view>
+            <view class="font_32 white flo_r atten_btn">
+              <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
+                ...
+              </picker>
+            </view>
+            <view class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}" @tap="attention">
+              {{text}}
+            </view>
+          </view>
+          <view class="clearfloat"></view>
         </view>
       </view>
     </view>
+  </view>
   <view class="font_32 wx_Title orange">基本资料</view>
   <view class="booklist  font_28">
     <view style="margin: 0 44rpx;" class="wx_Title">
@@ -114,54 +119,65 @@
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.photos.length}}张</view>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title" wx:if="{{profile_courtship.photos.length}} != 0">
-      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.photos}} )" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.photos}}" wx:key="*this"></image>
+      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.photos}} )" mode="aspectFit"
+             style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.photos}}"
+             wx:key="*this"></image>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title orange">
       <span>身份证</span>
-      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.identification_photos.length}}张</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.identification_photos.length}}张
+      </view>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title" wx:if="{{profile_courtship.identification_photos.length}} != 0">
-      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.identification_photos}} )" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.identification_photos}}" wx:key="*this"></image>
+      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.identification_photos}} )" mode="aspectFit"
+             style="width: 120rpx;height: 120rpx;margin-right: 12rpx"
+             wx:for="{{profile_courtship.identification_photos}}" wx:key="*this"></image>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title orange">
       <span>毕业证</span>
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.graduate_photos.length}}张</view>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title" wx:if="{{profile_courtship.graduate_photos.length}} != 0">
-      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.graduate_photos}} )" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.graduate_photos}}" wx:key="*this"></image>
+      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.graduate_photos}} )" mode="aspectFit"
+             style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.graduate_photos}}"
+             wx:key="*this"></image>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title orange">
       <span>其他证件</span>
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.other_photos.length}}张</view>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title" wx:if="{{profile_courtship.other_photos.length}} != 0">
-      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.other_photos}} )" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.other_photos}}" wx:key="*this"></image>
+      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.other_photos}} )" mode="aspectFit"
+             style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.other_photos}}"
+             wx:key="*this"></image>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title orange">
       <span>微信二维码</span>
       <view class="weui-cell__ft weui-cell__ft_in-access flo_r">{{profile_courtship.wechat_qrcode.length}}张</view>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title" wx:if="{{profile_courtship.wechat_qrcode.length}} != 0">
-      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.wechat_qrcode}} )" mode="aspectFit"   style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.wechat_qrcode}}" wx:key="*this"></image>
+      <image src="{{item}}" @tap="previewImage({{item}},{{profile_courtship.wechat_qrcode}} )" mode="aspectFit"
+             style="width: 120rpx;height: 120rpx;margin-right: 12rpx" wx:for="{{profile_courtship.wechat_qrcode}}"
+             wx:key="*this"></image>
     </view>
   </view>
-    <view class='list_box' wx:for='{{list}}' wx:key='this' wx:for-item='parentItem' wx:for-index='parentIndex'>
-      <view class='list'>
-        <view class='list_name_box' @tap='listTap' data-parentindex='{{parentIndex}}'>
-          <text class='list_item_name orange'>{{parentItem.listName}}</text>
-          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-        </view>
-        <view class='list_item_box' wx:if='{{parentItem.show}}'>
-          <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
-                data-parentindex='{{parentIndex}}'>
-            <view class='list_item_name_box' @tap="showModal('{{item.itemName}}')">
-              <text class='list_item_name'>{{item.itemName}}</text>
-              <view class="weui-cell__ft weui-cell__ft_in-access">{{item.content}}</view>
-            </view>
+  <view class='list_box' wx:for='{{list}}' wx:key='this' wx:for-item='parentItem' wx:for-index='parentIndex'>
+    <view class='list'>
+      <view class='list_name_box' @tap='listTap' data-parentindex='{{parentIndex}}'>
+        <text class='list_item_name orange'>{{parentItem.listName}}</text>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+      <view class='list_item_box' wx:if='{{parentItem.show}}'>
+        <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
+              data-parentindex='{{parentIndex}}'>
+          <view class='list_item_name_box' @tap="showModal('{{item.itemName}}')">
+            <text class='list_item_name'>{{item.itemName}}</text>
+            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.content}}</view>
           </view>
         </view>
       </view>
     </view>
+  </view>
   <view class="font_32 wx_Title orange">Ta的优势</view>
   <view class="booklist  font_28">
     <view style="margin: 0 44rpx;" class="wx_Title text-center orange">
@@ -169,24 +185,26 @@
       <span>点击查看</span>
     </view>
   </view>
-    <view style="height: 35rpx;width: 100%"></view>
-    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友</view>
-      <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
-      <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物</view>
-      <view class="clearfloat"></view>
+  <view style="height: 35rpx;width: 100%"></view>
+  <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
+    <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友
     </view>
-    <block wx:if="{{loading}}">
-      <view class="weui-loadmore">
-        <!--<view class="weui-loading"></view>-->
-        <view class="weui-loadmore__tips">正在加载</view>
-      </view>
-    </block>
-    <block wx:if="{{noMore}}">
-      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
-        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
-      </view>
-    </block>
+    <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
+    <view class="btn_red flo_l" style="margin-top: -8rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
+    </view>
+    <view class="clearfloat"></view>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <!--<view class="weui-loading"></view>-->
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
   </view>
 </template>
 
@@ -378,14 +396,14 @@
 //         complete: () => { this.loaded = false }
 //       })
     }
-//让所有的展开项，都变为收起
+// 让所有的展开项，都变为收起
     packUp(data, index) {
       for (let i = 0, len = data.length; i < len; i++) {
-        //其他最外层列表变为关闭状态
+        // 其他最外层列表变为关闭状态
         if (index != i) {
           data[i].show = false
           for (let j = 0; j < data[i].item.length; j++) {
-            //其他所有内层也为关闭状态
+            // 其他所有内层也为关闭状态
             data[i].item[j].show = false
           }
         }
@@ -448,7 +466,7 @@
           })
         }
       },
-      //预览图片
+      // 预览图片
       previewImage(image, array) {
         wx.previewImage({
           current: image, // 当前显示图片的http链接
@@ -466,25 +484,25 @@
       listTap(e) {
         console.log('触发了最外层')
         let Index = e.currentTarget.dataset.parentindex,
-          //获取点击的下标值
+          // 获取点击的下标值
           list = this.data.list
         list[Index].show = !list[Index].show || false
-        //变换其打开、关闭的状态
-//        if (list[Index].show){//如果点击后是展开状态，则让其他已经展开的列表变为收起状态
+        // 变换其打开、关闭的状态
+//        if (list[Index].show){// 如果点击后是展开状态，则让其他已经展开的列表变为收起状态
 //          this.packUp(list,Index);
 //        }
         this.setData({
           list
         })
       },
-      //点击里面的子列表展开收起
+      // 点击里面的子列表展开收起
       listItemTap(e) {
-        let parentindex = e.currentTarget.dataset.parentindex,//点击的内层所在的最外层列表下标
-          Index = e.currentTarget.dataset.index,//点击的内层下标
-          list = this.data.list;
-        console.log(list[parentindex].item, Index);
-        list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false;//变换其打开、关闭的状态
-        if (list[parentindex].item[Index].show) {//如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
+        let parentindex = e.currentTarget.dataset.parentindex, // 点击的内层所在的最外层列表下标
+          Index = e.currentTarget.dataset.index, // 点击的内层下标
+          list = this.data.list
+        console.log(list[parentindex].item, Index)
+        list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false // 变换其打开、关闭的状态
+        if (list[parentindex].item[Index].show) { // 如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
           for (let i = 0, len = list[parentindex].item.length; i < len; i++) {
             if (i != Index) {
               list[parentindex].item[i].show = false

@@ -3,8 +3,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
- var host = 'https://love.ufutx.com/api',
-// var host = 'http://love.hankin.com/api',
+//  var host = 'https://love.ufutx.com/api',
+var host = 'http://love.hankin.com/api',
     book = 'http://scraper.hankin.ufutx.cn/api',
     party= 'https://party.ufutx.com/api'
 export const service = {
@@ -84,6 +84,10 @@ export const service = {
     exchange: `${host}/exchange/goods`,
     //替人支付
     charge: `${host}/member/charge`,
+    //被邀请者
+    invitee: `${host}/invite/order`,
+    //被邀请者绑定
+    inviteBind: `${host}/use/invite/order`,
     // 重发接口
     reset: `${host}/reset/parties`,
     // 图书上传

@@ -112,7 +112,8 @@ export default class baseMixin extends wepy.mixin {
   }
   $showLoading(title){
     wx.showLoading({
-       title: title
+      title: title,
+      mask: true
     })
   }
   // 警告框

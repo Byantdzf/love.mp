@@ -2,37 +2,42 @@
   <view class="navbar borrow">
     <view class="page__bd">
       <view class="weui-tab">
-          <view class="weui-tab__content" >
-            <view class="page__bd "  >
-              <view class="flo_l borrowlist">
-                <view class="flo_l weui-cell__hd" >
-                  <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+        <view class="weui-tab__content">
+          <view class="page__bd ">
+            <view class="flo_l borrowlist">
+              <view class="flo_l weui-cell__hd">
+                <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+                       style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+              </view>
+              <view class="flo_l" style="width: 78%;position: relative">
+                <view class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
+                  <image
+                    src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.eBuZm4ON1h3P1571d3256087f83cf7d3fc3ceec0be5c.png"
+                    mode="aspectFit" style="width: 350rpx;height: 300rpx;" class="flo_l"></image>
                 </view>
-                <view class="flo_l" style="width: 78%;position: relative">
-                  <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.eBuZm4ON1h3P1571d3256087f83cf7d3fc3ceec0be5c.png" mode="aspectFit"style="width: 350rpx;height: 300rpx;" class="flo_l"></image>
-                  </view>
-                  <view style="width: 350rpx;height: 300rpx;">
-                    <view class="orange bold" style="position: absolute ;left: 40rpx;top: 64rpx;"> hi</view>
-                    <view class="black_6 font_24 flo_l" style="position: absolute ;left: 64rpx;top: 100rpx;width: 250rpx;">
-                      <view style="padding-left: 52rpx;width: 80%" class="ellipsis_1">
-                        我叫
-                        <span class="orange bold font_28">{{mylibs.name}}</span>
-                      </view>
-                      <text>感谢你加我为好友，请回复几个问题！</text>
+                <view style="width: 350rpx;height: 300rpx;">
+                  <view class="orange bold" style="position: absolute ;left: 40rpx;top: 64rpx;"> hi</view>
+                  <view class="black_6 font_24 flo_l"
+                        style="position: absolute ;left: 64rpx;top: 100rpx;width: 250rpx;">
+                    <view style="padding-left: 52rpx;width: 80%" class="ellipsis_1">
+                      我叫
+                      <span class="orange bold font_28">{{mylibs.name}}</span>
                     </view>
+                    <text>感谢你加我为好友，请回复几个问题！</text>
                   </view>
                 </view>
               </view>
             </view>
-            <view class="clearfloat"></view>
-            <view class="issue text-center">
-              <view class="font_28" wx:for="{{list}}" wx:key="*this">
-                <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">{{item.questions}}</view>
-                <view class="text-center">
-                  <input class="wx-input" style="margin: 22rpx auto" @blur="valueChange({{index}})" value="{{item.value}}" placeholder="请输入" />
-                </view>
+          </view>
+          <view class="clearfloat"></view>
+          <view class="issue text-center">
+            <view class="font_28" wx:for="{{list}}" wx:key="*this">
+              <view class="flo_l" style="margin-top: 14rpx;margin-right: 48rpx;">{{item.questions}}</view>
+              <view class="text-center">
+                <input class="wx-input" style="margin: 22rpx auto" @blur="valueChange({{index}})" value="{{item.value}}"
+                       placeholder="请输入"/>
               </view>
+            </view>
             <view class="btn_red font_28" style="margin: auto" @tap="addfriend">添加好友</view>
           </view>
         </view>

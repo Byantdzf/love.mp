@@ -118,6 +118,7 @@
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {
             that.trade_no = data.invite_order.trade_no
+            wx.setStorageSync('sharePay_id', data.invite_order.id)
             that.$apply()
             let wxconfig = data.order_pay.wx_pay.config
 //            wx.config(JSON.parse(response.data.data.order.wx_pay.js));

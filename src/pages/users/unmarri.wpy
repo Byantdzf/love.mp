@@ -49,7 +49,7 @@
     <input type="number" placeholder="输入您的体重（kg）" class="Inp"   @blur="typing('weight')" value="{{weight}}" focus="{{WeightFocus}}"/>
     </view>
     <view  class="list ">
-      <picker  mode = region value="{{region}}"  bindchange="cityChange" >
+      <picker  mode = 'region' value="{{region}}"  bindchange="cityChange" >
         <view class="picker">
           城市
           <text class="text">{{region[0]}},{{region[1]}}</text>
@@ -65,7 +65,7 @@
       </picker>
     </view>
     <view  class="list ">
-      <picker  mode = region value="{{region_id}}"  bindchange="region_idChange" >
+      <picker  mode = 'region' value="{{region_id}}"  bindchange="region_idChange" >
         <view class="picker">
           户口地
           <text class="text">{{region_id[1]}}</text>
@@ -191,7 +191,7 @@
           housing: ['无', '有'],
           housingIndex: 0,
           region: ['广东省', '广州市'],
-          region_id: [''],
+          region_id: [],
           birthday: '1990-01-01',
           user: {
             avatarUrl: '',

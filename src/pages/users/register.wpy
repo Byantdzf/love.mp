@@ -210,7 +210,7 @@
       })
     }
 
-    do_register(type) {
+    doRegister(type) {
       // 防抖
       console.log(type)
       if (this.loading) return
@@ -300,7 +300,7 @@
           this.encryptedData = e.detail.encryptedData
           this.iv = e.detail.iv
           this.$apply()
-          this.do_register(type)
+          this.doRegister(type)
           // 用户按了允许授权按钮
         } else {
           // 用户按了拒绝按钮

@@ -2,32 +2,37 @@
   <view class="navbar borrow">
     <view class="page__bd">
       <view class="weui-tab">
-        <view class="weui-tab__content" >
+        <view class="weui-tab__content">
           <view>
-            <image src="{{background_image}}" mode="aspectFit"   style="width: 100%;height: 384rpx;" class=""></image>
+            <image src="{{background_image}}" mode="aspectFit" style="width: 100%;height: 384rpx;" class=""></image>
           </view>
-          <view class="page__bd "  wx:for="{{user}}" wx:key="*this" style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
-            <view class="flo_l weui-cell__hd" >
-              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"   style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
+          <view class="page__bd " wx:for="{{user}}" wx:key="*this"
+                style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
+            <view class="flo_l weui-cell__hd">
+              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+                     style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
             </view>
             <view class="flo_l" style="margin-top: 26rpx">
-              <view  class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
+              <view class="font_28 flo_l white ellipsis_1 bold" style="margin-left: 22rpx;">
                 {{mylibs.name}}
               </view>
-              <view class="orange font_26 text-center flo_l menber"  style="width: 68rpx">
-                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                <view style="font-size: 26rpx;line-height: 32rpx;"class="flo_r black_6 ">{{mylibs.age}}</view>
+              <view class="orange font_26 text-center flo_l menber" style="width: 68rpx">
+                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                       class="flo_l"></image>
+                <view style="font-size: 26rpx;line-height: 32rpx;" class="flo_r black_6 ">{{mylibs.age}}</view>
               </view>
               <block wx:if="{{is_vip}}">
                 <view class="orange font_26 text-center flo_r menber">
-                  <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                  <view style="font-size: 20rpx;margin-top: 8rpx"class="flo_r">非会员</view>
+                  <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                         class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">非会员</view>
                 </view>
               </block>
               <block wx:else>
-                <view  class="orange font_26 text-center flo_r menber" style="width: 76rpx">
-                  <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
-                  <view style="font-size: 20rpx;margin-top: 0rpx"class="flo_r">会员</view>
+                <view class="orange font_26 text-center flo_r menber" style="width: 76rpx">
+                  <image src="../../images/icon/vip_active.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                         class="flo_l"></image>
+                  <view style="font-size: 20rpx;margin-top: 0rpx" class="flo_r">会员</view>
                 </view>
               </block>
             </view>
@@ -38,12 +43,12 @@
             <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
               由Byant推荐加入福恋
             </view>
-            <view  class="font_32 white flo_r atten_btn">
+            <view class="font_32 white flo_r atten_btn">
               <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
                 ...
               </picker>
             </view>
-            <view  class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}"  @tap="attention">
+            <view class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}" @tap="attention">
               {{text}}
             </view>
           </view>
@@ -54,10 +59,10 @@
   </view>
   <!--<view class="font_32 wx_Title orange">Ta的人脉</view>-->
   <!--<view class="font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">-->
-    <!--<view class="btn_red flo_l" style="margin-left: 24rpx" @tap="goto('/pages/home/addFriend')">介绍人</view>-->
-    <!--<view class="btn_red flo_l" @tap="goto('/pages/home/swopWeChat')">单身男</view>-->
-    <!--<view class="btn_red flo_l" style="margin-top: 0rpx"  @tap="goto('/pages/home/giveGift')">单身女</view>-->
-    <!--<view class="clearfloat"></view>-->
+  <!--<view class="btn_red flo_l" style="margin-left: 24rpx" @tap="goto('/pages/home/addFriend')">介绍人</view>-->
+  <!--<view class="btn_red flo_l" @tap="goto('/pages/home/swopWeChat')">单身男</view>-->
+  <!--<view class="btn_red flo_l" style="margin-top: 0rpx"  @tap="goto('/pages/home/giveGift')">单身女</view>-->
+  <!--<view class="clearfloat"></view>-->
   <!--</view>-->
   <view class="font_32 wx_Title orange">基本资料</view>
   <view class="booklist  font_28">
@@ -81,9 +86,11 @@
     </view>
   </view>
   <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-    <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友</view>
+    <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友
+    </view>
     <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
-    <view class="btn_red flo_l" style="margin-top: -8rpx"  @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物</view>
+    <view class="btn_red flo_l" style="margin-top: -8rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
+    </view>
     <view class="clearfloat"></view>
   </view>
   <block wx:if="{{loading}}">
@@ -273,10 +280,10 @@
 
 // 让所有的展开项，都变为收起
     packUp(data, index) {
-      for (let i = 0, len = data.length; i < len; i++) {// 其他最外层列表变为关闭状态
+      for (let i = 0, len = data.length; i < len; i++) { // 其他最外层列表变为关闭状态
         if (index != i) {
           data[i].show = false
-          for (let j = 0; j < data[i].item.length; j++) {// 其他所有内层也为关闭状态
+          for (let j = 0; j < data[i].item.length; j++) { // 其他所有内层也为关闭状态
             data[i].item[j].show = false
           }
         }
@@ -374,7 +381,7 @@
           list = this.data.list
         // console.log(list[parentindex].item, Index);
         list[parentindex].item[Index].show = !list[parentindex].item[Index].show || false// 变换其打开、关闭的状态
-        if (list[parentindex].item[Index].show) {// 如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
+        if (list[parentindex].item[Index].show) { // 如果是操作的打开状态，那么就让同级的其他列表变为关闭状态，保持始终只有一个打开
           for (let i = 0, len = list[parentindex].item.length; i < len; i++) {
             if (i != Index) {
               list[parentindex].item[i].show = false

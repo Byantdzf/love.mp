@@ -121,8 +121,8 @@
               method: 'get',
               data: data,
               success: function (res) {
-                let is_register = res.data.data.is_register
-                if (is_register == 1) {
+                let isRregister = res.data.data.is_register
+                if (isRregister == 1) {
                   wepy.login({
                     success: (res) => {
                       let codeV = res.code
