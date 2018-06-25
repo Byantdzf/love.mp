@@ -35,7 +35,6 @@
         'pages/users/myPay',
         'pages/users/myNews',
         'pages/users/friendlist',
-        'pages/users/list',
         'pages/users/examineWeChat',
         'pages/users/auditFriend',
         'pages/users/intro',
