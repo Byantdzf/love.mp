@@ -2,7 +2,7 @@
   <view class="map">
     <!--<Message :title.sync="title" ></Message>-->
     <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="14" markers="{{markers}}" @markertap="markertap"
-         @regionchange="regionchange" show-location style="width: 100%; height: {{height}};">
+         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};">
       <cover-view class='btn' @tap="showModal_v"
                   style="background: white;width: 580rpx;position: absolute;right: 8%;top: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3">
         <cover-image src='../../images/icon/share_active.png' bindtap="showModal_v" class='ten_l flo_l'
@@ -69,17 +69,47 @@
         </cover-view>
       </cover-view>
       <!--<cover-view class="commodity_screen" @tap="saveImage" wx:if="{{showModal}}"></cover-view>-->
-      <cover-view animation="{{animationImage}}" class="commodity_attr_box text-center" wx:if="{{showModal}}"
-                  style="background: none !important;height: 100% !important;">
-        <cover-image style="position: relative;left: 10%;top:10%"
-                     src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"
-                     class="shaerImage"></cover-image>
-        <cover-view
-          style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"
-          @tap.stop="saveImage('save')">保存
-        </cover-view>
-      </cover-view>
+      <!--<cover-view animation="{{animationImage}}" class="commodity_attr_box text-center" wx:if="{{showModal}}"-->
+                  <!--style="background: none !important;height: 100% !important;">-->
+        <!--<cover-image style="position: relative;left: 0%;top:10%"-->
+                     <!--src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"-->
+                     <!--class="shaerImage"></cover-image>-->
+        <!--<cover-view-->
+          <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
+          <!--@tap.stop="saveImage('save')">保存-->
+        <!--</cover-view>-->
+      <!--</cover-view>-->
     </map>
+    <modal  hidden="{{showImage}}"
+            confirm-text="保存"
+            cancel-text="取消"
+            bindconfirm="saveImage('save')"
+            bindcancel="listenerCancel">
+      <image style="position: relative;left: -3%;top:0%;box-shadow: 1rpx 1rpx 12rpx #d3d3d3;"
+                   src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"
+                   class="shaerImage"></image>
+      <!--<view style="position: absolute;left: 40%;bottom: 0;background: #FAFAFC; z-index: 999999;">-->
+        <!--<cover-view-->
+          <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
+          <!--@tap.stop="saveImage('save')">保存-->
+        <!--</cover-view>-->
+      <!--</view>-->
+    </modal>
+    <modal  hidden="{{showOpenSet}}"
+            no-confirm
+            no-cancel>
+      <view>需要你授权才能保存到相册哦！</view>
+      <view style="position: absolute;left: 10%;bottom: 0;background: #FAFAFC; z-index: 999999;">
+        <button class="btn orange" style="width: 100%;height: 82rpx;padding:0 86rpx;" open-type="openSetting" @opensetting="hideOpenSet">
+          取消
+        </button>
+      </view>
+      <view style="position: absolute;left: 46%;bottom: 0;background: #FAFAFC; z-index: 999999;">
+        <button class="btn orange" style="width: 100%;height: 82rpx;padding:0 86rpx;" open-type="openSetting" @opensetting="openSetting">
+          打开设置
+        </button>
+      </view>
+    </modal>
     <modal class="modal" hidden="{{hide}}" title="提示" no-cancel no-confirm>
       <cover-view class="text-center font_32">不授权将无法查看地图哦！</cover-view>
       <cover-view style="position: absolute;left: 40%;bottom: 0;background: #FAFAFC; z-index: 999999;">
@@ -122,12 +152,15 @@
       height: '',
       showModalStatus: false,
       showModal: false,
+      showImage: true,
+      showOpenSet: true,
       url: '',
       hide: true,
       showfriend: false,
       friends: [],
       animation: [],
       animationData: {},
+      showMap: true,
       animationImage: {}
     }
     components = {
@@ -188,11 +221,12 @@
         url: service.near_single,
         data: {
           location_latitude: myLat,
-          location_longitude: myLong
+          location_longitude: myLong,
+          nopage: 1
         }
       }, {
         success: ({code, data}) => {
-          that.nearFriends = data.data
+          that.nearFriends = data
           let markersNew = []
           that.nearFriends.forEach((item, index, arr) => {
             markersNew.push(
@@ -445,9 +479,25 @@
         }
       })
     }
-    showImage() {
-      // 显示遮罩层
-      this.showModal = true
+//    showImage() {
+//      // 显示遮罩层
+//      this.showModal = true
+//      this.showMap = false
+//      this.$apply()
+//    }
+    writePhotosAlbum() {
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success() {
+                wx.startRecord()
+              }
+            })
+          }
+        }
+      })
     }
     methods = {
       shareFriend() {
@@ -455,6 +505,9 @@
         setTimeout(() => {
           wx.hideLoading()
         }, 200)
+        this.showMap = false
+        this.showImage = false
+        this.$apply()
         var animation = wx.createAnimation({
           duration: 200,
           timingFunction: 'linear',
@@ -469,22 +522,22 @@
           this.showModalStatus = false
           this.$apply()
         }.bind(this), 200)
-        this.showImage()
-//        var animation = wx.createAnimation({
-//          duration: 200,
-//          timingFunction: 'linear',
-//          delay: 0
-//        })
-        this.animation = animation
-        animation.translateY(300).step()
-        this.animationImage = animation.export()
-        this.showModalStatus = true
-        this.$apply()
-        setTimeout(function() {
-          animation.translateY(0).step()
-          this.animationData = animation.export()
-          this.$apply()
-        }.bind(this), 200)
+//        this.showImage()
+////        var animation = wx.createAnimation({
+////          duration: 200,
+////          timingFunction: 'linear',
+////          delay: 0
+////        })
+//        this.animation = animation
+//        animation.translateY(300).step()
+//        this.animationImage = animation.export()
+//        this.showModalStatus = true
+//        this.$apply()
+//        setTimeout(function() {
+//          animation.translateY(0).step()
+//          this.animationData = animation.export()
+//          this.$apply()
+//        }.bind(this), 200)
       },
       saveImage(type) {
         var that = this
@@ -498,18 +551,24 @@
             url: 'http://pic.qiantucdn.com/images/banner/5b2cabd9084e0.jpg',
             success: (res) => {
               console.log(res)
-              that.$showLoading('下载中...')
               wepy.saveImageToPhotosAlbum({
                 filePath: res.tempFilePath,
                 success: (res) => {
-                  wx.hideLoading()
                   wx.showModal({
                     title: '下载成功',
                     content: '下载成功'
                   })
                 },
                 fail: () => {
-                  that.$showToast('下载失败')
+                  wx.getSetting({
+                    success(res) {
+                      if (!res.authSetting['scope.writePhotosAlbum']) {
+                        that.showImage = true
+                        that.showOpenSet = false
+                        that.$apply()
+                      }
+                    }
+                  })
                 }
               })
             },
@@ -529,20 +588,20 @@
 //             duration: 1500
 //          })
         }
-        var animation = wx.createAnimation({
-          duration: 200,
-          timingFunction: 'linear',
-          delay: 0
-        })
-        this.animation = animation
-        animation.translateY(300).step()
-        this.animationImage = animation.export()
-        setTimeout(function () {
-          animation.translateY(0).step()
-          this.animationImage = animation.export()
-          this.showModal = false
-          this.$apply()
-        }.bind(this), 200)
+//        var animation = wx.createAnimation({
+//          duration: 200,
+//          timingFunction: 'linear',
+//          delay: 0
+//        })
+//        this.animation = animation
+//        animation.translateY(300).step()
+//        this.animationImage = animation.export()
+//        setTimeout(function () {
+//          animation.translateY(0).step()
+//          this.animationImage = animation.export()
+//          this.showModal = false
+//          this.$apply()
+//        }.bind(this), 200)
       },
       showModal_v() {
         // 显示遮罩层
@@ -646,6 +705,12 @@
           // })
 //        }
       },
+      listenerCancel() {
+        this.showImage = true
+        this.showMap = true
+        console.log("kasjdkljasdkl")
+        this.$apply()
+      },
       openSetting(e) {
         let that = this
         this.hide = false
@@ -656,6 +721,7 @@
             altitude: true,
             type: 'gcj02',
             success: function (res) {
+              that.hide = true
               that.myLat = res.latitude
               that.myLong = res.longitude
               that.$apply()
@@ -667,11 +733,6 @@
             }
           })
         }
-        wepy.openSetting({
-          success: (res) => {
-
-          }
-        })
       },
       markertap(e) {
         console.log(e.markerId)
