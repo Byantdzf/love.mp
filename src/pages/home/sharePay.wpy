@@ -45,6 +45,7 @@
       type: '',
       pay_id: '',
       trade_no: '',
+      invite_order_id: '',
       image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.NnjWht2GdeEJeeba993da0e3990539ae56f5c2f74cdf.png',
       paylist: [
         {name: '市级VIP', money: '10', message: '特权：仅可添加本市的好友', checked: 'true'},
@@ -118,8 +119,16 @@
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {
             that.trade_no = data.invite_order.trade_no
+            that.invite_order_id = data.invite_order.id
             wx.setStorageSync('sharePay_id', data.invite_order.id)
             that.$apply()
+            that.$get({url: service.invitee + '/' + that.invite_order_id + '/share/pic'}, {
+              success: ({code, data}) => {
+                debugger
+              },
+              fail: ({code, data}) => {},
+              complete: () => {}
+            })
             let wxconfig = data.order_pay.wx_pay.config
 //            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
             wx.requestPayment({
@@ -131,6 +140,13 @@
               success: function (res) {
                 that.$post({url: service.orderpay + '/' + that.trade_no}, {
                   success: ({code, data}) => {
+//                    that.$post({url: service.invitee + '/' + that.invite_order_id + '/share/pic'}, {
+//                      success: ({code, data}) => {
+//                        debugger
+//                      },
+//                      fail: ({code, data}) => {},
+//                      complete: () => {}
+//                    })
                     wx.showToast({
                       title: '支付成功',
                       duration: 2000

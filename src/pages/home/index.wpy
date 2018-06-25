@@ -178,60 +178,60 @@
     }
 
     updataMap() {
-      let token = wx.getStorageSync('token')
+//      let token = wx.getStorageSync('token')
       let myLong = wx.getStorageSync('myLong')
       let myLat = wx.getStorageSync('myLat')
 //      if (token) {
 //        console.log(token)
-        let that = this
-        that.$get({
-          url: service.near_single,
-          data: {
-            location_latitude: myLat,
-            location_longitude: myLong
-          }
-        }, {
-          success: ({code, data}) => {
-            that.nearFriends = data.data
-            let markersNew = []
-            that.nearFriends.forEach((item, index, arr) => {
-              markersNew.push(
-                {
-                  iconPath: '../../images/icon/icon-position.png',
-                  id: item.id,
-                  latitude: item.location_latitude,
-                  longitude: item.location_longitude,
-                  name: item.name,
-                  mobile: item.mobile,
-                  sex: item.sex,
-                  type: item.type,
-                  image: item.wechat ? item.wechat.avatar : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png',
-                  width: 30,
-                  distance: item.distance,
-                  height: 30,
-                  callout: {
-                    content: item.name,
-                    color: '#2c8df6',
-                    fontSize: 14,
-                    borderRadius: 6,
-                    bgColor: '#fff',
-                    padding: 6,
-                    display: 'BYCLICK',
-                    boxShadow: '2px 2px 10px #aaa'
-                  }
+      let that = this
+      that.$get({
+        url: service.near_single,
+        data: {
+          location_latitude: myLat,
+          location_longitude: myLong
+        }
+      }, {
+        success: ({code, data}) => {
+          that.nearFriends = data.data
+          let markersNew = []
+          that.nearFriends.forEach((item, index, arr) => {
+            markersNew.push(
+              {
+                iconPath: '../../images/icon/icon-position.png',
+                id: item.id,
+                latitude: item.location_latitude,
+                longitude: item.location_longitude,
+                name: item.name,
+                mobile: item.mobile,
+                sex: item.sex,
+                type: item.type,
+                image: item.wechat ? item.wechat.avatar : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png',
+                width: 30,
+                distance: item.distance,
+                height: 30,
+                callout: {
+                  content: item.name,
+                  color: '#2c8df6',
+                  fontSize: 14,
+                  borderRadius: 6,
+                  bgColor: '#fff',
+                  padding: 6,
+                  display: 'BYCLICK',
+                  boxShadow: '2px 2px 10px #aaa'
                 }
-              )
-            })
-            that.markers = markersNew
-            that.$apply()
-            that.noMoreList = false
-          },
-          fail: ({code, data}) => {
-          },
-          complete: () => {
-            this.loading = false
-          }
-        })
+              }
+            )
+          })
+          that.markers = markersNew
+          that.$apply()
+          that.noMoreList = false
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
 //      }
     }
     getCenterLocation() {
