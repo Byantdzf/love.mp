@@ -175,7 +175,6 @@ export default class httpMixin extends wepy.mixin {
         })
       },
       complete: (res) => {
-        // 控制台调试日志
         //console.log('[COMPLETE]', res)
         // 隐藏加载提示
         wx.hideNavigationBarLoading()
