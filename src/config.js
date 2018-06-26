@@ -3,7 +3,9 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-var host = 'http://love.hankin.com/api',    book = 'http://scraper.server.ufutx.cn/api',
+ var host = 'https://love.ufutx.com/api',
+// var host = 'http://love.hankin.com/api',
+    book = 'http://scraper.server.ufutx.cn/api',
     party= 'https://party.ufutx.com/api'
 export const service = {
     // 登录接口
