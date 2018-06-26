@@ -1,8 +1,8 @@
 <template>
   <view class="map">
     <!--<Message :title.sync="title" ></Message>-->
-    <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="14" markers="{{markers}}" @markertap="markertap"
-         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};">
+    <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="16" markers="{{markers}}" @markertap="markertap"
+         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};" controls="{{controls}}"  polyline="{{polyline}}">
       <cover-view class='btn' @tap="showModal_v"
                   style="background: white;width: 580rpx;position: absolute;right: 8%;top: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3">
         <cover-image src='../../images/icon/share_active.png' bindtap="showModal_v" class='ten_l flo_l'
@@ -140,6 +140,29 @@
     data = {
 //      markers标记点
       markers: [],
+      polyline: [{
+        points: [{
+          longitude: 113.98627400,
+          latitude: 22.52690
+        }, {
+          longitude: 113.88176054,
+          latitude: 22.55127
+        }],
+        color:"#FF0000DD",
+        width: 2,
+        dottedLine: true
+      }],
+      controls: [{
+        id: 1,
+        iconPath: '../../images/icon/friends_active.png',
+        position: {
+          left: 0,
+          top: 300 - 50,
+          width: 50,
+          height: 50
+        },
+        clickable: true
+      }],
 //      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
       longitude: 0,
       latitude: 0,
