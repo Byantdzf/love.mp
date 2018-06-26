@@ -791,19 +791,6 @@
         that.$get({url: service.friendNear + '/' + id, data}, {
           success: ({code, data}) => {
             that.friends = data
-            that.polyline = [{
-              points: [{
-                longitude: that.myLong,
-                latitude: that.myLat
-              }, {
-                longitude: data.location_longitude,
-                latitude: data.location_latitude
-              }],
-              color: '#FF0000',
-              width: 2,
-              arrowLine: true,
-              dottedLine: true
-            }]
             that.$apply()
           },
           fail: ({code, data}) => {},
@@ -813,6 +800,20 @@
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
 //            that.friends = arr[index]
             console.log(arr[index])
+            that.polyline = [{
+              points: [{
+                longitude: that.myLong,
+                latitude: that.myLat
+              }, {
+                longitude: arr[index].longitude,
+                latitude: arr[index].latitude
+              }],
+              color: '#FF0000',
+              width: 2,
+              arrowLine: true,
+              dottedLine: true
+            }]
+            that.$apply()
             arr[index].iconPath = '../../images/icon/icon-position_red.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {

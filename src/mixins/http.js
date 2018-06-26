@@ -125,7 +125,8 @@ export default class httpMixin extends wepy.mixin {
                     wx.setStorageSync('openid', data.openid)
                   }
 
-                  var route = '/' + getCurrentPages()[0].__route__;
+                  // var route = '/' + getCurrentPages()[0].__route__;
+                  var route = '/' +  wx.setStorageSync('jump');
 
                   if (route == '/pages/users/register'){
                     return
@@ -146,6 +147,16 @@ export default class httpMixin extends wepy.mixin {
           })
 
         } else if (data.code == 3 ) {
+          var pages = getCurrentPages()    //获取加载的页面
+
+          var currentPage = pages[pages.length-1]    //获取当前页面的对象
+
+          var options = currentPage.options
+
+          var url = currentPage.route  + '?party_id=' + options.party_id //当前页面url
+
+          wx.setStorageSync('jump', url)
+
           if(data.message == 'rank'){
              wx.navigateTo({url: '/pages/users/upgradingVIP'})
           }

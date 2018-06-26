@@ -212,22 +212,19 @@
       }, {
         success: ({code, data}) => {
           _this.noMore = false
-          _this.loading = true
+          _this.loading = false
           if (data.data.length == 0 && data.data.last_page == 1) {
-            _this.loading = false
             _this.noMore = true
             _this.list = []
             return
           }
           if (data.current_page > data.last_page) {
             _this.noMore = true
-            _this.loading = true
             return
           }
           data = data.data
           if (this.isArray(data) && data.length === 0) {
             _this.noMore = true
-            _this.loading = false
             _this.list = []
             return
           }
@@ -271,6 +268,7 @@
       tabClick(e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
+        this.page = 1
         console.log(this.activeIndex)
         if (this.activeIndex == 1) {
           this.title = '单身会'
@@ -278,6 +276,8 @@
           this.title = '预备婚恋'
         } else if (this.activeIndex == 3) {
           this.title = '个人成长'
+        } else {
+          this.title = '专题'
         }
         this.$apply()
         this.getLibraries()
