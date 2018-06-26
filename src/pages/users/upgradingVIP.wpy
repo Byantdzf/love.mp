@@ -188,8 +188,8 @@
             type: 'rank',
             rank_id: that.pay_id
           }
-        if(!that.pay_id){
-          return that.$showToast("请先选择会员类型")
+        if (!that.pay_id) {
+          return that.$showToast('请先选择会员类型')
         }
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {

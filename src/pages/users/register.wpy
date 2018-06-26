@@ -5,7 +5,8 @@
   <view class="main-register" >
     <view class="weui-cells weui-cells_after-title main-address">
       <view class="weui-cell reset-cell-block" style=" width: 100%; position: absolute;left: 25rpx;top: -80rpx;">
-        <open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #dedede"></open-data>
+        <open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #dedede;margin-left: -12rpx;"></open-data>
+        <view class="font_28 flo_l bold black_6" style="width: 74%; margin-top: 80rpx;margin-left: 22rpx"> <span class="font_36 orange" style="margin-right: 6rpx;">{{marriage}}</span>邀请你加入福恋平台</view>
         <view class="clearfloat"></view>
       </view>
       <!--<view class="weui-cell reset-cell-block">-->
@@ -13,7 +14,7 @@
       <!--</view>-->
       <view class="weui-cell weui-cell_input" >
         <view class="weui-cell__bd h4">
-          <input @input="typing('name')" style="margin-top: 32rpx" class="weui-input" value="{{name}}" placeholder="你的真实姓名"/>
+          <input @input="typing('name')" style="margin-top: 80rpx" class="weui-input" value="{{name}}" placeholder="你的真实姓名"/>
         </view>
       </view>
       <!--<view class="weui-cell reset-cell-block">-->
@@ -98,6 +99,7 @@
       encryptedData: '',
       iv: '',
       avatarUrl: '',
+      marriage: '',
       nickName: ''
     }
 
@@ -150,6 +152,9 @@
 //        wx.switchTab({url: '/pages/partyList'})
       }
       this.$doLogin()
+      this.marriage = wx.getStorageSync('marriage')
+      this.$apply()
+
 //      this.$setCode()
 //      debugger
 //      wepy.getUserInfo({
@@ -369,7 +374,7 @@
       background: white;
       /*border-radius: 16rpx;*/
       margin: auto;
-      height: 580rpx;
+      height:600rpx;
       box-shadow: 1rpx 1rpx 12rpx #c5cec5;
     }
     .reset-cell-block{

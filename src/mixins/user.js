@@ -14,6 +14,7 @@ export default class userMixin extends wepy.mixin {
         console.log('wepy.login.success:', res)
         this.$post({ url: service.login, data: {code: res.code} }, {
           success: ({code, data}) => {
+            wx.setStorageSync('marriage', data.marriage)
             wx.setStorageSync('token', data.token)
             wx.setStorageSync('openid', data.openid)
             if(!data.token){
