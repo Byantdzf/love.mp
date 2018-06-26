@@ -3,8 +3,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-//  var host = 'https://love.ufutx.com/api',
-var host = 'http://love.hankin.com/api',
+ var host = 'https://love.ufutx.com/api',
+// var host = 'http://love.hankin.com/api',
     book = 'http://scraper.server.ufutx.cn/api',
     party= 'https://party.ufutx.com/api'
 export const service = {
@@ -78,6 +78,8 @@ export const service = {
     parties: `${party}/parties`,
     //vip等级列表
     ranks: `${host}/ranks`,
+    //vip充值user信息 3级
+    rankUser: `${host}/rank/user`,
     //我的福分 兑换礼物列表
     goodses: `${host}/goodses`,
     //我的福分 记录
