@@ -25,7 +25,7 @@
           <cover-view class="font_32 orange bold">{{friends.name}}
             <cover-view class="font_26 black_6 bold flo_r">{{friends.distance}}千米</cover-view>
           </cover-view>
-          <cover-image src='../../images/icon/man_v.png' wx:if="{{friends.sex}} == 1" class='ten_l flo_l'
+          <cover-image src='../../images/icon/man_v.png' wx:if="{{friends.sex  == '1'}}" class='ten_l flo_l'
                        style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>
           <cover-image src='../../images/icon/woman_v.png' wx:else class='ten_l flo_l'
                        style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>

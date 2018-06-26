@@ -52,7 +52,7 @@
       <picker  mode = 'region' value="{{region}}"  bindchange="cityChange" >
         <view class="picker">
           城市
-          <text class="text">{{region[0]}},{{region[1]}}</text>
+          <text class="text">{{region[0]}},{{region[1]}},{{region[2]}}</text>
         </view>
       </picker>
     </view>
@@ -68,7 +68,7 @@
       <picker  mode = 'region' value="{{region_id}}"  bindchange="region_idChange" >
         <view class="picker">
           户口地
-          <text class="text">{{region_id[1]}}</text>
+          <text class="text">{{region_id[1]}},{{region_id[2]}}</text>
         </view>
       </picker>
     </view>
@@ -335,7 +335,9 @@
               that.company = result.company
               that.region[0] = result.province
               that.region[1] = result.city
+              that.region[2] = result.dist
               that.region_id[1] = result.resident_city
+              that.region_id[2] = result.resident_dist
               that.residentIndex = result.resident_type === '城市户口' ? 0 : 1
               that.degree.forEach((item, index, arr) => {
                 console.log(arr[index])
@@ -403,9 +405,11 @@
               state: this.state[this.stateiIndex],
               province: this.region[0],
               city: this.region[1],
+              dist: this.region[2],
               resident_type: this.resident_type[this.residentIndex],
               resident_province: this.region_id[0],
               resident_city: this.region_id[1],
+              resident_dist: this.region_id[2],
               degree: this.degree[this.degreeIndex],
 //              salary_id: this.salary_id ? this.salary_id : this.salaries[0].id,
 //              h_car: this.carIndex,
@@ -445,14 +449,18 @@
             } else {
               console.log(data)
               this.$put({url: service.courtship, data}, {
-                success: ({code, res}) => {
+                success: ({code, data}) => {
                   wx.showToast({
                     title: '填写成功!',
                     icon: 'success',
                     duration: 1200
                   })
                   setTimeout(() => {
-                    wx.redirectTo({url: '/pages/users/upgradingVIP'})
+                    if (data.is_rank == 0) {
+                      wx.redirectTo({url: '/pages/users/upgradingVIP'})
+                    } else {
+                      wx.switchTab({url: '/pages/users/index'})
+                    }
                   }, 1200)
                 },
                 fail: ({code, data}) => {

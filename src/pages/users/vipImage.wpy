@@ -8,7 +8,7 @@
             <view class="userinfo clearfix">
               <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
               <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
-              <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover" @tap="gotofriends({{user}})"/>
+              <image class="userinfo-avatar" src="{{ user.avatar }}" background-size="cover" @tap="gotofriends({{user}})"/>
               <view class="userinfo-info">
                 <view class="userinfo-nickname font_32">
                   {{ user.name }}
@@ -76,8 +76,7 @@
       navigationBarTitleText: '上传照片'
     }
     data = {
-      user: {
-      },
+      user: {},
       photos: [],
       files: '',
       type_v: '',
@@ -120,7 +119,7 @@
     }
 
     onShow() {
-      this.getuser()
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, '上传' + this.uploadTitle)
     }
 // 初始化页面数据
@@ -258,6 +257,7 @@
             } else {
               data = {wechat_qrcode: that.photos}
             }
+            that.files = []
             wx.showToast({
               title: '上传成功',
               icon: 'none',

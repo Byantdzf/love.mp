@@ -17,7 +17,9 @@
                 {{mylibs.name}}
               </view>
               <view class="orange font_26 text-center flo_l menber" style="width: 68rpx">
-                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
+                <image src="../../images/icon/woman.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" wx:if="{{mylibs.profile_courtship.sex == '2'}}"
+                       class="flo_l"></image>
+                <image src="../../images/icon/man.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" wx:else
                        class="flo_l"></image>
                 <view style="font-size: 26rpx;line-height: 32rpx;" class="flo_r black_6 ">{{mylibs.age}}</view>
               </view>
