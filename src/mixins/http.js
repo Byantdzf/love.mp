@@ -145,6 +145,13 @@ export default class httpMixin extends wepy.mixin {
             }
           })
 
+        } else if (data.code == 3 ) {
+          if(data.message == 'rank'){
+             wx.navigateTo({url: '/pages/users/upgradingVIP'})
+          }
+          if(data.message == 'profile') {
+             wx.navigateTo({url: '/pages/users/unmarri'})
+          }
         } else {
           // 失败回调：其他情况
           return setTimeout(() => {

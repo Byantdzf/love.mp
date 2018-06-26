@@ -2,8 +2,7 @@
   <view class="map">
     <!--<Message :title.sync="title" ></Message>-->
     <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="16" markers="{{markers}}" @markertap="markertap"
-         @regionchange="regionchange" show-location wx:if="{{showMap}}" style="width: 100%; height: {{height}};"
-         polyline="{{polyline}}">
+         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};"   polyline="{{polyline}}">
       <cover-view class='btn' @tap="showModal_v"
                   style="background: white;width: 580rpx;position: absolute;right: 8%;top: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3">
         <cover-image src='../../images/icon/share_active.png' bindtap="showModal_v" class='ten_l flo_l'
@@ -26,7 +25,7 @@
           <cover-view class="font_32 orange bold">{{friends.name}}
             <cover-view class="font_26 black_6 bold flo_r">{{friends.distance}}千米</cover-view>
           </cover-view>
-          <cover-image src='../../images/icon/man_v.png' wx:if="{{friends.sex}} == '男'" class='ten_l flo_l'
+          <cover-image src='../../images/icon/man_v.png' wx:if="{{friends.sex}} == 1" class='ten_l flo_l'
                        style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>
           <cover-image src='../../images/icon/woman_v.png' wx:else class='ten_l flo_l'
                        style="width: 38rpx;height: 38rpx;margin-right: 22rpx;margin-top: 8rpx"></cover-image>
@@ -71,35 +70,35 @@
       </cover-view>
       <!--<cover-view class="commodity_screen" @tap="saveImage" wx:if="{{showModal}}"></cover-view>-->
       <!--<cover-view animation="{{animationImage}}" class="commodity_attr_box text-center" wx:if="{{showModal}}"-->
-      <!--style="background: none !important;height: 100% !important;">-->
-      <!--<cover-image style="position: relative;left: 0%;top:10%"-->
-      <!--src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"-->
-      <!--class="shaerImage"></cover-image>-->
-      <!--<cover-view-->
-      <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
-      <!--@tap.stop="saveImage('save')">保存-->
-      <!--</cover-view>-->
+                  <!--style="background: none !important;height: 100% !important;">-->
+        <!--<cover-image style="position: relative;left: 0%;top:10%"-->
+                     <!--src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"-->
+                     <!--class="shaerImage"></cover-image>-->
+        <!--<cover-view-->
+          <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
+          <!--@tap.stop="saveImage('save')">保存-->
+        <!--</cover-view>-->
       <!--</cover-view>-->
     </map>
-    <modal hidden="{{showImage}}"
-           confirm-text="保存"
-           cancel-text="取消"
-           bindconfirm="saveImage('save')"
-           bindcancel="listenerCancel">
+    <modal  hidden="{{showImage}}"
+            confirm-text="保存"
+            cancel-text="取消"
+            bindconfirm="saveImage('save')"
+            bindcancel="listenerCancel">
       <image style="position: relative;left: -3%;top:0%;box-shadow: 1rpx 1rpx 12rpx #d3d3d3;"
-             src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"
-             class="shaerImage"></image>
+                   src="http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/14/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.L2cteRZyEIJP66cb1b4030bf3cd564f3686c1c01fd39.png"
+                   class="shaerImage"></image>
       <!--<view style="position: absolute;left: 40%;bottom: 0;background: #FAFAFC; z-index: 999999;">-->
-      <!--<cover-view-->
-      <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
-      <!--@tap.stop="saveImage('save')">保存-->
-      <!--</cover-view>-->
+        <!--<cover-view-->
+          <!--style="position: relative;left: 42% ;z-index: 999999; top: 10%;color: orange;background: white;width: 120rpx;height: 68rpx;margin-top: 22rpx;line-height: 68rpx;border-radius: 12rpx;box-shadow: 1rpx 1rpx 12rpx #96d3d0"-->
+          <!--@tap.stop="saveImage('save')">保存-->
+        <!--</cover-view>-->
       <!--</view>-->
     </modal>
-    <modal hidden="{{showOpenSet}}"
-           no-confirm
-           title="提示"
-           no-cancel>
+    <modal  hidden="{{showOpenSet}}"
+            no-confirm
+            title="提示"
+            no-cancel>
       <view class="text-center">需要你授权才能保存到相册哦！</view>
       <view style="position: absolute;left: 10%;bottom: 0;background: #FAFAFC; z-index: 999999;">
         <button class="btn" style="width: 100%;height: 82rpx;padding:0 86rpx;" @tap="hideOpenSet">
@@ -107,8 +106,7 @@
         </button>
       </view>
       <view style="position: absolute;left: 46%;bottom: 0;background: #FAFAFC; z-index: 999999;">
-        <button class="btn green" style="width: 100%;height: 82rpx;padding:0 86rpx;" open-type="openSetting"
-                @opensetting="openSetting_image">
+        <button class="btn green" style="width: 100%;height: 82rpx;padding:0 86rpx;" open-type="openSetting" @opensetting="openSetting_image">
           打开设置
         </button>
       </view>
@@ -116,8 +114,7 @@
     <modal class="modal" hidden="{{hide}}" title="提示" no-cancel no-confirm>
       <view class="text-center font_32">不授权将无法查看地图哦！</view>
       <view style="position: absolute;left: 40%;bottom: 0;background: #FAFAFC; z-index: 999999;">
-        <button class="btn orange" style="width: 100%;height: 82rpx" open-type="openSetting"
-                @opensetting="openSetting_address">
+        <button class="btn orange" style="width: 100%;height: 82rpx" open-type="openSetting" @opensetting="openSetting_address">
           去授权
         </button>
       </view>
@@ -131,7 +128,7 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
-  import {service} from '../../config.js'
+  import { service } from '../../config.js'
   import message from '../../components/message'
 
   export default class pageQr extends wepy.page {
@@ -143,18 +140,7 @@
     data = {
 //      markers标记点
       markers: [],
-      polyline: [{
-        points: [{
-          longitude: 113.98627400,
-          latitude: 22.52690
-        }, {
-          longitude: 113.88176054,
-          latitude: 22.55127
-        }],
-        color: '#FF0000DD',
-        width: 2,
-        dottedLine: true
-      }],
+      polyline: [],
 //      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
       longitude: 0,
       latitude: 0,
@@ -184,7 +170,6 @@
     components = {
       Message: message
     }
-
     onLoad() {
       this.getSystem()
       // wx.setNavigationBarColor({
@@ -227,7 +212,7 @@
       that.myLong = wx.getStorageSync('myLong')
       that.myLat = wx.getStorageSync('myLat')
       that.mapCtx.getRegion({
-        success: function (res) {
+        success: function(res) {
           console.log('缩放')
           that.southwest = res.southwest
           that.northeast = res.northeast
@@ -289,12 +274,11 @@
 //        console.log(token)
 //      }
     }
-
     getCenterLocation() {
       let that = this
       wx.getLocation({
         type: 'gcj02',
-        success: function (res) {
+        success: function(res) {
           that.myLong = res.longitude
           that.myLat = res.latitude
           wx.setStorageSync('myLong', res.longitude)
@@ -309,7 +293,6 @@
         }
       })
     }
-
     mapFunction() {
       let that = this
       that.$get({
@@ -367,14 +350,12 @@
           that.$apply()
           that.noMoreList = false
         },
-        fail: ({code, data}) => {
-        },
+        fail: ({code, data}) => {},
         complete: () => {
           this.loading = false
         }
       })
     }
-
     getLngLat() {
       let that = this
       that.mapCtx = wx.createMapContext('map')
@@ -477,7 +458,6 @@
         }
       })
     }
-
     distance() {
       let to = ''
       this.markers.forEach((item, index, arr) => {
@@ -506,7 +486,6 @@
         }
       })
     }
-
 //    showImage() {
 //      // 显示遮罩层
 //      this.showModal = true
@@ -527,7 +506,6 @@
         }
       })
     }
-
     methods = {
       shareFriend() {
         this.$showLoading('加载中...')
@@ -545,7 +523,7 @@
         this.animation = animation
         animation.translateY(300).step()
         this.animationData = animation.export()
-        setTimeout(function () {
+        setTimeout(function() {
           animation.translateY(0).step()
           this.animationImage = animation.export()
           this.showModalStatus = false
@@ -664,7 +642,7 @@
         this.animation = animation
         animation.translateY(300).step()
         this.animationData = animation.export()
-        setTimeout(function () {
+        setTimeout(function() {
           animation.translateY(0).step()
           this.animationData = animation.export()
           this.showModalStatus = false
@@ -805,26 +783,35 @@
           id = e.markerId,
           data = {
 //            id: e.markerId,
-            myLat: that.myLat,
-            myLong: that.myLong
+            location_latitude: that.myLat,
+            location_longitude: that.myLong
           }
         console.log(data)
         that.showfriend = true
         that.$get({url: service.friendNear + '/' + id, data}, {
           success: ({code, data}) => {
             that.friends = data
+            that.polyline = [{
+              points: [{
+                longitude: that.myLong,
+                latitude: that.myLat
+              }, {
+                longitude: data.location_longitude,
+                latitude: data.location_latitude
+              }],
+              color: '#FF0000',
+              width: 2,
+              arrowLine: true,
+              dottedLine: true
+            }]
             that.$apply()
           },
-          fail: ({code, data}) => {
-          },
-          complete: () => {
-            this.loaded = false
-          }
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
         })
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
 //            that.friends = arr[index]
-            that.$apply()
             console.log(arr[index])
             arr[index].iconPath = '../../images/icon/icon-position_red.png'
           }
@@ -837,33 +824,33 @@
   }
 </script>
 <style lang="less">
-  page {
+  page{
     background: white;
     .commodity_screen {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #000;
-      opacity: 0.2;
-      overflow: hidden;
-      z-index: 1000;
-      color: #fff;
+      width:100%;
+      height:100%;
+      position:fixed;
+      top:0;
+      left:0;
+      background:#000;
+      opacity:0.2;
+      overflow:hidden;
+      z-index:1000;
+      color:#fff;
     }
     .commodity_attr_box {
-      width: 100%;
-      overflow: hidden;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 2000;
-      background: #fff;
+      width:100%;
+      overflow:hidden;
+      position:fixed;
+      bottom:0;
+      left:0;
+      z-index:2000;
+      background:#fff;
       /*padding-top:20rpx;*/
     }
-    .shaerImage {
-      width: 600 rpx;
-      height: 800 rpx;
+    .shaerImage{
+      width: 600rpx;
+      height: 800rpx;
     }
   }
 </style>
