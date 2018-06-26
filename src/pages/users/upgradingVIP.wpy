@@ -4,7 +4,7 @@
       <view class="weui-cells_after-title">
         <view class="weui-cell user_back">
           <view class="userinfo clearfix">
-            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"
+            <image class="userinfo-avatar" src="{{ user.avatar }}" background-size="cover"
                    @tap="gotofriends({{user}})"/>
             <view class="userinfo-info">
               <view class="userinfo-nickname font_32">
@@ -120,7 +120,7 @@
 
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      this.$get({url: service.rankUser}, {
         success: ({code, data}) => {
           this.user = data
           this.$apply()
