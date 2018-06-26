@@ -103,7 +103,10 @@
     }
 
     onPullDownRefresh() {
+      this.inputVal = ''
+      this.page = 1
       this.getLibraries()
+      this.$apply()
     }
     onReachBottom() {
       setTimeout(() => {
@@ -156,10 +159,7 @@
         myLong = wx.getStorageSync('myLong'),
         myLat = wx.getStorageSync('myLat')
       _this.loading = true
-      let url = service.near_single
-      if (keyword) {
-        url = service.near_single + '?keyword=' + keyword
-      }
+      let url = service.near_single + '?keyword=' + this.inputVal
       this.$get({
         url: url,
         data: {

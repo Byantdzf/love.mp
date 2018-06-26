@@ -23,7 +23,7 @@
                       我叫
                       <span class="orange bold font_28">{{mylibs.name}}</span>
                     </view>
-                    <text>感谢你加我为好友，请回复几个问题！</text>
+                    <text>{{text}}</text>
                   </view>
                 </view>
               </view>
@@ -38,7 +38,7 @@
                        placeholder="请输入"/>
               </view>
             </view>
-            <view class="btn_red font_28" style="margin: auto" @tap="addfriend">添加好友</view>
+            <view class="btn_red font_28" style="margin: auto" @tap="addfriend">申请加好友</view>
           </view>
         </view>
       </view>
@@ -79,6 +79,7 @@
       id: '',
       avatar: '',
       name: '',
+      text: '感谢你加我为好友！',
       loading: false
     }
 
@@ -107,6 +108,7 @@
       this.$get({url: service.users + '/' + self.id}, {
         success: ({code, data}) => {
           this.mylibs = data
+          this.$apply()
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -117,14 +119,18 @@
       this.$get({url: service.users + '/' + self.id + '/friend/questions'}, {
         success: ({code, data}) => {
           // let arr = {}
-          data.forEach((item, index, arr) => {
+          if (data.question_arr != null) {
+            self.text = '感谢你加我为好友，请回复几个问题！'
+            self.$apply()
+          }
+          data.question_arr.forEach((item, index, arr) => {
             self.list.push({
               questions: arr[index],
               value: ''
             })
           })
           self.$apply()
-          console.log(self.list)
+//          console.log(self.list)
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }

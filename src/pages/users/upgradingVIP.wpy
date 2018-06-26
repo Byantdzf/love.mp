@@ -208,8 +208,12 @@
                   success: ({code, data}) => {
                     wx.showToast({
                       title: '支付成功',
-                      duration: 2000
+                      duration: 1500
                     })
+                    setTimeout(() => {
+                      var route = '/' +  wx.setStorageSync('jump');
+                      wx.navigateTo({url: route})
+                    }, 1500)
                   },
                   fail: ({code, data}) => {
                   },
