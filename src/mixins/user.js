@@ -17,9 +17,9 @@ export default class userMixin extends wepy.mixin {
             wx.setStorageSync('marriage', data.marriage)
             wx.setStorageSync('token', data.token)
             wx.setStorageSync('openid', data.openid)
-            if(!data.token){
-              wx.setStorageSync('jump', '/' + getCurrentPages()[0].__route__)
-            }
+            // if(!data.token){
+            //   wx.setStorageSync('jump', '/' + getCurrentPages()[0].__route__)
+            // }
           }
         })
       },

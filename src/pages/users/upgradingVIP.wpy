@@ -211,8 +211,8 @@
                       duration: 1500
                     })
                     setTimeout(() => {
-                      var route = '/' +  wx.setStorageSync('jump');
-                      wx.navigateTo({url: route})
+                      var route = wx.getStorageSync('jump');
+                      wx.switchTab({url: route})
                     }, 1500)
                   },
                   fail: ({code, data}) => {
