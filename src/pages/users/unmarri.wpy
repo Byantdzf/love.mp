@@ -448,12 +448,11 @@
                   wx.showToast({
                     title: '填写成功!',
                     icon: 'success',
-                    duration: 1200,
-                    success: (res) => {
-                      let url = '/pages/home/index'
-                      wx.switchTab({url: url})
-                    }
+                    duration: 1200
                   })
+                  setTimeout(() => {
+                    wx.redirectTo({url: '/pages/users/upgradingVIP'})
+                  }, 1200)
                 },
                 fail: ({code, data}) => {
                 },

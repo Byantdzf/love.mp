@@ -3,10 +3,7 @@
     <view class="weui-panel">
       <view class="weui-cells_after-title">
         <view class="weui-cell user_back">
-          <!--<navigator url="/pages/user/registerV2" >-->
           <view class="userinfo clearfix">
-            <!--<open-data type="userAvatarUrl"  mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #de7a71;border-radius: 50%;"></open-data>-->
-            <!--<image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>-->
             <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"
                    @tap="gotofriends({{user}})"/>
             <view class="userinfo-info">
@@ -40,81 +37,32 @@
               <view class="message_red" wx:if="{{user.new_notice_count}}"></view>
             </view>
           </view>
-          <!--</navigator>-->
         </view>
       </view>
     </view>
-    <view style="background: white;width: 100%;height: 100rpx;padding: 8rpx 0">
-      <view style="width: 33%;height: 100%;" class="text-center flo_l"
-            @tap="goto('/pages/users/friendlist?type=attention')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.follow_count}}</view>
-        <view class=" font_26">关注</view>
-      </view>
-      <view style="width: 33%;height: 100%;" class="text-center flo_l" @tap="goto('/pages/users/friendlist?type=fans')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.fans_count}}</view>
-        <view class=" font_26">粉丝</view>
-      </view>
-      <view style="width: 33%;height: 100%;" class="text-center flo_l"
-            @tap="goto('/pages/users/friendlist?type=friend')">
-        <view class="bold font_32 orange" style="margin: 8rpx 0 -6rpx 0">{{user.friend_count}}</view>
-        <view class=" font_26">好友</view>
-      </view>
-    </view>
-    <!--<view class="weui-cells__title font_32 bold">图书借阅</view>-->
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/integral" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/order.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+    <view style="padding: 0 12rpx;">
+      <radio-group class="radio-group" bindchange="radioChange">
+        <view class="paylist"  wx:for="{{paylist}}" wx:key="*this">
+          <label class="radio">
+            <radio value="{{item.id}}" class="flo_l" checked="{{item.checked}}"/>
+            <view class="font_28 flo_l" style="margin-left: 12rpx;">{{item.name}} <span class="orange">{{item.price}}元{{item.iv}}</span> </view>
+            <view class='font_26 orange flo_r' style="width: 80%;text-align: right;">{{item.content}}</view>
+            <view class="clearfix"></view>
+          </label>
+          <view class="clearfix"></view>
         </view>
-        <view class="weui-cell__bd">我的福分</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">福分商城</view>
-      </navigator>
-      <navigator url="/pages/users/myGift" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/gift.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+      </radio-group>
+      <block wx:if="{{loading}}">
+        <view class="weui-loadmore">
+          <view class="weui-loading"></view>
+          <view class="weui-loadmore__tips">正在加载</view>
         </view>
-        <view class="weui-cell__bd">我的礼物</view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
-      </navigator>
-      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active" wx:if="{{user.type == 'single'}}">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/text1.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">VIP设置</view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
-      </navigator>
-      <navigator url="/pages/users/myPay" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/pay.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">我的订单</view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/service.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <button class="btn weui-cell__bd" open-type="feedback" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>
-          意见反馈
-        </button>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
-      </view>
-      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="../../images/icon/share.png"
-                 style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <button class="btn weui-cell__bd" open-type="share" style='padding: 0rpx;height: 48rpx;line-height: 48rpx;'>
-          分享给好友
-        </button>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
+      </block>
+      <view class="font_28 orange flo_r" @tap="goto('/pages/users/upgradeVIP')" style="margin-top: 22rpx;" >更多VIP服务》</view>
+      <view class="text-center pay">
+        <view class="btn_white font_32 flo_l" @tap="switchTab('/pages/home/index')">继续使用</view>
+        <view class="btn_red font_32 flo_l" style="margin-top: -6rpx; margin-left: 54rpx;" @tap="pay">确认支付</view>
+        <view class="clearfloat"></view>
       </view>
     </view>
   </view>
@@ -128,17 +76,20 @@
   import ShareMessage from '../../mixins/ShareMessage'
   import { service } from '../../config.js'
 
-  export default class pageUser extends wepy.page {
+  export default class upgradingVIP extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: '我的',
+      navigationBarTitleText: '升级VIP',
       enablePullDownRefresh: true
     }
     data = {
       libraries: {},
       user: {},
       is_vip: false,
-      nickName: '加载中...'
+      paylist: [],
+      pay_id: '',
+      trade_no: '',
+      loading: false
 
     }
 
@@ -151,6 +102,7 @@
     onShow() {
       // 初始化页面数据
       this.initPageData()
+      this.getPayList()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
@@ -175,8 +127,37 @@
         }
       })
     }
-
+    getPayList() {
+      let that = this
+      that.loading = true
+//      that.$showLoading('加载中...')
+      this.$get({url: service.ranks}, {
+        success: ({code, data}) => {
+          that.paylist = data
+          that.paylist.length = 3
+          that.loading = false
+          that.$apply()
+//          wepy.hideLoading()
+          console.log(that.paylist)
+        },
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+          this.loaded = false
+        }
+      })
+    }
     methods = {
+      radioChange: function(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.pay_id = e.detail.value
+//        this.paylist.forEach((item, index, arr) => {
+//          if (this.pay_id == arr[index].id) {
+//            this.type = arr[index].type
+//          }
+//        })
+        this.$apply()
+      },
       gotofriends(item) {
         let url = ''
         if (item.type == 'single') {
@@ -197,6 +178,61 @@
           url = '/pages/users/intro'
         }
         wx.navigateTo({url: url})
+      },
+      switchTab(url) {
+        wx.switchTab({url: url})
+      },
+      pay() {
+        let that = this,
+          data = {
+            type: 'rank',
+            rank_id: that.pay_id
+          }
+        if(!that.pay_id){
+          return that.$showToast("请先选择会员类型")
+        }
+        this.$post({url: service.charge, data}, {
+          success: ({code, data}) => {
+            that.trade_no = data.order_pay.trade_no
+            that.$apply()
+            let wxconfig = data.order_pay.wx_pay.config
+//            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
+            wx.requestPayment({
+              timeStamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+              package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: wxconfig.paySign, // 支付签名
+              success: function (res) {
+                that.$post({url: service.orderpay + '/' + that.trade_no}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '支付成功',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+                    this.loaded = false
+                  }
+                })
+              },
+              fail: function (res) {
+                wx.showToast({
+                  title: '支付失败:' + res.errMsg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            })
+          },
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
+        })
       }
     }
 
@@ -208,7 +244,7 @@
   @import "../../styles/custom/reset.less";
   @import "../../styles/custom/fn.less";
 page{
-  background: #ececec;
+  background: #f4f4f4;
 }
 .weui-cells {
   position: inherit;
@@ -294,6 +330,18 @@ page{
     position: absolute;
     right: 16rpx;
     top: 40rpx;
+  }
+  .paylist{
+    width: 88%;
+    margin: 22rpx;
+    background: white;
+    padding: 22rpx;
+    border-radius: 12rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .pay{
+    margin: 100rpx;
+
   }
 }
 </style>

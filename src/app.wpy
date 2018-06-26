@@ -6,8 +6,6 @@
   var ga = require('./ga.js')
   var GoogleAnalytics = ga.GoogleAnalytics
   var HitBuilders = ga.HitBuilders
-  var fundebug = require('./fundebug.0.2.0.min.js')
-  fundebug.apikey = 'c43b65f4a47b681237b8d19c80e96044a870a890fc9366592ec6dad67191e5ee'
 
   export default class extends wepy.app {
     config = {
@@ -45,7 +43,8 @@
         'pages/users/advantage',
         'pages/users/addFriendSet',
         'pages/users/upgradeVIP',
-        'pages/users/integralAddress'
+        'pages/users/integralAddress',
+        'pages/users/upgradingVIP'
       ],
       window: {
         navigationBarTitleText: '福恋',

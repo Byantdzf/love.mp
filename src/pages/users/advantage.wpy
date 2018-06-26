@@ -13,7 +13,7 @@
             <view class="userinfo-info">
               <view class="userinfo-nickname font_32">
                 manber
-                <block wx:if="{{is_vip}}">
+                <block wx:if="{{user.rank_id == 0}}">
                   <view class="orange font_26 text-center flo_r menber">
                     <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
                            class="flo_l"></image>

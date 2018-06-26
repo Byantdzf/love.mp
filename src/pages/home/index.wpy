@@ -2,7 +2,7 @@
   <view class="map">
     <!--<Message :title.sync="title" ></Message>-->
     <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="16" markers="{{markers}}" @markertap="markertap"
-         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};" controls="{{controls}}"  polyline="{{polyline}}">
+         @regionchange="regionchange" show-location  wx:if="{{showMap}}" style="width: 100%; height: {{height}};"   polyline="{{polyline}}">
       <cover-view class='btn' @tap="showModal_v"
                   style="background: white;width: 580rpx;position: absolute;right: 8%;top: 22rpx;padding: 14rpx;border-radius: 12rpx; box-shadow: 1rpx 1rpx 12rpx #d3d3d3">
         <cover-image src='../../images/icon/share_active.png' bindtap="showModal_v" class='ten_l flo_l'
@@ -152,17 +152,6 @@
         width: 2,
         dottedLine: true
       }],
-      controls: [{
-        id: 1,
-        iconPath: '../../images/icon/friends_active.png',
-        position: {
-          left: 0,
-          top: 300 - 50,
-          width: 50,
-          height: 50
-        },
-        clickable: true
-      }],
 //      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
       longitude: 0,
       latitude: 0,
@@ -266,17 +255,17 @@
                     image: item.wechat ? item.wechat.avatar : 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/11/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.IkD1JfquYA0L0651a2f1c9b29b4c2c633efc622d4de8.png',
                     width: 30,
                     distance: item.distance,
-                    height: 30,
-                    callout: {
-                      content: item.name,
-                      color: '#2c8df6',
-                      fontSize: 14,
-                      borderRadius: 6,
-                      bgColor: '#fff',
-                      padding: 6,
-                      display: 'BYCLICK',
-                      boxShadow: '2px 2px 10px #aaa'
-                    }
+                    height: 30
+//                    callout: {
+//                      content: item.name,
+//                      color: '#2c8df6',
+//                      fontSize: 14,
+//                      borderRadius: 6,
+//                      bgColor: '#fff',
+//                      padding: 6,
+//                      display: 'ALWAYS',
+//                      boxShadow: '2px 2px 10px #aaa'
+//                    }
                   }
                 )
               })
@@ -355,16 +344,16 @@
                 longitude: item.location_longitude,
                 width: 30,
                 height: 30,
-                callout: {
-                  content: item.name,
-                  color: '#2c8df6',
-                  fontSize: 14,
-                  borderRadius: 6,
-                  bgColor: '#fff',
-                  padding: 6,
-                  display: 'BYCLICK',
-                  boxShadow: '2px 2px 10px #aaa'
-                }
+//                callout: {
+//                  content: item.name,
+//                  color: '#2c8df6',
+//                  fontSize: 14,
+//                  borderRadius: 6,
+//                  bgColor: '#fff',
+//                  padding: 6,
+//                  display: 'BYCLICK',
+//                  boxShadow: '2px 2px 10px #aaa'
+//                }
               }
             )
           })
@@ -424,16 +413,16 @@
                       longitude: item.location_longitude,
                       width: 30,
                       height: 30,
-                      callout: {
-                        content: item.name,
-                        color: '#2c8df6',
-                        fontSize: 14,
-                        borderRadius: 6,
-                        bgColor: '#fff',
-                        padding: 6,
-                        display: 'BYCLICK',
-                        boxShadow: '2px 2px 10px #aaa'
-                      }
+//                      callout: {
+//                        content: item.name,
+//                        color: '#2c8df6',
+//                        fontSize: 14,
+//                        borderRadius: 6,
+//                        bgColor: '#fff',
+//                        padding: 6,
+//                        display: 'BYCLICK',
+//                        boxShadow: '2px 2px 10px #aaa'
+//                      }
                     }
                   )
                 } else {
@@ -445,16 +434,16 @@
                       longitude: item.location_longitude,
                       width: 30,
                       height: 30,
-                      callout: {
-                        content: item.name,
-                        color: '#2c8df6',
-                        fontSize: 14,
-                        borderRadius: 6,
-                        bgColor: '#fff',
-                        padding: 6,
-                        display: 'BYCLICK',
-                        boxShadow: '2px 2px 10px #aaa'
-                      }
+//                      callout: {
+//                        content: item.name,
+//                        color: '#2c8df6',
+//                        fontSize: 14,
+//                        borderRadius: 6,
+//                        bgColor: '#fff',
+//                        padding: 6,
+//                        display: 'BYCLICK',
+//                        boxShadow: '2px 2px 10px #aaa'
+//                      }
                     }
                   )
                 }
@@ -799,9 +788,17 @@
         }
       },
       markertap(e) {
+        console.log(e)
         console.log(e.markerId)
-        let that = this
+        let that = this,
+          data = {
+            id: e.markerId,
+            myLat: that.myLat,
+            myLong: that.myLong
+          }
+          console.log(data)
         that.showfriend = true
+
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
             that.friends = arr[index]
