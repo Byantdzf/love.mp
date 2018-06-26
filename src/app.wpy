@@ -227,7 +227,7 @@
         // 初始化GoogleAnalytics Tracker
         this.globalData.tracker = GoogleAnalytics.getInstance(this)
           .setAppName('福恋')
-          .setAppVersion('v0.1')
+          .setAppVersion('v1.0')
           .newTracker('UA-98664364-7')
       }
       var t = this.globalData.tracker
