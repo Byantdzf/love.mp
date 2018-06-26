@@ -9,7 +9,7 @@
           <view class="page__bd " wx:for="{{user}}" wx:key="*this"
                 style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
             <view class="flo_l weui-cell__hd">
-              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+              <image src="{{mylibs.avatar}}" mode="aspectFit"
                      style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
             </view>
             <view class="flo_l" style="margin-top: 26rpx">
