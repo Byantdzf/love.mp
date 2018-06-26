@@ -20,10 +20,10 @@
         </view>
       </picker>
     </view>
-    <view  class="list {{AgeFocus ? 'InputFocus' : ''}}" >
-    <span class="flo_l">年龄</span>
-    <input type="number"  placeholder="输入您的年龄" class="Inp" @blur="typing('age')" value="{{age}}" focus="{{AgeFocus}}" />
-    </view>
+    <!--<view  class="list {{AgeFocus ? 'InputFocus' : ''}}" >-->
+    <!--<span class="flo_l">年龄</span>-->
+    <!--<input type="number"  placeholder="输入您的年龄" class="Inp" @blur="typing('age')" value="{{age}}" focus="{{AgeFocus}}" />-->
+    <!--</view>-->
   <view class="section list">
     <picker mode="date"  value="{{birthday}}"  @change="typing('birthday')">
        <view class="picker">
@@ -420,10 +420,11 @@
 //              console.log(this.NameFocus)
 //              this.ShowModal('请填写真实姓名')
 //            } else
-            if (!this.age) {
-              this.AgeFocus = true
-              this.ShowModal('请填写年龄')
-            } else if (!this.stature) {
+//            if (!this.age) {
+//              this.AgeFocus = true
+//              this.ShowModal('请填写年龄')
+//            } else
+            if (!this.stature) {
               this.StatureFocus = true
               this.ShowModal('请填写身高（cm）')
             } else if (!this.weight) {
@@ -448,12 +449,11 @@
                   wx.showToast({
                     title: '填写成功!',
                     icon: 'success',
-                    duration: 1200,
-                    success: (res) => {
-                      let url = '/pages/home/index'
-                      wx.switchTab({url: url})
-                    }
+                    duration: 1200
                   })
+                  setTimeout(() => {
+                    wx.redirectTo({url: '/pages/users/upgradingVIP'})
+                  }, 1200)
                 },
                 fail: ({code, data}) => {
                 },

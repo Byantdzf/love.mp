@@ -28,6 +28,7 @@ export default class ShareMessage extends wepy.mixin {
       console.log(res)
       let that = this
       that.from_openid = wx.getStorageSync('openid')
+      that.$apply()
       let pages = getCurrentPages()    //获取加载的页面
       let currentPage = pages[pages.length-1]    //获取当前页面的对象
       let link = currentPage.route    //当前页面url

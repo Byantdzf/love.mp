@@ -3,8 +3,9 @@
                         小程序配置文件
 ======================================================== */
 // 域名
- var host = 'https://love.ufutx.com/api',
-// var host = 'http://love.hankin.com/api',
+
+//  var host = 'https://love.ufutx.com/api',
+var host = 'http://love.hankin.com/api',
     book = 'http://scraper.server.ufutx.cn/api',
     party= 'https://party.ufutx.com/api'
 export const service = {
@@ -34,6 +35,8 @@ export const service = {
     addFriend:`${host}/friend/users`,
     //好友
     friend:`${host}/friend`,
+    // 好友信息
+    friendNear: `${host}/near/singles`,
     //申请微信
     wechat:`${host}/show/wechat`,
     //微信好友

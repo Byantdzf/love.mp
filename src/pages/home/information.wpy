@@ -21,7 +21,7 @@
                        class="flo_l"></image>
                 <view style="font-size: 26rpx;line-height: 32rpx;" class="flo_r black_6 ">{{mylibs.profile_courtship.age}}</view>
               </view>
-              <block wx:if="{{is_vip}}">
+              <block wx:if="{{user.rank_id == 0}}">
                 <view class="orange font_26 text-center flo_r menber">
                   <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
                          class="flo_l"></image>
