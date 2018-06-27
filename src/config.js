@@ -3,8 +3,6 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-
-
 // var host = 'https://love.ufutx.com/api',
 var host = 'http://love.hankin.com/api',
     book = 'http://scraper.server.ufutx.cn/api',

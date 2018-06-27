@@ -195,7 +195,7 @@
 //    onShareAppMessage(title = '友福聚会') {
 //      return {
 //        title: title,
-////      path: '/pages/index.wpy',
+//        path: '/pages/index.wpy',
 //        // imageUrl: '',
 //        success: function (res) {
 //          // 转发成功

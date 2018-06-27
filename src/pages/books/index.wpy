@@ -127,6 +127,7 @@
     }
 
     onShow() {
+      this.page = 1
       this.getLibraries()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
