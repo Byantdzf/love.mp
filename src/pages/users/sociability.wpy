@@ -39,7 +39,8 @@
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <view class="font_32 loveTitle">请用第一感觉选择最适合你的选项</view>
+      <view class="font_32 loveTitle" wx:if="{{showTitle}}">请用第一感觉选择最适合你的选项</view>
+      <view class="font_32 loveTitle" wx:else>{{questions}}</view>
       <radio-group class="radio-group" bindchange="radioChange">
         <view class="paylist"  wx:for="{{list}}" wx:key="*this">
           <label class="radio">
@@ -50,11 +51,17 @@
           <view class="clearfix"></view>
         </view>
       </radio-group>
-      <view class="font_32 flo_r black_6" style="margin-right: 4%">
+      <view class="font_32 flo_r black_6" style="margin: 4%;">
         <span class="orange">{{index+1}}</span> / {{questionsList.length}}
       </view>
-      <view class="next btn_red" @tap="ensure" wx:if="{{show}}">下一题</view>
-      <view class="next btn_red" @tap="ensure_from" wx:else>完成</view>
+      <view class="clearfloat"></view>
+      <block wx:if="{{index}}">
+        <view style="padding: 0 16%;" class="text-center">
+          <view class="next btn_white inline-block" @tap="ensure" >上一题</view>
+          <view class="next btn_red inline-block" @tap="ensure_from" style="margin-top: -8rpx;" wx:if="{{!show}}">完成</view>
+          <view class="clearfloat"></view>
+        </view>
+      </block>
     </view>
   </view>
 </template>
@@ -82,8 +89,10 @@
       show: true,
       index: 0,
       value: '',
+      showTitle: true,
       answer: [],
       questionsList: [],
+      questions: '',
       list: []
     }
 
@@ -107,6 +116,9 @@
       console.log(e.title)
       console.log(e.type)
       this.type = e.type
+      if (e.title == '自己的优势') {
+        this.showTitle = false
+      }
       this.$apply()
       let title = '了解' + e.title
       wx.setNavigationBarTitle({
@@ -134,6 +146,7 @@
             return this.$showToast('数据显示错误')
           }
           that.list = data[that.index].option_arr
+          that.questions = data[that.index].questions
           console.log(that.list)
           that.list.forEach((item, index, arr) => {
             arr[index].checked = false
@@ -191,9 +204,39 @@
         wx.navigateTo({url: url})
       },
       radioChange(e) {
-        this.value = e.detail.value
-        this.$apply()
+        let that = this
+        that.value = e.detail.value
+        that.$apply()
         console.log('radio发生change事件，携带value值为：', e.detail.value)
+        let quert = {
+          question_id: that.questionsList[that.index].id,
+          value: that.value
+        }
+        if (that.index == that.questionsList.length-1) {
+          that.answer.splice(that.index, 1)
+          that.answer.push(quert)
+          console.log(that.answer)
+        }else {
+          that.answer.push(quert)
+          that.$apply()
+          console.log(that.answer)
+          setTimeout(() => {
+            if (that.index < that.questionsList.length - 1) {
+              that.index++
+              that.list = that.questionsList[that.index].option_arr
+              that.questions = that.questionsList[that.index].questions
+              that.list.forEach((item, index, arr) => {
+                arr[index].checked = false
+              })
+              that.value = ''
+              that.$apply()
+            }
+            if (that.index == that.questionsList.length - 1) {
+              that.show = false
+              that.$apply()
+            }
+          }, 500)
+        }
       },
       goto(url) {
         wx.navigateTo({url: url})
@@ -221,6 +264,7 @@
             answer: that.answer,
             type: that.type
           }
+          console.log(data)
           that.$post({url: service.vip + '/test', data}, {
             success: ({code, res}) => {
               setTimeout(function () {
@@ -245,38 +289,44 @@
       },
       ensure() {
         let that = this
-        if (that.value == '') {
-          return wx.showToast({
-            title: '请选择选项!',
-            icon: 'none',
-            duration: 1000
-          })
-        } else {
-          console.log(that.value)
-          console.log(that.questionsList[that.index].id)
-          let quert = {
-            question_id: that.questionsList[that.index].id,
-            value: that.value
-          }
-          that.answer.push(quert)
-          that.$apply()
-          console.log(that.answer)
-        }
-        if (that.index < that.questionsList.length - 1) {
-//          debugger
-          that.index++
-          that.list = that.questionsList[that.index].option_arr
-          console.log(that.list)
-          that.list.forEach((item, index, arr) => {
-            arr[index].checked = false
-          })
-          that.value = ''
-          that.$apply()
-          console.log(that.index)
-          console.log(that.value)
-        }
+//        if (that.value == '') {
+//          return wx.showToast({
+//            title: '请选择选项!',
+//            icon: 'none',
+//            duration: 1000
+//          })
+//        } else {
+//          let quert = {
+//            question_id: that.questionsList[that.index].id,
+//            value: that.value
+//          }
+//          that.answer.push(quert)
+//          that.$apply()
+//        }
         if (that.index == that.questionsList.length - 1) {
-          that.show = false
+          that.answer.splice(that.index, 1)
+        }
+        if (that.index < that.questionsList.length + 1) {
+//          debugger
+          that.index--
+          that.list = that.questionsList[that.index].option_arr
+          that.questions = that.questionsList[that.index].questions
+          console.log(that.answer)
+          that.list.forEach((item, index, arr) => {
+            if (that.answer[that.index].value == arr[index].value) {
+              arr[index].checked = true
+            } else {
+              arr[index].checked = false
+            }
+          })
+          that.answer.splice(that.index, 1)
+        }
+
+        that.value = ''
+        that.$apply()
+        console.log(that.answer)
+        if (that.index < that.questionsList.length - 1) {
+          that.show = true
           that.$apply()
         }
       }

@@ -1,7 +1,7 @@
 <template>
   <block wx:if="{{list.length}}">
     <view class="page__bd "  wx:for="{{list}}" wx:key="*this" >
-      <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+      <view class="flo_l borrowlist" >
         <view class="flo_l" style="width: 78%;">
           <view  class="font_26 flo_l ellipsis_1 " style="margin-left: 12rpx;">
             {{item.created_at}}

@@ -323,13 +323,10 @@
           if (data.login_time) {
             if (data.login_time.day) {
               return self.login_time = data.login_time.day + '天'
-              self.$apply()
             } else if (data.login_time.hour) {
               return self.login_time = data.login_time.hour + '小时'
-              self.$apply()
             } else if (data.login_time.min) {
               return self.login_time = data.login_time.min + '分钟'
-              self.$apply()
             }
           }
         },

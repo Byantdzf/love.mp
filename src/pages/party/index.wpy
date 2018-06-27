@@ -86,6 +86,8 @@
     }
 
     onShow() {
+      this.page = 1
+//      this.$apply()
       this.update('ALL')
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
@@ -96,14 +98,14 @@
     }
 
     onReachBottom() {
-      setTimeout(() => {
+//      setTimeout(() => {
 //        if (this.activeIndex == '1') {
-        this.getLibraries()
+      this.update('ALL')
 //        } else {
 //          this.initPageData()
 //        }
 //        this.$apply()
-      }, 200)
+//      }, 200)
     }
 
     getMessage() {

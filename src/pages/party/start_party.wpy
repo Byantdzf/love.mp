@@ -53,9 +53,11 @@
   <view style="width: 100%;" class="font_28 text-center">
     <button open-type="share" class="btn_white flo_l" style="margin-left: 15%;margin-right: 5%;">分享</button>
     <form bindsubmit="formSubmit" report-submit>
-      <button formType="submit"  data-type="click"  @tap="sign('join')"  class="btn_red flo_l" >
-        报名
-      </button>
+      <navigator target="miniProgram" open-type="navigate" app-id="wxa43b4cb4f447e846" path="/pages/party/start_party" @tap="sign" extra-data="{{extraData}}" version="develop">
+        <button formType="submit"  data-type="click"  hover-class="none"  class="btn_red flo_l" style="margin-top: -8rpx;">
+          报名
+        </button>
+      </navigator>
       <!--<button formType="submit"  data-type="click"  @tap="sign()" class="weui-btn btn-blue flo_l" wx:else>-->
       <!--取消报名-->
       <!--</button>-->
@@ -75,10 +77,11 @@
   import base from '../../mixins/base'
   import http from '../../mixins/http'
   import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
   import getFormId from '../../mixins/getFormId'
 
   export default class station extends wepy.page {
-    mixins = [base, http, user, getFormId]
+    mixins = [base, http, user, getFormId, ShareMessage]
     config = {
       navigationBarTitleText: '聚会详情',
       navigationBarTextStyle: 'black',
@@ -97,12 +100,12 @@
       shownotes: false,
       text: '展开↓',
       acvive: false,
+      extraData: {},
       showmember: true
     }
 
     onLoad(e) {
       this.party_id = e.party_id
-      this.update(this.party_id)
     }
 
     onShareAppMessage(res) {
@@ -144,13 +147,33 @@
     }
 
     onShow() {
+      this.getUid()
+      this.update(this.party_id)
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-
+    getUid() {
+      let that = this
+      that.$get({
+        url: service.account,
+        data: {
+          openid: wx.getStorageSync('openid')
+        }
+      }, {
+        success: ({code, data}) => {
+          console.log(data)
+          that.extraData = {
+            'uid': data,
+            'party_id': that.party_id
+          }
+          that.$apply()
+        }
+      })
+    }
     update(partyId) {
-      if (this.loading || this.noMoreList) return
-      this.loading = true
-      // 请求列表
+      wx.showLoading({
+        title: '加载中',
+        mask: true
+      })
       this.$get({
         url: service.parties + '/' + partyId
       }, {
@@ -161,6 +184,7 @@
           this.user = data.user
           this.members = data.members
           this.$apply()
+          wx.hideLoading()
           console.log(this.user)
         },
         fail: ({code, data}) => {
@@ -173,6 +197,9 @@
     }
 
     methods = {
+      sign() {
+        console.log(this.extraData)
+      },
       goadderss(latitude, longitude) {
         let that = this
         wepy.openLocation({
@@ -263,46 +290,6 @@
           duration: 1500
         })
       },
-      sign(type) {
-        let that = this
-        if (type == 'join') {
-          wx.navigateTo({url: '/pages/party/apply_party?party_id=' + this.party_id})
-        } else {
-          console.log('我要取消')
-          wx.showModal({
-            title: '提示',
-            content: '是否确认取消报名？',
-            success: (res) => {
-              if (res.confirm) {
-                that.$delete({
-                  url: service.parties + '/' + that.party_id + '/members',
-                  data: {
-                    formId: that.formId
-                  }
-                }, {
-                  success: ({code, data}) => {
-                    wx.showToast({
-                      title: '取消成功',
-                      image: '../../images/tabbars/succeed.png',
-                      duration: 1500
-                    })
-                    that.update(that.party_id)
-                    console.log(this.user)
-                  },
-                  fail: ({code, data}) => {
-                    // 失败了什么也不做
-                  },
-                  complete: () => {
-                    this.loading = false
-                  }
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
-      },
       setting(isDeadline, isCancel) {
         let that = this
         let itemList = []
@@ -321,7 +308,6 @@
               }, {
                 success: ({code, data}) => {
                   console.log(data.id)
-//                  debugger
                   wx.redirectTo({
                     url: '/pages/party/edit_party?party_id=' + data.id
                   })

@@ -124,7 +124,7 @@
             that.$apply()
             that.$get({url: service.invitee + '/' + that.invite_order_id + '/share/pic'}, {
               success: ({code, data}) => {
-                debugger
+//                debugger
               },
               fail: ({code, data}) => {},
               complete: () => {}

@@ -3,14 +3,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-<<<<<<< HEAD
- var host = 'https://love.ufutx.com/api',
-// var host = 'http://love.hankin.com/api',
-=======
-
- // var host = 'https://love.ufutx.com/api',
+//  var host = 'https://love.ufutx.com/api',
 var host = 'http://love.hankin.com/api',
->>>>>>> 99e8a0fca42a61156cdef22e00ebc75c2d3bfeee
     book = 'http://scraper.server.ufutx.cn/api',
     party= 'https://party.ufutx.com/api'
 export const service = {
