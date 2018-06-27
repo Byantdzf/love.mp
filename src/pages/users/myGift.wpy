@@ -98,7 +98,6 @@
 
     async onLoad(e) {
       let _this = this
-      _this.giftsData()
       _this.tabIndex()
 //      this.list.forEach((item,index,arr)=>{
 //        arr[index].URL = encodeURIComponent(arr[index].mod_textUrl)
@@ -106,7 +105,7 @@
     }
 
     onShow() {
-      this.getLibraries()
+      this.giftsData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
@@ -125,7 +124,7 @@
     }
 
     onPullDownRefresh() {
-      this.getLibraries()
+      this.giftsData()
     }
 
     onReachBottom() {
@@ -166,6 +165,7 @@
     // 初始化页面数据
     giftsData() {
       var self = this
+      self.tabs = []
       self.loading = true
       self.$get({url: service.gifts}, {
         success: ({code, data}) => {

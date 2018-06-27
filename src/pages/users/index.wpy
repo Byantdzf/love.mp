@@ -78,7 +78,7 @@
         <view class="weui-cell__bd">我的礼物</view>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>-->
       </navigator>
-      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active" wx:if="{{user.type == 'single'}}">
+      <navigator url="/pages/users/vipSetting" class="weui-cell weui-cell_access" hover-class="weui-cell_active" wx:if="{{user.type == 'single' && user.rank_id != 0}}">
         <view class="weui-cell__hd">
           <image src="../../images/icon/text1.png"
                  style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>

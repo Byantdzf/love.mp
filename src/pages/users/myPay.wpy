@@ -97,6 +97,7 @@
     }
 
     onPullDownRefresh() {
+      this.page = 1
       this.initPageData()
     }
 

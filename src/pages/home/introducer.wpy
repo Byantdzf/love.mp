@@ -6,10 +6,10 @@
           <view>
             <image src="{{background_image}}" mode="aspectFit" style="width: 100%;height: 384rpx;" class=""></image>
           </view>
-          <view class="page__bd " wx:for="{{user}}" wx:key="*this"
+          <view class="page__bd "
                 style="position: absolute;top: 44%;left: 6%;width: 92%;height: 204rpx">
             <view class="flo_l weui-cell__hd">
-              <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+              <image src="{{mylibs.avatar}}" mode="aspectFit"
                      style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
             </view>
             <view class="flo_l" style="margin-top: 26rpx">
@@ -40,19 +40,21 @@
             </view>
             <view class="font_24 white text-left flo_l" style="width: 60%;padding: 12rpx;">
               {{item.distance}}
-              <span>{{item.time}}</span>
+              <span>{{login_time}}前活跃</span>
             </view>
-            <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx">
-              由Byant推荐加入福恋
+            <view class="font_28 white text-left flo_l" style="width: 60%;margin-left: 24rpx" @tap="gotofriends({{mylibs.marriage}})">
+              由{{mylibs.marriage.name}}推荐加入福恋
             </view>
-            <view class="font_32 white flo_r atten_btn">
-              <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
-                ...
-              </picker>
-            </view>
-            <view class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}" @tap="attention">
-              {{text}}
-            </view>
+            <block wx:if="{{mylibs.self != 1}}">
+              <view class="font_32 white flo_r atten_btn">
+                <picker @change="bindPickerChange({{mylibs.id}})" value="{{index}}" range="{{array}}">
+                  ...
+                </picker>
+              </view>
+              <view class="font_32 orange btn_red text-center flo_r atten {{paramet_v? 'atten_w' : ''}}" @tap="attention">
+                {{text}}
+              </view>
+            </block>
           </view>
           <view class="clearfloat"></view>
         </view>
@@ -87,14 +89,16 @@
       <span>{{profile_marriage.slogan}}</span>
     </view>
   </view>
-  <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-    <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友
+  <block wx:if="{{mylibs.self != 1}}">
+    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
+      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友
+      </view>
+      <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
+      <view class="btn_red flo_l" style="margin-top: -8rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
+      </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
-    <view class="btn_red flo_l" style="margin-top: -8rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
-    </view>
-    <view class="clearfloat"></view>
-  </view>
+  </block>
   <block wx:if="{{loading}}">
     <view class="weui-loadmore">
       <!--<view class="weui-loading"></view>-->
@@ -128,19 +132,7 @@
       mylibs: [],
       array: ['举报', '取消好友'],
       background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.CaShiFjcO2Q7dd44e9547b343f1c8c4f6ae9424ab900.png',
-      user: [
-        {
-          'name': 'Angela',
-          'image': 'http://img4.imgtn.bdimg.com/it/u=2519013472,2812894432&fm=27&gp=0.jpg',
-          'age': '26',
-          'address': '深圳',
-          'stature': '164cm',
-          'distance': '200m',
-          'six': 0,
-          'time': '3分钟前活跃',
-          'vip': true
-        }
-      ],
+      user: [],
       list: [],
       activeIndex: 0,
       sliderOffset: 0,
@@ -156,7 +148,8 @@
       id: '',
       profile_courtship: [],
       profile_marriage: [],
-      paramet_v: false
+      paramet_v: false,
+      login_time: ''
     }
 
     computed = {}
@@ -206,7 +199,16 @@
             self.text = '关注'
             self.$apply()
           }
-          this.profile_marriage = data.profile_marriage
+          self.profile_marriage = data.profile_marriage
+          if (data.login_time) {
+            if (data.login_time.day) {
+              return self.login_time = data.login_time.day + '天'
+            } else if (data.login_time.hour) {
+              return self.login_time = data.login_time.hour + '小时'
+            } else if (data.login_time.min) {
+              return self.login_time = data.login_time.min + '分钟'
+            }
+          }
         },
         fail: ({code, data}) => {
         },
@@ -293,6 +295,15 @@
     }
 
     methods = {
+      gotofriends(item) {
+        let url = ''
+        if (item.type == 'single') {
+          url = '/pages/home/information?id=' + item.user_id
+        } else {
+          url = '/pages/home/introducer?id=' + item.user_id
+        }
+        wx.navigateTo({url: url})
+      },
       bindPickerChange(id, e) {
         console.log(id)
         console.log('picker发送选择改变，携带值为', e.detail.value)

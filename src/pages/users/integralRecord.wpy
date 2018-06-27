@@ -24,6 +24,18 @@
       <view class="clearfloat"></view>
     </view>
   </block>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
+
 </template>
 
 <script>
@@ -45,7 +57,10 @@
       user: {},
       is_vip: false,
       nickName: '加载中...',
-      list: []
+      list: [],
+      noMore: false,
+      page: 1,
+      loading: false
 
     }
 
@@ -64,23 +79,54 @@
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-
+    onPullDownRefresh() {
+      this.page = 1
+      this.initPageData()
+    }
+    onReachBottom() {
+      this.initPageData()
+    }
     onLoad() {
 
     }
 
-    onPullDownRefresh() {
-      this.initPageData()
-    }
-
     // 初始化页面数据
     initPageData() {
-      var self = this
-      self.loading = false
-      this.$get({url: service.scorehistory}, {
+      var _this = this,
+        data = {
+          page: _this.page
+        }
+      _this.loading = true
+      this.$get({url: service.scorehistory, data}, {
         success: ({code, data}) => {
-          self.list = data.data
-          self.$apply()
+          _this.noMore = false
+          _this.loading = false
+//          if (data.data.length == 0 && data.last_page == 1) {
+//            _this.loading = false
+//            _this.noMore = true
+//            _this.list = []
+//            return
+//          }
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = false
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            _this.list = []
+            return
+          }
+          if (_this.list.length === 0 || _this.page === 1) {
+            _this.list = data
+          } else {
+            data.map(function (item, index) {
+              _this.list.push(item)
+            })
+          }
+          _this.noMore = true
+          _this.page += 1
         },
         fail: ({code, data}) => {
         },
