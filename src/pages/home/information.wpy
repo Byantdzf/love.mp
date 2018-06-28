@@ -173,9 +173,9 @@
       <view class='list_item_box' wx:if='{{parentItem.show}}'>
         <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
               data-parentindex='{{parentIndex}}'>
-          <view class='list_item_name_box' @tap="showModalV({{item.key}}, {{item.title}})">
+          <view class='list_item_name_box' @tap="showModalV({{item.title}}, {{item.content}})">
             <text class='list_item_name'>{{item.title}}</text>
-            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.value}}</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.num}}</view>
           </view>
         </view>
       </view>
@@ -247,7 +247,8 @@
       background_image: 'http://local-pictures.img-cn-shenzhen.aliyuncs.com/201806/15/wx53cf66d72649eb5a.o6zAJs2lf_SH4K2plnWTlsSfhR70.CaShiFjcO2Q7dd44e9547b343f1c8c4f6ae9424ab900.png',
       user: [],
       list: [
-        {listName: '爱情语言',
+        {
+          listName: '爱情语言',
           item: [{
             itemName: '需要肯定的语言', content: '13', time: '2017-05-06'
           }, {
@@ -259,7 +260,8 @@
           }, {
             itemName: '喜欢身体接触', content: '44', time: '2015-08-06'
           }]
-        }, {listName: '交往基因',
+        }, {
+          listName: '交往基因',
           item: [{
             itemName: '力量型', content: '12', time: '2015-05-15'
           }, {
@@ -289,17 +291,18 @@
       login_time: 0
     }
 
-    computed = {
-    }
+    computed = {}
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     async onLoad(e) {
       let _this = this
       console.log(e.id)
       _this.id = e.id
     }
+
     onShow() {
       this.getMessage()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -308,6 +311,7 @@
     onPullDownRefresh() {
       this.getMessage()
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
@@ -335,8 +339,8 @@
             self.$apply()
           }
           console.log(self.list[0])
-          self.list[0].item = data.city_test_arr
-          self.list[1].item = data.province_test_arr
+          self.list[0].item = data.love_languages
+          self.list[1].item = data.love_characters
           console.log(data.city_test_arr)
           self.profile_courtship = data.profile_courtship
           self.character = data.character
@@ -360,6 +364,7 @@
         }
       })
     }
+
     // 初始化页面数据
     initPageData() {
       var self = this
@@ -373,6 +378,7 @@
       //   complete: () => { this.loaded = false }
       // })
     }
+
     getLibraries(keyword) {
       // let _this = this
       // _this.loading = true
@@ -422,6 +428,7 @@
 //         complete: () => { this.loaded = false }
 //       })
     }
+
 // 让所有的展开项，都变为收起
     packUp(data, index) {
       for (let i = 0, len = data.length; i < len; i++) {
@@ -435,6 +442,7 @@
         }
       }
     }
+
     methods = {
       showAdvantagesV() {
         let num = this.mylibs.my_rank_name.split('VIP')[1]
@@ -531,20 +539,19 @@
       showModalV(title, content) {
         wx.showModal({
           title: title,
-          content: '一个温和主义者，悠闲，平和，有耐心，感情内藏，待人和蔼，乐于倾听，遇事冷静，随遇而安。S型喜欢使用一句口头禅：“不过如此。”这个特点使得——S型总是缺乏热情，不愿改变。心情好的时候，S型的人比较善解人意，会是一个老好人的形象；一旦生气，就会不闻不问，可能会显得比较冷漠。\n' +
-          '\n' +
-          ' 代表人物：摩西。'
+          content: content
         })
       },
       listTap(e) {
         console.log('触发了最外层')
         let num = this.mylibs.my_rank_name.split('VIP')[1]
-        if (num < 2 ) {
-          return wx.showModal({
+        console.log(num)
+        if (num < 2) {
+          wx.showModal({
             title: '提示',
             content: '需要先成为VIP2会员！',
             confirmText: '去升级',
-            success: function(res) {
+            success: function (res) {
               if (res.confirm) {
 //                wx.navigateTo({url: url})
                 wx.redirectTo({url: '/pages/users/upgradingVIP'})
@@ -553,18 +560,19 @@
               }
             }
           })
-        }
-        let Index = e.currentTarget.dataset.parentindex,
-          // 获取点击的下标值
-          list = this.data.list
-        list[Index].show = !list[Index].show || false
-        // 变换其打开、关闭的状态
+        } else {
+          let Index = e.currentTarget.dataset.parentindex,
+            list = this.data.list
+          list[Index].show = !list[Index].show || false
+          // 变换其打开、关闭的状态
 //        if (list[Index].show){// 如果点击后是展开状态，则让其他已经展开的列表变为收起状态
 //          this.packUp(list,Index);
 //        }
-        this.setData({
-          list
-        })
+          this.setData({
+            list
+          })
+//          debugger
+        }
       },
       // 点击里面的子列表展开收起
       listItemTap(e) {
@@ -608,23 +616,23 @@
           }
         })
       },
-      showInput () {
+      showInput() {
         this.inputShowed = true
       },
-      hideInput () {
+      hideInput() {
         this.inputVal = ''
         this.inputShowed = false
       },
-      clearInput () {
+      clearInput() {
         this.inputVal = ''
       },
-      inputTyping (e) {
+      inputTyping(e) {
         this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)
       },
-      tabClick (e) {
+      tabClick(e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
 //        if (this.activeIndex == '1') {
@@ -649,8 +657,11 @@
           success: ({code, data}) => {
             wx.reLaunch({url: '/pages/borrow'})
           },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
 
@@ -669,8 +680,11 @@
                 success: ({code, data}) => {
                   wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -696,8 +710,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }

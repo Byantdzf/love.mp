@@ -22,7 +22,7 @@
   <view class="font_32 bookTitle">礼物记录</view>
   <view class="booklist">
     <block wx:if="{{list.length}}">
-      <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.id}}')">
+      <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.send_user.id}}')">
         <view class="flo_l">
           <image class="book-avatar" src="{{item.send_user.avatar}}" background-size="cover"/>
         </view>
