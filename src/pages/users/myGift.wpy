@@ -24,12 +24,12 @@
     <block wx:if="{{list.length}}">
       <view wx:for="{{list}}" class="book" wx:key="*this" @tap="goto('/pages/home/information?id={{item.id}}')">
         <view class="flo_l">
-          <image class="book-avatar" src="{{item.image}}" background-size="cover"/>
+          <image class="book-avatar" src="{{item.send_user.avatar}}" background-size="cover"/>
         </view>
         <view class="font_28" style="margin-top: 22rpx">
-          <view class="flo_l">{{item.name}}</view>
-          <view class="flo_l" style="margin-left: 12rpx;">给你赠送 <span class="font_32 orange bold">{{item.num}}</span> 朵玫瑰</view>
-          <view class="font_26 flo_r black_6">{{item.time}}</view>
+          <view class="flo_l">{{item.send_user.name}}</view>
+          <view class="flo_l" style="margin-left: 12rpx;">给你赠送 <span class="font_32 orange bold">{{item.num}}</span> {{gift.unit}}{{gift.name}}</view>
+          <view class="font_26 flo_r black_6">{{item.created_at}}</view>
         </view>
         <view class="clearfloat"></view>
       </view>
