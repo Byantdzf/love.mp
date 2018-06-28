@@ -76,7 +76,8 @@
       navigationBarTitleText: '上传照片'
     }
     data = {
-      user: {},
+      user: {
+      },
       photos: [],
       files: '',
       type_v: '',
@@ -190,10 +191,10 @@
           }
         })
       },
-      previewImage(imge, photoslist) {
+      previewImage(imge, photolist) {
         wepy.previewImage({
           current: imge, // 当前显示图片的http链接
-          urls: photoslist // 需要预览的图片http链接列表
+          urls: photolist // 需要预览的图片http链接列表
         })
       },
       stateChange(e) {

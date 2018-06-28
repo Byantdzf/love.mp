@@ -212,11 +212,11 @@
           question_id: that.questionsList[that.index].id,
           value: that.value
         }
-        if (that.index == that.questionsList.length-1) {
+        if (that.index == that.questionsList.length - 1) {
           that.answer.splice(that.index, 1)
           that.answer.push(quert)
           console.log(that.answer)
-        }else {
+        } else {
           that.answer.push(quert)
           that.$apply()
           console.log(that.answer)
@@ -250,12 +250,12 @@
             duration: 1000
           })
         } else {
-          let quert = {
-            question_id: that.questionsList[that.index].id,
-            value: that.value
-          }
-          that.answer.push(quert)
-          that.$apply()
+//          let quert = {
+//            question_id: that.questionsList[that.index].id,
+//            value: that.value
+//          }
+//          that.answer.push(quert)
+//          that.$apply()
           console.log(that.answer)
           wx.showLoading({
             title: '提交中...'

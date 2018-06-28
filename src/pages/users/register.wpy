@@ -219,6 +219,13 @@
       // 防抖
       console.log(type)
       if (this.loading) return
+      if (!this.getString(this.marriage)) {
+        return wx.showModal({
+          title: '抱歉！',
+          content: '需要推荐人才能注册！',
+          showCancel: false
+        })
+      }
       if (!this.getString(this.name)) {
         return this.$alert('温馨提示', '请输入姓名')
       }

@@ -28,7 +28,7 @@
     <view style="background-image:url({{background_imagev}});background-size:cover;width: 63%;height: 19vh;position: absolute;left: 36%;top: 8%;z-index: 9999;" class="black_6 text-center font_26">
       <view style="margin: 40rpx;margin-left: 100rpx;margin-right: 0rpx">
         <view>Ta对你有意思哦！</view>
-        <view>赶紧识别图中二维码加</view>
+        <view>赶紧保存图中二维码加</view>
         <view>Ta的微信吧！</view>
       </view>
     </view>
@@ -36,7 +36,7 @@
      Ta的二维码
     </view>
     <view class="white font_32" style="position: absolute;left: 0%;top: 36%;">
-      <image src="{{wechat_qrcode}}" mode="aspectFit"  ></image>
+      <image src="{{wechat_qrcode}}" mode="aspectFit" @tap="previewImage({{wechat_qrcode}})" ></image>
     </view>
   </view>
   <view class="clearfloat"></view>
@@ -123,6 +123,14 @@
     }
 
     methods = {
+      previewImage(image) {
+        let photolist = []
+        photolist.push(image)
+        wepy.previewImage({
+          current: image, // 当前显示图片的http链接
+          urls: photolist // 需要预览的图片http链接列表
+        })
+      },
       modalChange2() {
         this.hide = true
         this.message = {}

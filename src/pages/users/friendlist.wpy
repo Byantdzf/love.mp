@@ -30,7 +30,7 @@
                     {{item.name}}
                   </view>
                   <view  class="font_28 flo_l ellipsis_1" style="margin-left: 12rpx;">
-                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.six}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
+                    <image src="../../images/icon/man_v.png" mode="aspectFit" wx:if="{{item.sex == 1}}" style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
                     <image src="../../images/icon/woman_v.png" mode="aspectFit" wx:else   style="width: 38rpx;height: 38rpx;" class="flo_l"></image>
                   </view>
                 </view>
@@ -114,6 +114,7 @@
     }
 
     onShow() {
+      this.page = 1
       this.getLibraries()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }

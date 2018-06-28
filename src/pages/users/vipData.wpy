@@ -11,7 +11,7 @@
             <view class="userinfo-info">
               <view class="userinfo-nickname font_32">
                 {{ user.name }}
-                <block wx:if="{{user.rank_id == 0}}">
+                <block wx:if="{{is_vip}}">
                   <view class="orange font_26 text-center flo_r menber" @tap="goto('/pages/users/upgradeVIP')">
                     <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;" class="flo_l"></image>
                     <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">非会员</view>

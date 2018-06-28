@@ -45,7 +45,8 @@
           <!--<image src="../../images/icon/order.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">VIP资料</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">已完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{user.vip_profile == 0}}">未完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:else>已完成</view>
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
@@ -54,42 +55,39 @@
           <!--<image src="../../images/icon/gift.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">加好友设置</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">未完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{user.friend_question.length == 0}}">未完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:else>已完成</view>
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/sociability?title=爱情语言&type=市级VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="viptest('vip1', '/pages/users/sociability?title=爱情语言&type=市级VIP')" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/text1.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">了解爱情语言（市级VIP）</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">未完成</view>
-      </navigator>
-      <!--<navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">-->
-      <!--<view class="weui-cell__hd">-->
-      <!--<image src="../../images/icon/test.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-      <!--</view>-->
-      <!--<view class="weui-cell__bd">心有灵犀</view>-->
-      <!--&lt;!&ndash;<view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>&ndash;&gt;-->
-      <!--</navigator>-->
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{user.city_vip_test == 1}}">已完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:else>未完成</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/sociability?title=交往基因&type=省级VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="viptest('vip2', '/pages/users/sociability?title=交往基因&type=省级VIP')" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <!--<view class="weui-cell__hd">-->
         <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         <!--</view>-->
         <view class="weui-cell__bd">了解交往基因（省级VIP）</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">升级</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{user.province_vip_test == 1}}">已完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:else>未完成</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <navigator url="/pages/users/sociability?title=自己的优势&type=全国VIP" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view @tap="viptest('vip3', '/pages/users/sociability?title=自己的优势&type=全国VIP')"  class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
           <!--<image src="../../images/icon/pay.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         </view>
         <view class="weui-cell__bd">了解自己的优势（全国VIP）</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">升级</view>
-      </navigator>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:if="{{user.country_vip_test == 1}}">已完成</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" wx:else>未完成</view>
+      </view>
     </view>
   </view>
 </template>
@@ -149,7 +147,6 @@
         }
       })
     }
-
     methods = {
       gotoUser(type) {
         let url = ''
@@ -166,6 +163,54 @@
           url = '/pages/home/information?id=' + item.id
         } else {
           url = '/pages/home/introducer?id=' + item.id
+        }
+        wx.navigateTo({url: url})
+      },
+      viptest(type, url) {
+        if (this.user.rank_name == 'VIP1' && type == 'vip2') {
+          return wx.showModal({
+            title: '提示',
+            content: '需要先成为VIP2会员！',
+            confirmText: '去升级',
+            success: function(res) {
+              if (res.confirm) {
+//                wx.navigateTo({url: url})
+                wx.navigateTo({url: '/pages/users/upgradingVIP'})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+        if (this.user.rank_name == 'VIP1' && type == 'vip3') {
+          return wx.showModal({
+            title: '提示',
+            content: '需要先成为VIP3会员！',
+            confirmText: '去升级',
+            success: function(res) {
+              if (res.confirm) {
+//                wx.navigateTo({url: url})
+                wx.navigateTo({url: '/pages/users/upgradingVIP'})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+        if (this.user.rank_name == 'VIP2' && type == 'vip3') {
+          return wx.showModal({
+            title: '提示',
+            content: '需要先成为VIP3会员！',
+            confirmText: '去升级',
+            success: function(res) {
+              if (res.confirm) {
+//                wx.navigateTo({url: url})
+                wx.navigateTo({url: '/pages/users/upgradingVIP'})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
         }
         wx.navigateTo({url: url})
       },

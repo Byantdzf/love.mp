@@ -22,11 +22,11 @@
                        class="flo_l"></image>
                 <view style="font-size: 26rpx;line-height: 32rpx;" class="flo_r black_6 ">{{mylibs.age}}</view>
               </view>
-              <block wx:if="{{user.rank_id == 0}}">
+              <block wx:if="{{mylibs.rank_id == '0'}}">
                 <view class="orange font_26 text-center flo_r menber">
                   <image src="../../images/icon/vip.png" mode="aspectFill" style="width: 32rpx;height: 32rpx;"
                          class="flo_l"></image>
-                  <view style="font-size: 20rpx;margin-top: 8rpx" class="flo_r">非会员</view>
+                  <view style="font-size: 20rpx;margin-top: 4rpx" class="flo_r">非会员</view>
                 </view>
               </block>
               <block wx:else>
@@ -107,7 +107,7 @@
   <view class="booklist  font_28">
     <view style="margin: 0 44rpx;" class="wx_Title">
       <span>薪水级别</span>
-      <span class="flo_r">{{profile_courtship.salary.min}}~{{profile_courtship.salary.max}}</span>
+      <span class="flo_r">{{profile_courtship.salary.text}}</span>
     </view>
     <view style="margin: 0 44rpx;" class="wx_Title">
       <span>是否有车</span>
@@ -173,9 +173,9 @@
       <view class='list_item_box' wx:if='{{parentItem.show}}'>
         <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
               data-parentindex='{{parentIndex}}'>
-          <view class='list_item_name_box' @tap="showModal('{{item.itemName}}')">
-            <text class='list_item_name'>{{item.itemName}}</text>
-            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.content}}</view>
+          <view class='list_item_name_box' @tap="showModalV({{item.key}}, {{item.title}})">
+            <text class='list_item_name'>{{item.key}}</text>
+            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.value}}</view>
           </view>
         </view>
       </view>
@@ -183,18 +183,31 @@
   </view>
   <view class="font_32 wx_Title orange">Ta的优势</view>
   <view class="booklist  font_28">
-    <view style="margin: 0 44rpx;" class="wx_Title text-center orange">
+    <view style="margin: 0 44rpx;" class="wx_Title text-center orange" wx:if="{{showAdvantages}}" @tap="showAdvantagesV">
       <view class="weui-loading"></view>
       <span>点击查看</span>
+    </view>
+    <view wx:else>
+      <view style="margin: 0 44rpx;" class="wx_Title font_32" >
+        <span>TA—>属于： <span class=" orange">"{{character.type}}"</span></span>
+      </view>
+      <view style="margin: 0 44rpx;" class="wx_Title">
+        <span class="font_32">TA—>性格： </span>
+        <span class="orange">"{{character.character}}"</span>
+      </view>
+      <view style="margin: 0 44rpx;" class="wx_Title">
+        <span class="font_32">TA—>适合职业： </span>
+        <view class=" orange" wx:for="{{character.profession}}" wx:key="*this">{{item}}</view>
+      </view>
     </view>
   </view>
   <view style="height: 35rpx;width: 100%"></view>
   <block wx:if="{{mylibs.self != 1}}">
-    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;">
-      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')">加好友
+    <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;padding: 0 10%">
+      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')" wx:if="{{mylibs.is_friend == 1}}">交换微信</view>
+      <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')" wx:else>加好友
       </view>
-      <view class="btn_white flo_l" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')">交换微信</view>
-      <view class="btn_red flo_l" style="margin-top: -8rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
+      <view class="btn_red flo_l" style="margin-top: -8rpx;margin-left: 72rpx" @tap="goto('/pages/home/giveGift?id={{mylibs.id}}')">送礼物
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -271,6 +284,8 @@
       id: '',
       profile_courtship: [],
       paramet_v: false,
+      showAdvantages: true,
+      character: {},
       login_time: 0
     }
 
@@ -319,7 +334,15 @@
             self.text = '关注'
             self.$apply()
           }
+          console.log(self.list[0])
+          self.list[0].item = data.city_test_arr
+          self.list[1].item = data.province_test_arr
+          console.log(data.city_test_arr)
           self.profile_courtship = data.profile_courtship
+          self.character = data.character
+          if (data.is_friend == 0) {
+            self.array = ['举报']
+          }
           if (data.login_time) {
             if (data.login_time.day) {
               return self.login_time = data.login_time.day + '天'
@@ -413,6 +436,26 @@
       }
     }
     methods = {
+      showAdvantagesV() {
+        let num = this.mylibs.rank.name.split('VIP')[1]
+        if (num < 3) {
+          return wx.showModal({
+            title: '提示',
+            content: '需要先成为VIP3会员！',
+            confirmText: '去升级',
+            success: function (res) {
+              if (res.confirm) {
+//                wx.navigateTo({url: url})
+                wx.navigateTo({url: '/pages/users/upgradingVIP'})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+        this.showAdvantages = false
+        this.$apply()
+      },
       gotofriends(item) {
         let url = ''
         if (item.type == 'single') {
@@ -485,9 +528,9 @@
           urls: array // 需要预览的图片http链接列表
         })
       },
-      showModal(item) {
+      showModalV(title, content) {
         wx.showModal({
-          title: item,
+          title: title,
           content: '一个温和主义者，悠闲，平和，有耐心，感情内藏，待人和蔼，乐于倾听，遇事冷静，随遇而安。S型喜欢使用一句口头禅：“不过如此。”这个特点使得——S型总是缺乏热情，不愿改变。心情好的时候，S型的人比较善解人意，会是一个老好人的形象；一旦生气，就会不闻不问，可能会显得比较冷漠。\n' +
           '\n' +
           ' 代表人物：摩西。'
@@ -495,6 +538,22 @@
       },
       listTap(e) {
         console.log('触发了最外层')
+        let num = this.mylibs.rank.name.split('VIP')[1]
+        if (num < 2 ) {
+          return wx.showModal({
+            title: '提示',
+            content: '需要先成为VIP会员！',
+            confirmText: '去升级',
+            success: function(res) {
+              if (res.confirm) {
+//                wx.navigateTo({url: url})
+                wx.redirectTo({url: '/pages/users/upgradingVIP'})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
         let Index = e.currentTarget.dataset.parentindex,
           // 获取点击的下标值
           list = this.data.list

@@ -184,7 +184,7 @@
                 },
                 fail: function (res) {
                   wx.showToast({
-                    title: '支付失败:' + res.errMsg,
+                    title: '已取消支付',
                     icon: 'none',
                     duration: 2000
                   })
