@@ -69,7 +69,7 @@
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '升级VIP',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: false
     }
     data = {
       user: {},

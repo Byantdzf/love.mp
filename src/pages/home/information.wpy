@@ -174,7 +174,7 @@
         <view class='list_item' wx:for='{{parentItem.item}}' wx:key='this' catchtap='listItemTap' data-index='{{index}}'
               data-parentindex='{{parentIndex}}'>
           <view class='list_item_name_box' @tap="showModalV({{item.key}}, {{item.title}})">
-            <text class='list_item_name'>{{item.key}}</text>
+            <text class='list_item_name'>{{item.title}}</text>
             <view class="weui-cell__ft weui-cell__ft_in-access">{{item.value}}</view>
           </view>
         </view>
@@ -201,8 +201,8 @@
       </view>
     </view>
   </view>
-  <view style="height: 35rpx;width: 100%"></view>
   <block wx:if="{{mylibs.self != 1}}">
+    <view style="height: 140rpx;width: 100%"></view>
     <view class="fixed_bot font_32 text-center" style="width: 100%;background: white;margin-top: 12rpx;padding: 0 10%">
       <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/swopWeChat?id={{mylibs.id}}')" wx:if="{{mylibs.is_friend == 1}}">交换微信</view>
       <view class="btn_white flo_l" style="margin-left: 32rpx" @tap="goto('/pages/home/addFriend?id={{mylibs.id}}')" wx:else>加好友
@@ -437,7 +437,7 @@
     }
     methods = {
       showAdvantagesV() {
-        let num = this.mylibs.rank.name.split('VIP')[1]
+        let num = this.mylibs.my_rank_name.split('VIP')[1]
         if (num < 3) {
           return wx.showModal({
             title: '提示',
@@ -538,11 +538,11 @@
       },
       listTap(e) {
         console.log('触发了最外层')
-        let num = this.mylibs.rank.name.split('VIP')[1]
+        let num = this.mylibs.my_rank_name.split('VIP')[1]
         if (num < 2 ) {
           return wx.showModal({
             title: '提示',
-            content: '需要先成为VIP会员！',
+            content: '需要先成为VIP2会员！',
             confirmText: '去升级',
             success: function(res) {
               if (res.confirm) {

@@ -6,7 +6,7 @@
           <view class="page__bd ">
             <view class="flo_l borrowlist">
               <view class="flo_l weui-cell__hd">
-                <image src="{{mylibs.wechat.avatar}}" mode="aspectFit"
+                <image src="{{mylibs.avatar}}" mode="aspectFit"
                        style="width: 120rpx;height: 120rpx;border-radius: 50%" class="flo_l"></image>
               </view>
               <view class="flo_l" style="width: 78%;position: relative">
@@ -121,15 +121,14 @@
           // let arr = {}
           if (data.question_arr != null) {
             self.text = '感谢你加我为好友，请回复几个问题！'
+            data.question_arr.forEach((item, index, arr) => {
+              self.list.push({
+                questions: arr[index],
+                value: ''
+              })
+            })
             self.$apply()
           }
-          data.question_arr.forEach((item, index, arr) => {
-            self.list.push({
-              questions: arr[index],
-              value: ''
-            })
-          })
-          self.$apply()
 //          console.log(self.list)
         },
         fail: ({code, data}) => {},
